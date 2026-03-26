@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Diagnostik starten – Psynovia</title>
+  <meta name="description" content="Psynovia befindet sich im Aufbau.">
+  <style>
+    :root{
+      --ink:#0d2f57;
+      --mut:#4b5b6b;
+      --a1:#69a7ff;
+      --a2:#2a6bb3;
+      --bd: rgba(13,47,87,.14);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font:16px/1.7 system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      color:var(--ink);
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+      padding:24px;
+    }
+    .wrap{
+      max-width:680px;
+      width:100%;
+      text-align:center;
+    }
+    .dot{
+      width:14px;
+      height:14px;
+      border-radius:999px;
+      margin:0 auto 20px;
+      background:linear-gradient(135deg,var(--a2),var(--a1));
+    }
+    h1{
+      font-size:clamp(30px,4vw,44px);
+      line-height:1.1;
+      margin:0 0 18px;
+    }
+    p{
+      color:var(--mut);
+      font-size:18px;
+      margin:0 0 18px;
+    }
+    .copyLabel{
+      margin-top:28px;
+      margin-bottom:10px;
+      color:var(--mut);
+      font-size:17px;
+    }
+    .mailRow{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:14px 18px;
+      border:1px solid var(--bd);
+      border-radius:18px;
+      background:#fff;
+      max-width:100%;
+      flex-wrap:wrap;
+    }
+    .mail{
+      font-size:clamp(18px,2.2vw,22px);
+      font-weight:800;
+      color:var(--ink);
+      word-break:break-word;
+    }
+    .copyBtn{
+      border:1px solid var(--bd);
+      background:#fff;
+      border-radius:12px;
+      width:42px;
+      height:42px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      font-size:18px;
+      color:var(--ink);
+    }
+    .copyBtn:hover{
+      background:rgba(13,47,87,.04);
+    }
+    .hint{
+      margin-top:16px;
+      font-size:14px;
+      color:var(--mut);
+    }
+    .copied{
+      margin-top:10px;
+      font-size:14px;
+      color:var(--ink);
+      opacity:0;
+      transition:opacity .2s ease;
+    }
+    .copied.show{
+      opacity:1;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="dot"></div>
+    <h1>Diagnostik starten</h1>
+
+    <p>
+      Unsere Website befindet sich aktuell noch im Aufbau.<br><br>
+      Die Diagnostik kannst du aber bereits jetzt ganz unkompliziert starten.
+    </p>
+
+    <div class="copyLabel">Schreib uns einfach an:</div>
+
+    <div class="mailRow">
+      <div class="mail" id="mailText">TobiasWinner@psynovia.de</div>
+      <button class="copyBtn" id="copyBtn" type="button" aria-label="E-Mail kopieren">⧉</button>
+    </div>
+
+    <div class="copied" id="copiedMsg">E-Mail-Adresse kopiert</div>
+
+    <p class="hint">
+      Wir schicken dir dann direkt das Diagnostiktool und alle weiteren Informationen zu.
+    </p>
+  </main>
+
+  <script>
+    const copyBtn = document.getElementById('copyBtn');
+    const mailText = document.getElementById('mailText').textContent.trim();
+    const copiedMsg = document.getElementById('copiedMsg');
+
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(mailText);
+        copiedMsg.classList.add('show');
+        setTimeout(() => copiedMsg.classList.remove('show'), 1800);
+      } catch (e) {
+        const textarea = document.createElement('textarea');
+        textarea.value = mailText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        copiedMsg.classList.add('show');
+        setTimeout(() => copiedMsg.classList.remove('show'), 1800);
+      }
+    });
+  </script>
+</body>
+</html>
