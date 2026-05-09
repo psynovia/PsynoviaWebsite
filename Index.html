@@ -2939,6 +2939,38 @@ main.ps-onepager{width:100%;overflow:hidden;}
 
 
 </style>
+
+
+<style id="ps-hero-start-layout-fix-v6">
+/* Fix: Hero initial layout on mobile.
+   The sticky header is already in normal document flow.
+   Therefore the hero must NOT add the header height again as top padding.
+   Also use stable viewport units to prevent address-bar induced jumps. */
+:root{--ps-sticky-real-height:76px;}
+@media (max-width:430px){:root{--ps-sticky-real-height:66px;}}
+@media (min-width:760px){:root{--ps-sticky-real-height:84px;}}
+@media (min-width:1000px){:root{--ps-sticky-real-height:92px;}}
+html{scroll-padding-top:calc(var(--ps-sticky-real-height) + 10px);}
+.ps-header-scope{position:sticky!important;top:0!important;z-index:9999!important;}
+.ps-hero-scope{margin-top:0!important;min-height:auto!important;}
+.ps-hero-scope .page{height:auto!important;min-height:calc(100svh - var(--ps-sticky-real-height))!important;overflow:visible!important;}
+.ps-hero-scope .hero{height:auto!important;min-height:calc(100svh - var(--ps-sticky-real-height))!important;padding-top:clamp(18px,4.2vh,42px)!important;padding-bottom:clamp(18px,4vh,36px)!important;grid-template-rows:auto 1fr auto!important;}
+.ps-hero-scope .headline{transform:none!important;margin-top:0!important;margin-bottom:0!important;}
+@media (orientation:portrait){
+  .ps-hero-scope .headline{transform:none!important;}
+  .ps-hero-scope .hero{padding-top:clamp(16px,3.4vh,32px)!important;row-gap:clamp(16px,3vh,30px)!important;}
+}
+@media (max-width:430px) and (orientation:portrait){
+  .ps-hero-scope .hero{min-height:calc(100svh - var(--ps-sticky-real-height))!important;padding-top:18px!important;padding-left:12px!important;padding-right:12px!important;}
+  .ps-hero-scope .headline{font-size:clamp(31px,8.6vw,40px)!important;line-height:1.03!important;letter-spacing:-.034em!important;}
+}
+/* Prefer stable small viewport height where supported; prevents first-scroll snapping on Android/Chrome. */
+@supports (height: 100svh){
+  .ps-hero-scope .page{min-height:calc(100svh - var(--ps-sticky-real-height))!important;}
+  .ps-hero-scope .hero{min-height:calc(100svh - var(--ps-sticky-real-height))!important;}
+}
+</style>
+
 </head>
 <body>
 <div class="ps-header-scope"><div aria-hidden="true" class="psynoviaMenu" id="psynovia-menu">
