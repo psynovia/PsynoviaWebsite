@@ -2969,6 +2969,63 @@ html{scroll-padding-top:calc(var(--ps-sticky-real-height) + 10px);}
   .ps-hero-scope .page{min-height:calc(100svh - var(--ps-sticky-real-height))!important;}
   .ps-hero-scope .hero{min-height:calc(100svh - var(--ps-sticky-real-height))!important;}
 }
+
+
+/* v7 Overlay-Fix: Close-Buttons dürfen nicht unter dem Sticky Header verschwinden */
+:root{
+  --ps-sticky-header-offset: 76px;
+}
+@media (max-width: 760px){
+  :root{ --ps-sticky-header-offset: 68px; }
+}
+
+/* Erklärung-Reader */
+.ps-erklaerung-scope .reader{
+  z-index: 12000 !important;
+}
+.ps-erklaerung-scope .readerTop{
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 12010 !important;
+  padding-top: calc(var(--ps-sticky-header-offset) + 10px) !important;
+  padding-right: 16px !important;
+}
+.ps-erklaerung-scope .readerTop .close,
+.ps-erklaerung-scope .close{
+  position: relative !important;
+  z-index: 12020 !important;
+  flex: 0 0 auto !important;
+}
+.ps-erklaerung-scope .readerContent{
+  padding-top: 22px !important;
+}
+
+/* Ablauf-Reader */
+.ps-ablauf-scope .reader{
+  z-index: 12000 !important;
+}
+.ps-ablauf-scope .readerTop{
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 12010 !important;
+  padding-top: calc(var(--ps-sticky-header-offset) + 10px) !important;
+  padding-right: 16px !important;
+}
+.ps-ablauf-scope .readerTop .close,
+.ps-ablauf-scope .close{
+  position: relative !important;
+  z-index: 12020 !important;
+  flex: 0 0 auto !important;
+}
+.ps-ablauf-scope .readerScroller{
+  padding-top: 18px !important;
+}
+
+/* Sicherheitsnetz: wenn ein Overlay offen ist, bleibt der Schließen-Button sichtbar und antippbar */
+.ps-erklaerung-scope .reader.open .close,
+.ps-ablauf-scope .reader.is-open .close{
+  pointer-events: auto !important;
+}
 </style>
 
 </head>
@@ -3338,6 +3395,8 @@ Diese Datengrundlage ermöglicht eine ärztliche Diagnose – unabhängig davon,
     rText.innerHTML=formatText(el.dataset.text||'');
     reader.classList.add('open');
     document.body.style.overflow='hidden';
+    const scroller=reader.querySelector('.readerContent');
+    if(scroller) scroller.scrollTop=0;
   };
   window.closeErklaerungReader=function(){
     if(reader) reader.classList.remove('open');
@@ -3374,7 +3433,7 @@ Diese Datengrundlage ermöglicht eine ärztliche Diagnose – unabhängig davon,
   const title=root.querySelector('#readerTitle');
   const detail=root.querySelector('#readerDetail');
   const close=root.querySelector('#readerClose');
-  function open(key){const d=DETAILS[key]; if(!d||!reader||!title||!detail) return; title.textContent=d.title; detail.innerHTML=d.html; reader.classList.add('is-open'); reader.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';}
+  function open(key){const d=DETAILS[key]; if(!d||!reader||!title||!detail) return; title.textContent=d.title; detail.innerHTML=d.html; reader.classList.add('is-open'); reader.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; const scroller=reader.querySelector('.readerScroller'); if(scroller) scroller.scrollTop=0;}
   function closeIt(){if(reader){reader.classList.remove('is-open'); reader.setAttribute('aria-hidden','true');} document.body.style.overflow='';}
   root.querySelectorAll('[data-key]').forEach(el=>el.addEventListener('click',()=>open(el.dataset.key)));
   if(close) close.addEventListener('click',closeIt);
