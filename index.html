@@ -1277,7 +1277,8 @@ main.ps-onepager{width:100%;overflow:hidden;}
       overflow-y:auto !important;
     }
 .ps-hero-scope .page{
-      width:100% !important;
+      width:min(1100px, calc(100vw - 24px)) !important;
+  margin:0 auto !important;
       min-height:100dvh !important;
       height:auto !important;
       overflow:visible !important;
@@ -3035,6 +3036,366 @@ html{scroll-padding-top:calc(var(--ps-sticky-real-height) + 10px);}
 }
 </style>
 
+
+<style id="ps-desktop-tablet-stability-carousel-pricing-v1">
+/* Minimal-invasiver Release-Patch:
+   - Desktop/Tablet-Scrolling gegen zu breite Landscape-Regeln härten
+   - Erklärungskarten als horizontales Carousel auf allen Breakpoints
+   - Pricing-Spacing und Abrechnungskarte auf Desktop optimieren
+   - Mobile-Portrait möglichst unverändert lassen */
+
+/* Große Tablets und Desktop im Querformat dürfen nicht in einem Hero-Scrollcontainer gefangen werden. */
+@media (min-width: 900px) and (orientation: landscape){
+  html,
+  body{
+    height:auto !important;
+    min-height:100% !important;
+    overflow-x:hidden !important;
+    overflow-y:auto !important;
+    touch-action:auto !important;
+  }
+
+  body.psynoviaMenuOpen{
+    overflow:hidden !important;
+  }
+
+  .ps-header-scope.psynoviaMenuOpen{
+    overflow:visible !important;
+  }
+
+  .ps-hero-scope,
+  .ps-hero-scope .page,
+  .ps-hero-scope .hero{
+    height:auto !important;
+    overflow:visible !important;
+    touch-action:auto !important;
+  }
+
+  .ps-hero-scope .page{
+    min-height:auto !important;
+  }
+
+  .ps-hero-scope .hero{
+    min-height:calc(100svh - var(--ps-sticky-real-height, 76px)) !important;
+  }
+
+  .ps-onepager,
+  .ps-section{
+    overflow:visible !important;
+  }
+
+  .ps-erklaerung-scope .cards,
+  .ps-pricing-scope .pricing-grid{
+    overflow-x:auto !important;
+  }
+}
+
+/* Sehr kleine Landscape-Displays behalten die kompaktere Sonderlogik, aber nur in diesem Bereich. */
+@media (orientation: landscape) and (max-width: 900px) and (max-height: 520px){
+  .ps-hero-scope .page{
+    overflow-y:auto !important;
+    -webkit-overflow-scrolling:touch;
+  }
+}
+
+/* Erklärung: Desktop nicht mehr als 6er-Grid, sondern ruhige horizontale Swipe-/Scroll-Leiste. */
+.ps-erklaerung-scope .cards{
+  display:flex !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  scroll-snap-type:x mandatory !important;
+  gap:18px !important;
+  padding:8px 2px 22px !important;
+  scrollbar-width:none !important;
+  -webkit-overflow-scrolling:touch !important;
+  overscroll-behavior-x:contain !important;
+}
+
+.ps-erklaerung-scope .cards::-webkit-scrollbar{
+  display:none !important;
+}
+
+.ps-erklaerung-scope .info-card{
+  flex:0 0 min(420px, 86vw) !important;
+  scroll-snap-align:center !important;
+}
+
+.ps-erklaerung-scope .dots{
+  display:flex !important;
+}
+
+@media (min-width: 900px){
+  .ps-erklaerung-scope .cards{
+    cursor:grab;
+    user-select:none;
+  }
+
+  .ps-erklaerung-scope .cards.is-dragging{
+    cursor:grabbing;
+    scroll-snap-type:none !important;
+  }
+
+  .ps-erklaerung-scope .info-card{
+    min-height:500px !important;
+  }
+}
+
+/* Pricing Desktop: Abstand zwischen Preisbereich und Infokarten herstellen. */
+@media (min-width: 900px){
+  .ps-pricing-scope .pricing-grid{
+    margin-bottom:44px !important;
+  }
+
+  .ps-pricing-scope .pricing-info-layout{
+    align-items:start !important;
+    gap:24px !important;
+  }
+
+  .ps-pricing-scope .billing-card{
+    min-height:0 !important;
+    padding:24px 28px !important;
+    align-self:start !important;
+  }
+
+  .ps-pricing-scope .billing-card .billing-row{
+    margin:7px 0 !important;
+    font-size:15.5px !important;
+    line-height:1.45 !important;
+  }
+}
+</style>
+
+
+
+
+
+
+
+
+<style id="ps-erklaerung-carousel-clean-desktop-v1">
+/* Sauberer Desktop-Fix Wissenskarten:
+   - entfernt alte mandatory-snap-Probleme im Desktop-Mausmodus
+   - erzwingt echten horizontalen Overflow
+   - entfernt internen Absatz-Scroll; Karten bleiben lesbar über Öffnen/Reader
+   - Touch/Mobile bleibt durch bestehende Grundlogik unverändert */
+@media (min-width: 900px){
+  .ps-erklaerung-scope .cards{
+    display:flex !important;
+    flex-wrap:nowrap !important;
+    width:100% !important;
+    max-width:100% !important;
+    overflow-x:auto !important;
+    overflow-y:hidden !important;
+    scroll-snap-type:none !important;
+    overscroll-behavior:contain !important;
+    overscroll-behavior-x:contain !important;
+    overscroll-behavior-y:contain !important;
+    -webkit-overflow-scrolling:touch !important;
+    cursor:grab !important;
+    scrollbar-width:none !important;
+  }
+
+  .ps-erklaerung-scope .cards::-webkit-scrollbar{
+    display:none !important;
+  }
+
+  .ps-erklaerung-scope .info-card{
+    flex:0 0 420px !important;
+    width:420px !important;
+    min-width:420px !important;
+    max-width:420px !important;
+    scroll-snap-align:none !important;
+  }
+
+  .ps-erklaerung-scope .info-card p{
+    max-height:none !important;
+    overflow:visible !important;
+    padding-right:0 !important;
+  }
+
+  .ps-erklaerung-scope .cards.is-mouse-dragging{
+    cursor:grabbing !important;
+    user-select:none !important;
+  }
+
+  .ps-erklaerung-scope .dots{
+    display:flex !important;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1120px){
+  .ps-erklaerung-scope .info-card{
+    flex-basis:390px !important;
+    width:390px !important;
+    min-width:390px !important;
+    max-width:390px !important;
+  }
+}
+</style>
+
+
+<style id="ps-erklaerung-reader-overlay-fix-v1">
+/* Wissenskarten-Reader als echtes eigenständiges Overlay.
+   Ziel: kein Überlagern durch Website-Teile, kein Hintergrundscroll, eigener Scrollbereich. */
+.ps-erklaerung-scope .reader{
+  position:fixed !important;
+  inset:0 !important;
+  width:100vw !important;
+  height:100dvh !important;
+  min-height:100dvh !important;
+  z-index:2147483000 !important;
+  background:
+    radial-gradient(circle at 16% 8%, rgba(98,190,227,.18), transparent 25%),
+    radial-gradient(circle at 88% 14%, rgba(242,138,52,.12), transparent 27%),
+    linear-gradient(180deg,#f7fcff 0%,#edf8fd 100%) !important;
+  overflow:hidden !important;
+  overscroll-behavior:contain !important;
+  isolation:isolate !important;
+}
+
+.ps-erklaerung-scope .reader:not(.active){
+  display:none !important;
+  pointer-events:none !important;
+}
+
+.ps-erklaerung-scope .reader.active{
+  display:flex !important;
+  flex-direction:column !important;
+  pointer-events:auto !important;
+}
+
+.ps-erklaerung-scope .readerTop{
+  position:sticky !important;
+  top:0 !important;
+  z-index:3 !important;
+  flex:0 0 auto !important;
+  width:100% !important;
+  background:rgba(247,252,255,.96) !important;
+  backdrop-filter:blur(14px) !important;
+  -webkit-backdrop-filter:blur(14px) !important;
+}
+
+.ps-erklaerung-scope .readerBody,
+.ps-erklaerung-scope .readerScroll,
+.ps-erklaerung-scope .readerContent{
+  min-height:0 !important;
+}
+
+.ps-erklaerung-scope .readerContent{
+  flex:1 1 auto !important;
+  width:100% !important;
+  max-width:900px !important;
+  margin:0 auto !important;
+  padding:8px clamp(18px,4vw,42px) 32px !important;
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+  overscroll-behavior:contain !important;
+  -webkit-overflow-scrolling:touch !important;
+}
+
+.ps-erklaerung-scope .readerCard{
+  position:relative !important;
+  z-index:2 !important;
+  width:100% !important;
+  max-width:760px !important;
+  margin:0 auto !important;
+  max-height:none !important;
+  overflow:visible !important;
+}
+
+html.ps-erklaerung-reader-open,
+html.ps-erklaerung-reader-open body{
+  overflow:hidden !important;
+  height:100% !important;
+}
+
+html.ps-erklaerung-reader-open .ps-header-scope,
+html.ps-erklaerung-reader-open .ps-hero-scope,
+html.ps-erklaerung-reader-open .ps-ablauf-scope,
+html.ps-erklaerung-reader-open .ps-pricing-scope,
+html.ps-erklaerung-reader-open .ps-footer-scope{
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+
+html.ps-erklaerung-reader-open .ps-erklaerung-scope > *:not(.reader){
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+
+@media (max-width: 560px){
+  .ps-erklaerung-scope .reader{
+    height:100svh !important;
+    min-height:100svh !important;
+  }
+
+  .ps-erklaerung-scope .readerContent{
+    padding:6px 16px 28px !important;
+  }
+}
+</style>
+
+
+<style id="ps-erklaerung-reader-spacing-final-v1">
+/* Finaler Mini-Patch Wissenskarten-Reader:
+   blockierende ältere Reader-Abstände werden hier gezielt überstimmt. */
+.ps-erklaerung-scope .reader.active .readerTop{
+  width:min(1100px, calc(100vw - 24px)) !important;
+  max-width:min(1100px, calc(100vw - 24px)) !important;
+  margin:0 auto !important;
+  left:auto !important;
+  right:auto !important;
+  border-radius:0 0 22px 22px !important;
+}
+
+.ps-erklaerung-scope .reader.active .readerContent{
+  padding-top:6px !important;
+  padding-bottom:32px !important;
+}
+
+.ps-erklaerung-scope .reader.active .readerCard,
+.ps-erklaerung-scope .reader.active .readerContent > *:first-child{
+  margin-top:0 !important;
+}
+
+@media (max-width: 560px){
+  .ps-erklaerung-scope .reader.active .readerTop{
+    width:calc(100vw - 20px) !important;
+    max-width:calc(100vw - 20px) !important;
+    border-radius:0 0 18px 18px !important;
+  }
+
+  .ps-erklaerung-scope .reader.active .readerContent{
+    padding-top:4px !important;
+    padding-bottom:28px !important;
+  }
+}
+</style>
+
+
+<style id="ps-erklaerung-reader-top-offset-final-v1">
+/* Finaler Fix: alter Sticky-Header-Sicherheitsabstand drückte das X im Wissenskarten-Reader zu tief. */
+.ps-erklaerung-scope .reader.active .readerTop{
+  padding-top:8px !important;
+  padding-bottom:8px !important;
+}
+
+.ps-erklaerung-scope .reader.active .readerContent{
+  padding-top:6px !important;
+}
+
+@media (max-width:560px){
+  .ps-erklaerung-scope .reader.active .readerTop{
+    padding-top:6px !important;
+    padding-bottom:6px !important;
+  }
+
+  .ps-erklaerung-scope .reader.active .readerContent{
+    padding-top:4px !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="ps-header-scope"><div aria-hidden="true" class="psynoviaMenu" id="psynovia-menu">
@@ -3273,7 +3634,7 @@ So entsteht Klarheit – auch bei komplexen oder weniger eindeutigen Verläufen.
 </section><section id="pricing" class="ps-section ps-pricing-scope">
 <main class="page"><section class="hero"><div class="kicker">Preise &amp; Kosten</div><h1>Klare Kosten.<br/>Keine Überraschungen.</h1><p><strong>Du entscheidest selbst,</strong> wie weit du gehen möchtest.</p></section><section class="pricing-grid"><article class="card primary"><span class="label">Phase 2</span><div class="card-top"><div class="title-block"><h2>Diagnostik</h2>
 <p>Leitlinienorientierte Datenerhebung – ganz bequem von zu Hause aus.<br/>
-Diese Datengrundlage ermöglicht eine ärztliche Diagnose – unabhängig davon, wer sie stellt.</p></div><div class="price"><span class="amount">289 €</span><small>einmalig</small></div></div><div class="divider"></div><ul class="features"><li class="feature"><span class="icon"><svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6"></path><path d="M8 13h8"></path><path d="M8 17h6"></path></svg></span><div><strong>Umfassende Fragebögen</strong></div></li><li class="feature"><span class="icon"><svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path><circle cx="8" cy="6" r="2"></circle><circle cx="16" cy="12" r="2"></circle><circle cx="11" cy="18" r="2"></circle></svg></span><div><strong>Objektive Testverfahren</strong></div></li><li class="feature"><span class="icon"><svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg></span><div><strong>Abgrenzung zu anderen Ursachen</strong></div></li><li class="feature"><span class="icon"><svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><circle cx="12" cy="7" r="4"></circle><path d="M5.5 21a6.5 6.5 0 0 1 13 0"></path></svg></span><div><strong>Persönliches Neuroprofil</strong></div></li><li class="feature"><span class="icon"><svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 11h6"></path><path d="M9 15h6"></path><path d="M9 19h4"></path><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6"></path></svg></span><div><strong>Schriftlicher Befundbericht</strong></div></li></ul><button type="button" class="cta" data-nav="wartung.html">Jetzt Diagnostik starten</button><p class="instant">Sofort starten – ohne Wartezeit</p></article><article class="card secondary"><span class="label">Phase 3 (optional)</span><div class="card-top"><div class="title-block"><h2>Klinisches Interview<br/>&amp; Diagnose</h2><p>Persönliche Einordnung durch ärztliche oder psychotherapeutische Fachpersonen.</p></div></div><div class="divider"></div><ul class="features"><li class="feature"><span class="icon"><svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 3v18"></path><path d="M5 10h14"></path><path d="M7 21h10"></path><path d="M6 10l-3 6h6l-3-6Z"></path><path d="M18 10l-3 6h6l-3-6Z"></path></svg></span><div><strong>Ärztliche / therapeutische Diagnosestellung</strong></div></li><li class="feature"><span class="icon"><svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"></path><path d="M8 9h8"></path><path d="M8 13h5"></path></svg></span><div><strong>Persönliche Rücksprache</strong></div></li><li class="feature"><span class="icon"><svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 12l2 2 4-4"></path><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path></svg></span><div><strong>Individuelle Empfehlungen</strong></div></li></ul><div class="price" style="margin-top:34px"><span class="amount">180 €</span><small>optional</small></div><div class="optional-note"><svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8L12 21l7.8-7.6a5.5 5.5 0 0 0 1-8.8Z"></path></svg><div><strong>Nur, wenn du es brauchst.</strong></div></div></article></section>
+Diese Datengrundlage ermöglicht eine ärztliche Diagnose – unabhängig davon, wer sie stellt.</p></div><div class="price"><span class="amount">278 €</span><small>einmalig</small></div></div><div class="divider"></div><ul class="features"><li class="feature"><span class="icon"><svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6"></path><path d="M8 13h8"></path><path d="M8 17h6"></path></svg></span><div><strong>Umfassende Fragebögen</strong></div></li><li class="feature"><span class="icon"><svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path><circle cx="8" cy="6" r="2"></circle><circle cx="16" cy="12" r="2"></circle><circle cx="11" cy="18" r="2"></circle></svg></span><div><strong>Objektive Testverfahren</strong></div></li><li class="feature"><span class="icon"><svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg></span><div><strong>Abgrenzung zu anderen Ursachen</strong></div></li><li class="feature"><span class="icon"><svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><circle cx="12" cy="7" r="4"></circle><path d="M5.5 21a6.5 6.5 0 0 1 13 0"></path></svg></span><div><strong>Persönliches Neuroprofil</strong></div></li><li class="feature"><span class="icon"><svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 11h6"></path><path d="M9 15h6"></path><path d="M9 19h4"></path><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6"></path></svg></span><div><strong>Schriftlicher Befundbericht</strong></div></li></ul><button type="button" class="cta" data-nav="wartung.html">Jetzt Diagnostik starten</button><p class="instant">Sofort starten – ohne Wartezeit</p></article><article class="card secondary"><span class="label">Phase 3 (optional)</span><div class="card-top"><div class="title-block"><h2>Klinisches Interview<br/>&amp; Diagnose</h2><p>Persönliche Einordnung durch ärztliche oder psychotherapeutische Fachpersonen.</p></div></div><div class="divider"></div><ul class="features"><li class="feature"><span class="icon"><svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 3v18"></path><path d="M5 10h14"></path><path d="M7 21h10"></path><path d="M6 10l-3 6h6l-3-6Z"></path><path d="M18 10l-3 6h6l-3-6Z"></path></svg></span><div><strong>Ärztliche / therapeutische Diagnosestellung</strong></div></li><li class="feature"><span class="icon"><svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"></path><path d="M8 9h8"></path><path d="M8 13h5"></path></svg></span><div><strong>Persönliche Rücksprache</strong></div></li><li class="feature"><span class="icon"><svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 12l2 2 4-4"></path><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path></svg></span><div><strong>Individuelle Empfehlungen</strong></div></li></ul><div class="price" style="margin-top:34px"><span class="amount">179 €</span><small>optional</small></div><div class="optional-note"><svg fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8L12 21l7.8-7.6a5.5 5.5 0 0 0 1-8.8Z"></path></svg><div><strong>Nur, wenn du es brauchst.</strong></div></div></article></section>
 <div aria-hidden="true" class="pricing-dots">
 <span class="pricing-dot active"></span>
 <span class="pricing-dot"></span>
@@ -3283,7 +3644,7 @@ Diese Datengrundlage ermöglicht eine ärztliche Diagnose – unabhängig davon,
 <div class="info-icon">✓</div>
 <div>
 <h3>Abrechnung</h3>
-<p class="billing-row billing-ok">Private Krankenkassen</p>
+<p class="billing-row billing-ok">Private Kassen und Beihilfe</p>
 <p class="billing-row billing-ok">Selbstzahler</p>
 <p class="billing-row billing-ok">Wir unterstützen Sie gerne beim Kostenerstattungsverfahren der GKV 
 <span class="info-tooltip">
@@ -3532,5 +3893,212 @@ Diese Datengrundlage ermöglicht eine ärztliche Diagnose – unabhängig davon,
   document.addEventListener('click',()=>root.querySelectorAll('.info-tooltip').forEach(t=>t.classList.remove('active')));
 })();
 </script>
+
+
+
+
+
+
+
+
+
+<script id="ps-erklaerung-carousel-clean-desktop-v1">
+(function(){
+  var root=document.querySelector('.ps-erklaerung-scope');
+  if(!root) return;
+  var cards=root.querySelector('#cards');
+  if(!cards) return;
+
+  function isDesktop(){
+    return window.innerWidth >= 900;
+  }
+
+  function cardList(){
+    return Array.prototype.slice.call(cards.querySelectorAll('.info-card'));
+  }
+
+  function maxScrollLeft(){
+    return Math.max(0, cards.scrollWidth - cards.clientWidth);
+  }
+
+  function clamp(value,min,max){
+    return Math.max(min,Math.min(max,value));
+  }
+
+  function nearestIndex(){
+    var list=cardList();
+    if(!list.length) return 0;
+    var center=cards.scrollLeft + cards.clientWidth / 2;
+    var bestIndex=0;
+    var bestDistance=Infinity;
+    for(var i=0;i<list.length;i++){
+      var cardCenter=list[i].offsetLeft + list[i].offsetWidth / 2;
+      var distance=Math.abs(cardCenter-center);
+      if(distance<bestDistance){
+        bestDistance=distance;
+        bestIndex=i;
+      }
+    }
+    return bestIndex;
+  }
+
+  function centerCard(index, behavior){
+    var list=cardList();
+    if(!list.length) return;
+    index=clamp(index,0,list.length-1);
+    var card=list[index];
+    var target=card.offsetLeft - ((cards.clientWidth - card.clientWidth) / 2);
+    target=clamp(target,0,maxScrollLeft());
+    cards.scrollTo({left:target,behavior:behavior || 'smooth'});
+  }
+
+  // Existing dots call this global. Keep name, replace fragile scrollIntoView behavior.
+  window.goToCard=function(i){
+    centerCard(i,'smooth');
+  };
+
+  function isInsideCards(target){
+    return !!(target && (target === cards || (target.closest && target.closest('#cards') === cards)));
+  }
+
+  var wheelLocked=false;
+  window.addEventListener('wheel',function(e){
+    if(!isDesktop()) return;
+    if(!isInsideCards(e.target)) return;
+
+    // Requirement: page must not scroll while mouse wheel is over the Wissenskarten.
+    e.preventDefault();
+    e.stopPropagation();
+
+    if(wheelLocked) return;
+
+    var deltaY=e.deltaY || 0;
+    var deltaX=e.deltaX || 0;
+    var delta=Math.abs(deltaY) >= Math.abs(deltaX) ? deltaY : deltaX;
+    if(!delta) return;
+
+    var direction=delta > 0 ? 1 : -1;
+    var next=nearestIndex() + direction;
+    centerCard(next,'smooth');
+
+    wheelLocked=true;
+    window.setTimeout(function(){
+      wheelLocked=false;
+    },360);
+  },{passive:false,capture:true});
+
+  var dragging=false;
+  var realDrag=false;
+  var suppressClick=false;
+  var startX=0;
+  var startY=0;
+  var startLeft=0;
+  var DRAG_THRESHOLD=8;
+
+  cards.addEventListener('mousedown',function(e){
+    if(!isDesktop()) return;
+    if(e.button !== 0) return;
+    dragging=true;
+    realDrag=false;
+    startX=e.clientX;
+    startY=e.clientY;
+    startLeft=cards.scrollLeft;
+  });
+
+  document.addEventListener('mousemove',function(e){
+    if(!dragging) return;
+    var dx=e.clientX-startX;
+    var dy=e.clientY-startY;
+
+    if(!realDrag && Math.abs(dx)>DRAG_THRESHOLD && Math.abs(dx)>Math.abs(dy)){
+      realDrag=true;
+      suppressClick=true;
+      cards.classList.add('is-mouse-dragging');
+    }
+
+    if(realDrag){
+      e.preventDefault();
+      cards.scrollLeft=clamp(startLeft-dx,0,maxScrollLeft());
+    }
+  });
+
+  function stopDrag(){
+    if(!dragging) return;
+    dragging=false;
+    realDrag=false;
+    cards.classList.remove('is-mouse-dragging');
+  }
+
+  document.addEventListener('mouseup',stopDrag);
+  window.addEventListener('blur',stopDrag);
+
+  cards.addEventListener('click',function(e){
+    if(!suppressClick) return;
+    suppressClick=false;
+    e.preventDefault();
+    e.stopPropagation();
+  },true);
+})();
+</script>
+
+
+<script id="ps-erklaerung-reader-overlay-fix-v1">
+(function(){
+  var root=document.querySelector('.ps-erklaerung-scope');
+  if(!root) return;
+  var reader=root.querySelector('#reader') || root.querySelector('.reader');
+  if(!reader) return;
+
+  function lockReader(){
+    document.documentElement.classList.add('ps-erklaerung-reader-open');
+    document.body.classList.add('ps-erklaerung-reader-open');
+    reader.setAttribute('aria-modal','true');
+    reader.setAttribute('role','dialog');
+    reader.setAttribute('aria-hidden','false');
+    reader.scrollTop=0;
+    var content=reader.querySelector('.readerContent');
+    if(content) content.scrollTop=0;
+  }
+
+  function unlockReader(){
+    document.documentElement.classList.remove('ps-erklaerung-reader-open');
+    document.body.classList.remove('ps-erklaerung-reader-open');
+    reader.setAttribute('aria-hidden','true');
+  }
+
+  var originalOpen=window.openReader;
+  var originalClose=window.closeErklaerungReader;
+
+  window.openReader=function(card){
+    if(typeof originalOpen === 'function'){
+      originalOpen(card);
+    }
+    reader.classList.add('active');
+    lockReader();
+  };
+
+  window.closeErklaerungReader=function(){
+    if(typeof originalClose === 'function'){
+      originalClose();
+    }else{
+      reader.classList.remove('active');
+    }
+    unlockReader();
+  };
+
+  document.addEventListener('keydown',function(e){
+    if(e.key === 'Escape' && reader.classList.contains('active')){
+      window.closeErklaerungReader();
+    }
+  });
+
+  reader.addEventListener('click',function(e){
+    if(e.target === reader){
+      window.closeErklaerungReader();
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
