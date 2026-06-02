@@ -3172,7 +3172,7 @@ html{scroll-padding-top:calc(var(--ps-sticky-real-height) + 10px);}
 
 
 
-<style id="ps-erklaerung-carousel-clean-desktop-v1">
+<style id="ps-erklaerung-carousel-clean-desktop-css-v1">
 /* Sauberer Desktop-Fix Wissenskarten:
    - entfernt alte mandatory-snap-Probleme im Desktop-Mausmodus
    - erzwingt echten horizontalen Overflow
@@ -3234,9 +3234,23 @@ html{scroll-padding-top:calc(var(--ps-sticky-real-height) + 10px);}
 </style>
 
 
-<style id="ps-erklaerung-reader-overlay-fix-v1">
-/* Wissenskarten-Reader als echtes eigenständiges Overlay.
-   Ziel: kein Überlagern durch Website-Teile, kein Hintergrundscroll, eigener Scrollbereich. */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style id="ps-erklaerung-reader-consolidated-css-v1">
+/* Konsolidierter Wissenskarten-Reader nach Cleanup Schritt 2.
+   Ersetzt die zuvor gestapelten Overlay-/Spacing-/Flicker-Fixes. */
 .ps-erklaerung-scope .reader{
   position:fixed !important;
   inset:0 !important;
@@ -3251,62 +3265,74 @@ html{scroll-padding-top:calc(var(--ps-sticky-real-height) + 10px);}
   overflow:hidden !important;
   overscroll-behavior:contain !important;
   isolation:isolate !important;
+  transform:none !important;
+  transition:none !important;
 }
 
 .ps-erklaerung-scope .reader:not(.active){
   display:none !important;
+  visibility:hidden !important;
+  opacity:0 !important;
   pointer-events:none !important;
 }
 
-.ps-erklaerung-scope .reader.active{
+.ps-erklaerung-scope .reader.active,
+.ps-erklaerung-scope .reader.open.active{
   display:flex !important;
   flex-direction:column !important;
+  visibility:visible !important;
+  opacity:1 !important;
   pointer-events:auto !important;
 }
 
-.ps-erklaerung-scope .readerTop{
+.ps-erklaerung-scope .reader.active .readerTop{
   position:sticky !important;
   top:0 !important;
-  z-index:3 !important;
+  z-index:2147483001 !important;
   flex:0 0 auto !important;
-  width:100% !important;
+  width:min(1100px, calc(100vw - 24px)) !important;
+  max-width:min(1100px, calc(100vw - 24px)) !important;
+  margin:0 auto !important;
+  padding:8px 16px !important;
+  display:flex !important;
+  justify-content:flex-end !important;
   background:rgba(247,252,255,.96) !important;
+  border-bottom:1px solid rgba(31,100,170,.08) !important;
+  border-radius:0 0 22px 22px !important;
   backdrop-filter:blur(14px) !important;
   -webkit-backdrop-filter:blur(14px) !important;
+  pointer-events:auto !important;
 }
 
-.ps-erklaerung-scope .readerBody,
-.ps-erklaerung-scope .readerScroll,
-.ps-erklaerung-scope .readerContent{
-  min-height:0 !important;
+.ps-erklaerung-scope .reader.active .close{
+  pointer-events:auto !important;
+  position:relative !important;
+  z-index:2147483002 !important;
 }
 
 .ps-erklaerung-scope .readerContent{
   flex:1 1 auto !important;
+  min-height:0 !important;
   width:100% !important;
   max-width:900px !important;
   margin:0 auto !important;
-  padding:8px clamp(18px,4vw,42px) 32px !important;
+  padding:6px clamp(18px,4vw,42px) 32px !important;
   overflow-y:auto !important;
   overflow-x:hidden !important;
   overscroll-behavior:contain !important;
   -webkit-overflow-scrolling:touch !important;
 }
 
-.ps-erklaerung-scope .readerCard{
-  position:relative !important;
-  z-index:2 !important;
-  width:100% !important;
-  max-width:760px !important;
-  margin:0 auto !important;
-  max-height:none !important;
-  overflow:visible !important;
+.ps-erklaerung-scope .readerContent > *:first-child{
+  margin-top:0 !important;
 }
 
+/* Hintergrund während Wissenskarte verborgen, aber ohne height:100%-Kollaps. */
 html.ps-erklaerung-reader-open,
 html.ps-erklaerung-reader-open body{
+  height:auto !important;
+  min-height:100% !important;
   overflow:hidden !important;
-  height:100% !important;
 }
 
 html.ps-erklaerung-reader-open .ps-header-scope,
@@ -3323,75 +3349,94 @@ html.ps-erklaerung-reader-open .ps-erklaerung-scope > *:not(.reader){
   pointer-events:none !important;
 }
 
-@media (max-width: 560px){
+@media (max-width:560px){
   .ps-erklaerung-scope .reader{
     height:100svh !important;
     min-height:100svh !important;
   }
 
-  .ps-erklaerung-scope .readerContent{
-    padding:6px 16px 28px !important;
-  }
-}
-</style>
-
-
-<style id="ps-erklaerung-reader-spacing-final-v1">
-/* Finaler Mini-Patch Wissenskarten-Reader:
-   blockierende ältere Reader-Abstände werden hier gezielt überstimmt. */
-.ps-erklaerung-scope .reader.active .readerTop{
-  width:min(1100px, calc(100vw - 24px)) !important;
-  max-width:min(1100px, calc(100vw - 24px)) !important;
-  margin:0 auto !important;
-  left:auto !important;
-  right:auto !important;
-  border-radius:0 0 22px 22px !important;
-}
-
-.ps-erklaerung-scope .reader.active .readerContent{
-  padding-top:6px !important;
-  padding-bottom:32px !important;
-}
-
-.ps-erklaerung-scope .reader.active .readerCard,
-.ps-erklaerung-scope .reader.active .readerContent > *:first-child{
-  margin-top:0 !important;
-}
-
-@media (max-width: 560px){
   .ps-erklaerung-scope .reader.active .readerTop{
     width:calc(100vw - 20px) !important;
     max-width:calc(100vw - 20px) !important;
+    padding:6px 16px !important;
     border-radius:0 0 18px 18px !important;
   }
 
-  .ps-erklaerung-scope .reader.active .readerContent{
-    padding-top:4px !important;
-    padding-bottom:28px !important;
+  .ps-erklaerung-scope .readerContent{
+    padding:4px 16px 28px !important;
   }
 }
 </style>
 
 
-<style id="ps-erklaerung-reader-top-offset-final-v1">
-/* Finaler Fix: alter Sticky-Header-Sicherheitsabstand drückte das X im Wissenskarten-Reader zu tief. */
-.ps-erklaerung-scope .reader.active .readerTop{
-  padding-top:8px !important;
-  padding-bottom:8px !important;
+<style id="ps-ablauf-reader-overlay-hardening-css-v1">
+/* Ablauf-Reader Overlay-Härtung:
+   Verhindert sichtbare Pricing-/Nachbarsektionen, wenn der Reader an Section-Grenzen geöffnet wird.
+   Kein Body-Freeze, kein scrollTo. */
+.ps-ablauf-scope .reader{
+  z-index:2147482000 !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+  transition:none !important;
 }
 
-.ps-erklaerung-scope .reader.active .readerContent{
-  padding-top:6px !important;
+.ps-ablauf-scope .reader.is-open{
+  display:flex !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  pointer-events:auto !important;
+  transform:none !important;
+}
+
+.ps-ablauf-scope .reader.is-open .readerTop{
+  position:sticky !important;
+  top:0 !important;
+  z-index:2147482001 !important;
+  pointer-events:auto !important;
+}
+
+.ps-ablauf-scope .reader.is-open .close{
+  position:relative !important;
+  z-index:2147482002 !important;
+  pointer-events:auto !important;
+}
+
+/* Hintergrund ausblenden, solange Ablauf-Reader offen ist. */
+html.ps-ablauf-reader-open .ps-header-scope,
+html.ps-ablauf-reader-open .ps-hero-scope,
+html.ps-ablauf-reader-open .ps-erklaerung-scope,
+html.ps-ablauf-reader-open .ps-pricing-scope,
+html.ps-ablauf-reader-open .ps-footer-scope{
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+
+html.ps-ablauf-reader-open .ps-ablauf-scope > *:not(.reader){
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+</style>
+
+
+<style id="ps-ablauf-reader-header-slim-v1">
+/* Ablaufkarten: gleicher schmaler Header wie Wissenskarten */
+.ps-ablauf-scope .reader.is-open .readerTop{
+  width:min(1100px, calc(100vw - 24px)) !important;
+  max-width:min(1100px, calc(100vw - 24px)) !important;
+  margin:0 auto !important;
+  padding:8px 16px !important;
+  padding-top:8px !important;
+  border-radius:0 0 22px 22px !important;
+  background:rgba(247,252,255,.96) !important;
+  border-bottom:1px solid rgba(31,100,170,.08) !important;
 }
 
 @media (max-width:560px){
-  .ps-erklaerung-scope .reader.active .readerTop{
-    padding-top:6px !important;
-    padding-bottom:6px !important;
-  }
-
-  .ps-erklaerung-scope .reader.active .readerContent{
-    padding-top:4px !important;
+  .ps-ablauf-scope .reader.is-open .readerTop{
+    width:calc(100vw - 20px) !important;
+    max-width:calc(100vw - 20px) !important;
+    padding:6px 16px !important;
+    border-radius:0 0 18px 18px !important;
   }
 }
 </style>
@@ -3723,7 +3768,7 @@ Diese Datengrundlage ermöglicht eine ärztliche Diagnose – unabhängig davon,
   const burger=document.querySelector('.ps-header-scope .burger');
   function syncBodyScrollLock(){
     const menuOpen=!!header?.classList.contains('psynoviaMenuOpen');
-    const erkOpen=!!document.querySelector('.ps-erklaerung-scope .reader.open');
+    const erkOpen=!!document.querySelector('.ps-erklaerung-scope .reader.open, .ps-erklaerung-scope .reader.active');
     const ablaufOpen=!!document.querySelector('.ps-ablauf-scope .reader.is-open');
     document.body.style.overflow=(menuOpen||erkOpen||ablaufOpen)?'hidden':'';
   }
@@ -3815,20 +3860,38 @@ Diese Datengrundlage ermöglicht eine ärztliche Diagnose – unabhängig davon,
   }
   window.openReader=function(el){
     if(!reader||!rTitle||!rText||!el) return;
+
     rTitle.textContent=el.dataset.title||'';
     rText.innerHTML=(el.dataset.title==='So arbeitet Psynovia') ? formatPsynoviaWorkText(el.dataset.text||'') : formatText(el.dataset.text||'');
-    reader.classList.add('open');
+
+    reader.classList.add('open','active');
+    reader.style.display='flex';
+    reader.style.visibility='visible';
+    reader.style.opacity='1';
     reader.setAttribute('aria-hidden','false');
+    reader.setAttribute('aria-modal','true');
+    reader.setAttribute('role','dialog');
+
+    document.documentElement.classList.add('ps-erklaerung-reader-open');
+    document.body.classList.add('ps-erklaerung-reader-open');
     if(window.psynoviaSyncBodyScrollLock) window.psynoviaSyncBodyScrollLock();
     else document.body.style.overflow='hidden';
+
     const scroller=reader.querySelector('.readerContent');
     if(scroller) scroller.scrollTop=0;
   };
   window.closeErklaerungReader=function(){
     if(reader){
-      reader.classList.remove('open');
+      reader.classList.remove('open','active');
+      reader.style.display='none';
+      reader.style.visibility='hidden';
+      reader.style.opacity='0';
       reader.setAttribute('aria-hidden','true');
     }
+
+    document.documentElement.classList.remove('ps-erklaerung-reader-open');
+    document.body.classList.remove('ps-erklaerung-reader-open');
+
     if(window.psynoviaSyncBodyScrollLock) window.psynoviaSyncBodyScrollLock();
     else document.body.style.overflow='';
   };
@@ -3902,7 +3965,7 @@ Diese Datengrundlage ermöglicht eine ärztliche Diagnose – unabhängig davon,
 
 
 
-<script id="ps-erklaerung-carousel-clean-desktop-v1">
+<script id="ps-erklaerung-carousel-clean-desktop-js-v1">
 (function(){
   var root=document.querySelector('.ps-erklaerung-scope');
   if(!root) return;
@@ -4042,59 +4105,62 @@ Diese Datengrundlage ermöglicht eine ärztliche Diagnose – unabhängig davon,
 </script>
 
 
-<script id="ps-erklaerung-reader-overlay-fix-v1">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script id="ps-ablauf-reader-overlay-hardening-js-v1">
 (function(){
-  var root=document.querySelector('.ps-erklaerung-scope');
+  var root=document.querySelector('.ps-ablauf-scope');
   if(!root) return;
-  var reader=root.querySelector('#reader') || root.querySelector('.reader');
+  var reader=root.querySelector('#reader');
   if(!reader) return;
 
-  function lockReader(){
-    document.documentElement.classList.add('ps-erklaerung-reader-open');
-    document.body.classList.add('ps-erklaerung-reader-open');
-    reader.setAttribute('aria-modal','true');
-    reader.setAttribute('role','dialog');
-    reader.setAttribute('aria-hidden','false');
-    reader.scrollTop=0;
-    var content=reader.querySelector('.readerContent');
-    if(content) content.scrollTop=0;
+  function setAblaufReaderOpen(open){
+    document.documentElement.classList.toggle('ps-ablauf-reader-open',open);
+    document.body.classList.toggle('ps-ablauf-reader-open',open);
   }
 
-  function unlockReader(){
-    document.documentElement.classList.remove('ps-erklaerung-reader-open');
-    document.body.classList.remove('ps-erklaerung-reader-open');
-    reader.setAttribute('aria-hidden','true');
-  }
+  root.querySelectorAll('[data-key]').forEach(function(el){
+    el.addEventListener('click',function(){
+      window.setTimeout(function(){
+        if(reader.classList.contains('is-open')){
+          setAblaufReaderOpen(true);
+        }
+      },0);
+    });
+  });
 
-  var originalOpen=window.openReader;
-  var originalClose=window.closeErklaerungReader;
-
-  window.openReader=function(card){
-    if(typeof originalOpen === 'function'){
-      originalOpen(card);
-    }
-    reader.classList.add('active');
-    lockReader();
-  };
-
-  window.closeErklaerungReader=function(){
-    if(typeof originalClose === 'function'){
-      originalClose();
-    }else{
-      reader.classList.remove('active');
-    }
-    unlockReader();
-  };
+  var observer=new MutationObserver(function(){
+    setAblaufReaderOpen(reader.classList.contains('is-open'));
+  });
+  observer.observe(reader,{attributes:true,attributeFilter:['class']});
 
   document.addEventListener('keydown',function(e){
-    if(e.key === 'Escape' && reader.classList.contains('active')){
-      window.closeErklaerungReader();
+    if(e.key==='Escape' && reader.classList.contains('is-open')){
+      window.setTimeout(function(){
+        setAblaufReaderOpen(reader.classList.contains('is-open'));
+      },0);
     }
   });
 
   reader.addEventListener('click',function(e){
-    if(e.target === reader){
-      window.closeErklaerungReader();
+    if(e.target===reader){
+      window.setTimeout(function(){
+        setAblaufReaderOpen(reader.classList.contains('is-open'));
+      },0);
     }
   });
 })();
