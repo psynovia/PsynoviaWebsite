@@ -857,6 +857,185 @@ body.v50-privacy-reader-open{
 body.psynovia-resume-open{overflow:hidden!important}
 </style>
 
+
+
+
+<style id="psynovia-v25-2-desktop-wrapper-scroll-fix">
+/* V25.2 – Desktop wrapper/scroll fix.
+   Mobile stays untouched. Applies only to desktop and large tablets. */
+@media (min-width: 900px){
+  html,
+  body{
+    height:auto !important;
+    min-height:100% !important;
+    overflow-x:hidden !important;
+    overflow-y:auto !important;
+  }
+
+  .app{
+    width:100% !important;
+    min-height:100vh !important;
+    height:auto !important;
+    overflow:visible !important;
+    align-items:flex-start !important;
+  }
+
+  .phone{
+    width:100% !important;
+    max-width:900px !important;
+    min-height:100vh !important;
+    height:auto !important;
+    overflow:visible !important;
+    margin:0 auto !important;
+    padding-left:clamp(24px,4vw,48px) !important;
+    padding-right:clamp(24px,4vw,48px) !important;
+    padding-bottom:56px !important;
+  }
+
+  .panel{
+    width:100% !important;
+    max-width:100% !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    overflow:visible !important;
+  }
+
+  .panel.active{
+    display:flex !important;
+    flex-direction:column !important;
+  }
+
+  .q-card,
+  .result-card,
+  .stop-card{
+    width:100% !important;
+    max-width:760px !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    overflow:visible !important;
+    margin-left:auto !important;
+    margin-right:auto !important;
+    padding:clamp(24px,3vw,34px) !important;
+    border-radius:28px !important;
+  }
+
+  .context-screen .q-card,
+  #v50BasisPanel .q-card,
+  #v50PrivacyPanel .q-card,
+  #v50ContractPanel .q-card,
+  #resultPanel .result-card{
+    overflow:visible !important;
+  }
+
+  .question,
+  .result-title,
+  .stop-title,
+  .q-card h1{
+    max-width:100% !important;
+    overflow-wrap:anywhere !important;
+    font-size:clamp(30px,3.2vw,42px) !important;
+    line-height:1.08 !important;
+  }
+
+  .hint,
+  .q-card p,
+  .result-card p,
+  .stop-card p{
+    font-size:clamp(15px,1.2vw,17px) !important;
+    line-height:1.48 !important;
+  }
+
+  .answers,
+  .chip-grid,
+  .answer-grid,
+  .option-grid{
+    max-width:100% !important;
+  }
+
+  .chip,
+  .answer,
+  .option{
+    min-height:48px !important;
+    font-size:15px !important;
+  }
+
+  .nextbtn,
+  .final-button,
+  button.nextbtn,
+  button.final-button{
+    min-height:54px !important;
+    font-size:17px !important;
+    border-radius:18px !important;
+    position:relative !important;
+    bottom:auto !important;
+  }
+}
+
+@media (min-width: 1280px){
+  .phone{
+    max-width:960px !important;
+  }
+
+  .q-card,
+  .result-card,
+  .stop-card{
+    max-width:800px !important;
+  }
+}
+</style>
+
+
+<style id="psynovia-v25-5-pointer-button-stability">
+/* V25.5 – interaction affordance only. No routing fallback. */
+button,
+[role="button"],
+.answer,
+.chip,
+.nextbtn,
+.final-button,
+.cta,
+.task-tap{
+  cursor:pointer !important;
+}
+
+button *,
+.answer *,
+.chip *,
+.nextbtn *,
+.final-button *,
+.cta *,
+.task-tap *{
+  cursor:inherit !important;
+}
+
+button:disabled,
+button:disabled *,
+.nextbtn:disabled,
+.nextbtn:disabled *,
+.final-button:disabled,
+.final-button:disabled *{
+  cursor:not-allowed !important;
+}
+</style>
+
+
+<style id="psynovia-v25-6-sex-at-birth-css">
+#v50BasisPanel .basis-sex-block{
+  margin-top:clamp(8px,1.6dvh,12px);
+}
+#v50BasisPanel .basis-sex-hint{
+  margin:6px 0 0 3px;
+  color:#60788d;
+  font-size:clamp(11.5px,3.05vw,13px);
+  line-height:1.36;
+}
+#v50BasisPanel #v50SexAtBirthChips{
+  margin-top:10px;
+}
+</style>
+
 </head>
 <body>
 <div class="app"><div class="phone">
@@ -985,7 +1164,7 @@ window.psynoviaStorage = {
 window.state=state;
 function next(){ if(qIndex < questions.length-1) showQuestion(qIndex+1); else showResult(); }
 
-function showQuestion(i){
+function showQuestion(i){try{setProgressStep("screening_question",{questionIndex:i});}catch(e){}
   qIndex=i; const x=questions[i]; setPanel('questionPanel'); updateProgress(x.phase,pct()); $('questionPanel').classList.toggle('is-mini-gonogo', x.type==='mini_gonogo');
   $('qKicker').textContent=x.k; $('qCount').textContent=isScoredQuestion(x)?(scoredQuestionNumber(i)+' / '+totalScoredQuestions()):'Vorgeschmack'; $('qIcon').textContent=x.icon; $('qTitle').textContent=x.q; $('qHint').textContent=x.hint||''; $('extraArea').innerHTML=''; $('answers').innerHTML='';
   if(x.type==='mini_gonogo') return renderMiniTask();
@@ -1136,7 +1315,7 @@ function computeScreeningResult(){
   };
 }
 
-function showResult(){
+function showResult(){try{setProgressStep("screening_result");}catch(e){}
   const result = computeScreeningResult();
   state.screening = result;
   save();
@@ -1237,7 +1416,7 @@ window.addEventListener('resize', applyViewportClass);
 (function(){
 const $=id=>document.getElementById(id);
 function getState(){if(!window.state)window.state={answers:{},context:{},basis:{},consents:{},miniTask:null,createdAt:new Date().toISOString()};if(!window.state.context)window.state.context={};if(!window.state.consents)window.state.consents={};return window.state}
-function persistState(){if(window.psynoviaStorage&&typeof window.psynoviaStorage.save==="function")return window.psynoviaStorage.persistState();if(typeof window.save==="function")return window.persistState();}
+function persistState(){if(window.psynoviaStorage&&typeof window.psynoviaStorage.save==="function")return window.psynoviaStorage.save();if(typeof window.save==="function")return window.save();}
 function show(p){document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));p.classList.add("active");window.scrollTo({top:0,behavior:"smooth"})}
 function panel(id,cls,content){let p=$(id);if(!p){p=document.createElement("section");p.id=id;p.className=cls||"panel question-panel";document.querySelector("main").appendChild(p)}p.innerHTML=content;return p}
 function meta(a,b,c){
@@ -1251,14 +1430,14 @@ function meta(a,b,c){
 }
 function sel(p){return Array.from(p.querySelectorAll(".chip.selected")).map(b=>b.dataset.value).filter(Boolean)}
 function chips(p){p.querySelectorAll(".chip").forEach(b=>{b.onclick=()=>{b.classList.toggle("selected");b.setAttribute("aria-pressed",b.classList.contains("selected")?"true":"false")}})}
-function routeToMedical(){const p=panel("v50MedicalPanel","panel question-panel context-screen",`<div class="q-card"><div class="q-top"><div class="q-kicker">Klinischer Kontext</div><div class="q-count">Körperliche Faktoren</div></div><h1 class="question">Gibt es körperliche oder neurologische Faktoren, die für die Einordnung wichtig sein könnten?</h1><p class="hint">Manche körperlichen oder neurologischen Faktoren können Aufmerksamkeit, Antrieb, Schlaf oder Konzentration beeinflussen. Bitte wählen Sie aus, was bei Ihnen bekannt ist.</p><div class="chips"><button type="button" class="chip" data-value="none">Keine bekannt</button><button type="button" class="chip" data-value="thyroid">Schilddrüsenerkrankung</button><button type="button" class="chip" data-value="epilepsy">Epilepsie / Krampfanfälle</button><button type="button" class="chip" data-value="tbi">Schädel-Hirn-Trauma / Gehirnerschütterungen</button><button type="button" class="chip" data-value="sleep_apnea">Schlafstörung / Schlafapnoe</button><button type="button" class="chip" data-value="chronic_pain">Chronische Schmerzen</button><button type="button" class="chip" data-value="migraine_neuro">Migräne / neurologische Erkrankung</button><button type="button" class="chip" data-value="cardio">Herz-Kreislauf-Erkrankung</button><button type="button" class="chip" data-value="hormonal">Hormonelle Erkrankung</button><button type="button" class="chip" data-value="pregnancy_postpartum">Schwangerschaft / Wochenbett</button><button type="button" class="chip" data-value="other">Sonstige relevante Erkrankung</button></div><div class="form-grid"><label><div class="label">Falls relevant: Welche Erkrankung oder medizinische Besonderheit?</div><textarea id="medicalNotes" placeholder="Optional"></textarea></label></div><div class="context-next"><button type="button" class="nextbtn" id="medicalNextBtn">Weiter</button></div></div>`);chips(p);$("medicalNextBtn").onclick=()=>{const s=getState();s.context.medical={selected:sel(p),notes:($("medicalNotes").value||"").trim()};persistState();routeToPsych()};meta("Klinischer Kontext","Phase 2","66%");show(p)}
-function routeToPsych(){const p=panel("v50PsychPanel","panel question-panel context-screen",`<div class="q-card"><div class="q-top"><div class="q-kicker">Klinischer Kontext</div><div class="q-count">Psychische Vorerkrankungen</div></div><h1 class="question">Gab oder gibt es psychische Diagnosen oder Behandlungen?</h1><p class="hint">Einige psychische Belastungen können ADHS ähneln, ADHS begleiten oder die Einordnung erschweren. Bitte wählen Sie aus, was bei Ihnen bekannt ist oder früher diagnostiziert wurde.</p><div class="chips"><button type="button" class="chip" data-value="none">Keine bekannt</button><button type="button" class="chip" data-value="depression">Depression</button><button type="button" class="chip" data-value="anxiety_panic">Angststörung / Panikstörung</button><button type="button" class="chip" data-value="ocd">Zwangsstörung</button><button type="button" class="chip" data-value="eating_disorder">Essstörung</button><button type="button" class="chip" data-value="ptsd">Traumafolgestörung / PTBS</button><button type="button" class="chip" data-value="bipolar">Bipolare Störung</button><button type="button" class="chip" data-value="psychosis">Psychose</button><button type="button" class="chip" data-value="substance">Substanzproblematik</button><button type="button" class="chip" data-value="autism">Autismus-Spektrum</button><button type="button" class="chip" data-value="personality">Persönlichkeitsproblematik</button><button type="button" class="chip" data-value="psychotherapy">Frühere oder aktuelle Psychotherapie</button><button type="button" class="chip" data-value="psychiatry">Frühere oder aktuelle psychiatrische Behandlung</button><button type="button" class="chip" data-value="other">Sonstiges</button></div><div class="form-grid"><label><div class="label">Falls relevant: Was wurde diagnostiziert oder behandelt?</div><textarea id="psychNotes" placeholder="Optional"></textarea></label></div><div class="context-next"><button type="button" class="nextbtn" id="psychNextBtn">Weiter</button></div></div>`);chips(p);$("psychNextBtn").onclick=()=>{const s=getState();s.context.psych={selected:sel(p),notes:($("psychNotes").value||"").trim()};persistState();routeToMedication()};meta("Klinischer Kontext","Phase 2","72%");show(p)}
-function routeToMedication(){const p=panel("v50MedicationPanel","panel question-panel context-screen",`<div class="q-card"><div class="q-top"><div class="q-kicker">Klinischer Kontext</div><div class="q-count">Aktuelle Medikation</div></div><h1 class="question">Nehmen Sie aktuell Medikamente ein?</h1><p class="hint">Medikamente können Aufmerksamkeit, Schlaf, Antrieb oder emotionale Regulation beeinflussen. Diese Angabe hilft, die späteren Ergebnisse fachlich sinnvoll einzuordnen.</p><div class="chips" id="medicationStatusChips"><button type="button" class="chip" data-value="no">Nein</button><button type="button" class="chip" data-value="yes">Ja</button></div><div class="form-grid medication-followup" id="medicationDetailsWrap" style="display:none"><label><div class="label">Bitte tragen Sie Medikament, Dosis und Einnahmezeitpunkt ein, soweit bekannt.</div><textarea id="medicationDetails" placeholder="Beispiel: Medikinet adult 20 mg morgens, Sertralin 50 mg morgens."></textarea></label></div><div class="context-next"><button type="button" class="nextbtn" id="medicationNextBtn">Weiter</button></div></div>`);const cs=Array.from(p.querySelectorAll("#medicationStatusChips .chip"));cs.forEach(b=>b.onclick=()=>{cs.forEach(x=>x.classList.remove("selected"));b.classList.add("selected");$("medicationDetailsWrap").style.display=b.dataset.value==="yes"?"grid":"none"});$("medicationNextBtn").onclick=()=>{const s=p.querySelector("#medicationStatusChips .chip.selected");if(!s){alert("Bitte wählen Sie aus, ob Sie aktuell Medikamente einnehmen.");return}const st=getState();st.context.medication={status:s.dataset.value,details:($("medicationDetails")?.value||"").trim()};persistState();routeToSafety()};meta("Klinischer Kontext","Phase 2","78%");show(p)}
-function routeToSafety(){const p=panel("v50SafetyPanel","panel question-panel context-screen",`<div class="q-card"><div class="q-top"><div class="q-kicker">Belastung und Sicherheit</div><div class="q-count">Versorgungsgrenze</div></div><h1 class="question">Hatten Sie in den letzten zwei Wochen Gedanken daran, nicht mehr leben zu wollen oder sich etwas anzutun?</h1><p class="hint">Bitte beantworten Sie diese Frage möglichst ehrlich. Psynovia ist keine Notfallversorgung.</p><div class="answers"><button type="button" class="answer" data-risk="none"><span class="ico">○</span><span class="answer-copy"><strong>Nein</strong></span></button><button type="button" class="answer" data-risk="mild"><span class="ico">◔</span><span class="answer-copy"><strong>Gelegentlich solche Gedanken</strong></span></button><button type="button" class="answer" data-risk="moderate"><span class="ico">◐</span><span class="answer-copy"><strong>Häufig solche Gedanken</strong></span></button><button type="button" class="answer" data-risk="acute"><span class="ico">●</span><span class="answer-copy"><strong>Ich würde mir etwas antun, wenn ich die Möglichkeit hätte</strong></span></button></div><div class="notice warn" id="moderateSafetyNotice" style="display:none">Falls diese Gedanken aktuell stark belastend sind, empfehlen wir zusätzlich eine persönliche ärztliche oder psychotherapeutische Unterstützung.</div></div>`);p.querySelectorAll("[data-risk]").forEach(b=>b.onclick=()=>{const r=b.dataset.risk,s=getState();s.context.safety={suicide_risk:r,stop:r==="acute",completed_iso:new Date().toISOString()};delete s.basis;delete s.consents;persistState();if(r==="acute")return routeToSafetyStop();if(r==="moderate")return routeToSafetyModerate();routeToBasisFallback()});meta("Sicherheit","Phase 2","82%");show(p)}
-function routeToSafetyModerate(){const p=panel("v50SafetyModeratePanel","panel question-panel context-screen",`<div class="q-card"><div class="q-top"><div class="q-kicker">Versorgungsgrenze</div><div class="q-count">Hinweis</div></div><h1 class="question">Bitte behalten Sie Ihre Sicherheit im Blick.</h1><p class="hint">Sie haben angegeben, in den letzten zwei Wochen häufig Gedanken daran gehabt zu haben, nicht mehr leben zu wollen oder sich etwas anzutun.</p><div class="notice warn">Eine digitale ADHS-Diagnostik kann hilfreich sein, ersetzt in dieser Situation aber keine persönliche Unterstützung. Wenn diese Gedanken aktuell stark belastend sind, wenden Sie sich bitte zusätzlich an eine ärztliche, psychotherapeutische oder psychiatrische Versorgungsstelle.<br><br><strong>Bei akuter Gefahr:</strong><br>Notruf: <strong>112</strong><br>Ärztlicher Bereitschaftsdienst: <strong>116117</strong><br>Telefonseelsorge: <strong>0800 1110111</strong></div><p class="hint">Wenn aktuell keine unmittelbare Gefahr besteht, können Sie mit der Praxisaufnahme fortfahren.</p><button type="button" class="nextbtn" id="v50SafetyModerateNext">Weiter</button></div>`);$("v50SafetyModerateNext").onclick=()=>routeToBasisFallback();meta("Versorgungsgrenze","Phase 2","84%");show(p)}
-function routeToSafetyStop(){const p=$("safetyStopPanel");if(p){meta("Versorgungsgrenze","Intake beendet","82%");show(p)}else alert("Bitte wenden Sie sich zeitnah an eine psychiatrische, psychotherapeutische oder notfallmäßige Versorgung.")}
+function routeToMedical(){try{setProgressStep("medical");}catch(e){}const p=panel("v50MedicalPanel","panel question-panel context-screen",`<div class="q-card"><div class="q-top"><div class="q-kicker">Klinischer Kontext</div><div class="q-count">Körperliche Faktoren</div></div><h1 class="question">Gibt es körperliche oder neurologische Faktoren, die für die Einordnung wichtig sein könnten?</h1><p class="hint">Manche körperlichen oder neurologischen Faktoren können Aufmerksamkeit, Antrieb, Schlaf oder Konzentration beeinflussen. Bitte wählen Sie aus, was bei Ihnen bekannt ist.</p><div class="chips"><button type="button" class="chip" data-value="none">Keine bekannt</button><button type="button" class="chip" data-value="thyroid">Schilddrüsenerkrankung</button><button type="button" class="chip" data-value="epilepsy">Epilepsie / Krampfanfälle</button><button type="button" class="chip" data-value="tbi">Schädel-Hirn-Trauma / Gehirnerschütterungen</button><button type="button" class="chip" data-value="sleep_apnea">Schlafstörung / Schlafapnoe</button><button type="button" class="chip" data-value="chronic_pain">Chronische Schmerzen</button><button type="button" class="chip" data-value="migraine_neuro">Migräne / neurologische Erkrankung</button><button type="button" class="chip" data-value="cardio">Herz-Kreislauf-Erkrankung</button><button type="button" class="chip" data-value="hormonal">Hormonelle Erkrankung</button><button type="button" class="chip" data-value="pregnancy_postpartum">Schwangerschaft / Wochenbett</button><button type="button" class="chip" data-value="other">Sonstige relevante Erkrankung</button></div><div class="form-grid"><label><div class="label">Falls relevant: Welche Erkrankung oder medizinische Besonderheit?</div><textarea id="medicalNotes" placeholder="Optional"></textarea></label></div><div class="context-next"><button type="button" class="nextbtn" id="medicalNextBtn">Weiter</button></div></div>`);chips(p);$("medicalNextBtn").onclick=()=>{const s=getState();s.context.medical={selected:sel(p),notes:($("medicalNotes").value||"").trim()};persistState();routeToPsych()};meta("Klinischer Kontext","Phase 2","66%");show(p)}
+function routeToPsych(){try{setProgressStep("psych");}catch(e){}const p=panel("v50PsychPanel","panel question-panel context-screen",`<div class="q-card"><div class="q-top"><div class="q-kicker">Klinischer Kontext</div><div class="q-count">Psychische Vorerkrankungen</div></div><h1 class="question">Gab oder gibt es psychische Diagnosen oder Behandlungen?</h1><p class="hint">Einige psychische Belastungen können ADHS ähneln, ADHS begleiten oder die Einordnung erschweren. Bitte wählen Sie aus, was bei Ihnen bekannt ist oder früher diagnostiziert wurde.</p><div class="chips"><button type="button" class="chip" data-value="none">Keine bekannt</button><button type="button" class="chip" data-value="depression">Depression</button><button type="button" class="chip" data-value="anxiety_panic">Angststörung / Panikstörung</button><button type="button" class="chip" data-value="ocd">Zwangsstörung</button><button type="button" class="chip" data-value="eating_disorder">Essstörung</button><button type="button" class="chip" data-value="ptsd">Traumafolgestörung / PTBS</button><button type="button" class="chip" data-value="bipolar">Bipolare Störung</button><button type="button" class="chip" data-value="psychosis">Psychose</button><button type="button" class="chip" data-value="substance">Substanzproblematik</button><button type="button" class="chip" data-value="autism">Autismus-Spektrum</button><button type="button" class="chip" data-value="personality">Persönlichkeitsproblematik</button><button type="button" class="chip" data-value="psychotherapy">Frühere oder aktuelle Psychotherapie</button><button type="button" class="chip" data-value="psychiatry">Frühere oder aktuelle psychiatrische Behandlung</button><button type="button" class="chip" data-value="other">Sonstiges</button></div><div class="form-grid"><label><div class="label">Falls relevant: Was wurde diagnostiziert oder behandelt?</div><textarea id="psychNotes" placeholder="Optional"></textarea></label></div><div class="context-next"><button type="button" class="nextbtn" id="psychNextBtn">Weiter</button></div></div>`);chips(p);$("psychNextBtn").onclick=()=>{const s=getState();s.context.psych={selected:sel(p),notes:($("psychNotes").value||"").trim()};persistState();routeToMedication()};meta("Klinischer Kontext","Phase 2","72%");show(p)}
+function routeToMedication(){try{setProgressStep("medication");}catch(e){}const p=panel("v50MedicationPanel","panel question-panel context-screen",`<div class="q-card"><div class="q-top"><div class="q-kicker">Klinischer Kontext</div><div class="q-count">Aktuelle Medikation</div></div><h1 class="question">Nehmen Sie aktuell Medikamente ein?</h1><p class="hint">Medikamente können Aufmerksamkeit, Schlaf, Antrieb oder emotionale Regulation beeinflussen. Diese Angabe hilft, die späteren Ergebnisse fachlich sinnvoll einzuordnen.</p><div class="chips" id="medicationStatusChips"><button type="button" class="chip" data-value="no">Nein</button><button type="button" class="chip" data-value="yes">Ja</button></div><div class="form-grid medication-followup" id="medicationDetailsWrap" style="display:none"><label><div class="label">Bitte tragen Sie Medikament, Dosis und Einnahmezeitpunkt ein, soweit bekannt.</div><textarea id="medicationDetails" placeholder="Beispiel: Medikinet adult 20 mg morgens, Sertralin 50 mg morgens."></textarea></label></div><div class="context-next"><button type="button" class="nextbtn" id="medicationNextBtn">Weiter</button></div></div>`);const cs=Array.from(p.querySelectorAll("#medicationStatusChips .chip"));cs.forEach(b=>b.onclick=()=>{cs.forEach(x=>x.classList.remove("selected"));b.classList.add("selected");$("medicationDetailsWrap").style.display=b.dataset.value==="yes"?"grid":"none"});$("medicationNextBtn").onclick=()=>{const s=p.querySelector("#medicationStatusChips .chip.selected");if(!s){alert("Bitte wählen Sie aus, ob Sie aktuell Medikamente einnehmen.");return}const st=getState();st.context.medication={status:s.dataset.value,details:($("medicationDetails")?.value||"").trim()};persistState();routeToSafety()};meta("Klinischer Kontext","Phase 2","78%");show(p)}
+function routeToSafety(){try{setProgressStep("safety");}catch(e){}const p=panel("v50SafetyPanel","panel question-panel context-screen",`<div class="q-card"><div class="q-top"><div class="q-kicker">Belastung und Sicherheit</div><div class="q-count">Versorgungsgrenze</div></div><h1 class="question">Hatten Sie in den letzten zwei Wochen Gedanken daran, nicht mehr leben zu wollen oder sich etwas anzutun?</h1><p class="hint">Bitte beantworten Sie diese Frage möglichst ehrlich. Psynovia ist keine Notfallversorgung.</p><div class="answers"><button type="button" class="answer" data-risk="none"><span class="ico">○</span><span class="answer-copy"><strong>Nein</strong></span></button><button type="button" class="answer" data-risk="mild"><span class="ico">◔</span><span class="answer-copy"><strong>Gelegentlich solche Gedanken</strong></span></button><button type="button" class="answer" data-risk="moderate"><span class="ico">◐</span><span class="answer-copy"><strong>Häufig solche Gedanken</strong></span></button><button type="button" class="answer" data-risk="acute"><span class="ico">●</span><span class="answer-copy"><strong>Ich würde mir etwas antun, wenn ich die Möglichkeit hätte</strong></span></button></div><div class="notice warn" id="moderateSafetyNotice" style="display:none">Falls diese Gedanken aktuell stark belastend sind, empfehlen wir zusätzlich eine persönliche ärztliche oder psychotherapeutische Unterstützung.</div></div>`);p.querySelectorAll("[data-risk]").forEach(b=>b.onclick=()=>{const r=b.dataset.risk,s=getState();s.context.safety={suicide_risk:r,stop:r==="acute",completed_iso:new Date().toISOString()};delete s.basis;delete s.consents;persistState();if(r==="acute")return routeToSafetyStop();if(r==="moderate")return routeToSafetyModerate();routeToBasisFallback()});meta("Sicherheit","Phase 2","82%");show(p)}
+function routeToSafetyModerate(){try{setProgressStep("safety_moderate");}catch(e){}const p=panel("v50SafetyModeratePanel","panel question-panel context-screen",`<div class="q-card"><div class="q-top"><div class="q-kicker">Versorgungsgrenze</div><div class="q-count">Hinweis</div></div><h1 class="question">Bitte behalten Sie Ihre Sicherheit im Blick.</h1><p class="hint">Sie haben angegeben, in den letzten zwei Wochen häufig Gedanken daran gehabt zu haben, nicht mehr leben zu wollen oder sich etwas anzutun.</p><div class="notice warn">Eine digitale ADHS-Diagnostik kann hilfreich sein, ersetzt in dieser Situation aber keine persönliche Unterstützung. Wenn diese Gedanken aktuell stark belastend sind, wenden Sie sich bitte zusätzlich an eine ärztliche, psychotherapeutische oder psychiatrische Versorgungsstelle.<br><br><strong>Bei akuter Gefahr:</strong><br>Notruf: <strong>112</strong><br>Ärztlicher Bereitschaftsdienst: <strong>116117</strong><br>Telefonseelsorge: <strong>0800 1110111</strong></div><p class="hint">Wenn aktuell keine unmittelbare Gefahr besteht, können Sie mit der Praxisaufnahme fortfahren.</p><button type="button" class="nextbtn" id="v50SafetyModerateNext">Weiter</button></div>`);$("v50SafetyModerateNext").onclick=()=>routeToBasisFallback();meta("Versorgungsgrenze","Phase 2","84%");show(p)}
+function routeToSafetyStop(){try{setProgressStep("safety_stop");}catch(e){}const p=$("safetyStopPanel");if(p){meta("Versorgungsgrenze","Intake beendet","82%");show(p)}else alert("Bitte wenden Sie sich zeitnah an eine psychiatrische, psychotherapeutische oder notfallmäßige Versorgung.")}
 
-function routeToBasisFallback(){const p=panel("v50BasisPanel","panel question-panel",`<div class="q-card"><div class="q-top"><div class="q-kicker">Aufnahme</div><div class="q-count">Basisdaten</div></div><h1 class="question">Persönliche Daten</h1><p class="hint">Diese Angaben werden für Zuordnung, Kontakt und Rechnung benötigt.</p><div class="form-grid"><label><div class="label">Vor- und Nachname</div><input id="v50BasisName" autocomplete="name"></label><label><div class="label">Geburtsdatum</div><input id="v50BasisBirth" type="date"><div id="v50BirthWarning" style="display:none">Psynovia richtet sich aktuell ausschließlich an Erwachsene ab 18 Jahren. Bitte überprüfen Sie Ihr Geburtsdatum.</div></label><label><div class="label">E-Mail-Adresse</div><input id="v50BasisEmail" type="email" autocomplete="email"></label><label><div class="label">Telefonnummer</div><input id="v50BasisPhone" type="tel" autocomplete="tel"></label></div><h2>Rechnungsadresse</h2><div class="form-grid"><label><div class="label">Straße und Hausnummer</div><input id="v50BasisStreet" autocomplete="street-address"></label><label><div class="label">PLZ</div><input id="v50BasisZip" inputmode="numeric" autocomplete="postal-code"></label><label><div class="label">Ort</div><input id="v50BasisCity" autocomplete="address-level2"></label><label><div class="label">Land</div><input id="v50BasisCountry" autocomplete="country-name" value="Deutschland"></label></div><h2>Abrechnung & Kostenerstattung</h2><div class="billing-hint">Die diagnostischen Leistungen von Psynovia werden nach der Gebührenordnung für Ärzte (GOÄ) abgerechnet und können bei privaten Krankenversicherungen sowie Beihilfestellen zur Kostenerstattung eingereicht werden.<br><br>Für gesetzlich Versicherte erfolgt die Nutzung zunächst als Selbstzahlerleistung. Wir empfehlen, vorab ein Kostenerstattungsverfahren bei Ihrer Krankenkasse einzuleiten.</div><p class="hint">Bitte geben Sie Ihren aktuellen Versicherungsstatus an:</p><div class="chips" id="v50InsuranceChips"><button type="button" class="chip" data-value="privat_versichert">Privat versichert</button><button type="button" class="chip" data-value="beihilfeberechtigt">Beihilfeberechtigt</button><button type="button" class="chip" data-value="gesetzlich_versichert">Gesetzlich versichert</button><button type="button" class="chip" data-value="selbstzahler">Selbstzahler</button></div><h2>Aktuelle Behandlung</h2><p class="hint">Befinden Sie sich aktuell in psychotherapeutischer oder psychiatrischer Behandlung?</p><div class="chips" id="v50TreatmentChips"><button type="button" class="chip" data-value="nein">Nein</button><button type="button" class="chip" data-value="psychotherapie">Psychotherapie</button><button type="button" class="chip" data-value="psychiatrische_behandlung">Psychiatrische Behandlung</button><button type="button" class="chip" data-value="beides">Beides</button></div><h2>Für unsere Planung</h2><p class="hint">Können Sie aktuell schon einschätzen, ob Sie nach der Datenerhebung zusätzlich ein diagnostisches Abschlussgespräch in Anspruch nehmen möchten?</p><div class="chips" id="v50InterviewChips"><button type="button" class="chip" data-value="ja_wahrscheinlich">Ja, wahrscheinlich</button><button type="button" class="chip" data-value="vielleicht">Vielleicht</button><button type="button" class="chip" data-value="eher_nicht">Eher nicht</button><button type="button" class="chip" data-value="unsicher">Ich bin mir noch unsicher</button></div><div class="planning-note">Diese Angabe dient ausschließlich unserer Planung. Sie ist unverbindlich und kann jederzeit geändert werden.</div><p class="hint" style="margin-top:18px"><strong>Wurden Sie von einer Praxis oder einem Behandler auf Psynovia hingewiesen?</strong></p><div class="chips" id="v50ReferralChips"><button type="button" class="chip" data-value="nein">Nein</button><button type="button" class="chip" data-value="ja">Ja</button></div><div class="form-grid" id="v50ReferralWrap" style="display:none"><label><div class="label">Von wem wurden Sie auf Psynovia hingewiesen?</div><input id="v50ReferralSource" placeholder="Name der Praxis oder des Behandlers"></label></div><h2>Optional</h2><label><div class="label">Was hat Sie dazu bewegt, diese Diagnostik zu beginnen?</div><textarea id="v50BasisReason" placeholder="Zum Beispiel: Ich habe schon lange das Gefühl, anders zu funktionieren und möchte besser verstehen, warum bestimmte Dinge im Alltag so schwerfallen."></textarea></label><button type="button" class="nextbtn" id="v50BasisNext">Weiter</button></div>`);["v50InsuranceChips","v50TreatmentChips","v50InterviewChips","v50ReferralChips"].forEach(id=>{const chips=Array.from(p.querySelectorAll("#"+id+" .chip"));chips.forEach(chip=>chip.onclick=()=>{chips.forEach(x=>x.classList.remove("selected"));chip.classList.add("selected");const group=$(id);if(group){group.classList.remove("is-invalid");const next=group.nextElementSibling;if(next&&next.classList.contains("field-warning"))next.remove()}if(id==="v50ReferralChips"){const wrap=$("v50ReferralWrap");if(wrap)wrap.style.display=chip.dataset.value==="ja"?"grid":"none"}})});
+function routeToBasisFallback(){try{setProgressStep("basis");}catch(e){}const p=panel("v50BasisPanel","panel question-panel",`<div class="q-card"><div class="q-top"><div class="q-kicker">Aufnahme</div><div class="q-count">Basisdaten</div></div><h1 class="question">Persönliche Daten</h1><p class="hint">Diese Angaben werden für Zuordnung, Kontakt und Rechnung benötigt.</p><div class="form-grid"><label><div class="label">Vor- und Nachname</div><input id="v50BasisName" autocomplete="name"></label><label><div class="label">Geburtsdatum</div><input id="v50BasisBirth" type="date"><div id="v50BirthWarning" style="display:none">Psynovia richtet sich aktuell ausschließlich an Erwachsene ab 18 Jahren. Bitte überprüfen Sie Ihr Geburtsdatum.</div></label><div class="basis-sex-block"><div class="label">Biologisches Geschlecht bei Geburt</div><div class="basis-sex-hint">Für die ADHS-Diagnostik kann das biologische Geschlecht relevant sein, da sich Symptomprofile und Kompensationsstrategien teilweise unterscheiden können.</div><div class="chips" id="v50SexAtBirthChips"><button type="button" class="chip" data-value="female">Weiblich</button><button type="button" class="chip" data-value="male">Männlich</button><button type="button" class="chip" data-value="intersex">Intergeschlechtlich</button></div></div><label><div class="label">E-Mail-Adresse</div><input id="v50BasisEmail" type="email" autocomplete="email"></label><label><div class="label">Telefonnummer</div><input id="v50BasisPhone" type="tel" autocomplete="tel"></label></div><h2>Rechnungsadresse</h2><div class="form-grid"><label><div class="label">Straße und Hausnummer</div><input id="v50BasisStreet" autocomplete="street-address"></label><label><div class="label">PLZ</div><input id="v50BasisZip" inputmode="numeric" autocomplete="postal-code"></label><label><div class="label">Ort</div><input id="v50BasisCity" autocomplete="address-level2"></label><label><div class="label">Land</div><input id="v50BasisCountry" autocomplete="country-name" value="Deutschland"></label></div><h2>Abrechnung & Kostenerstattung</h2><div class="billing-hint">Die diagnostischen Leistungen von Psynovia werden nach der Gebührenordnung für Ärzte (GOÄ) abgerechnet und können bei privaten Krankenversicherungen sowie Beihilfestellen zur Kostenerstattung eingereicht werden.<br><br>Für gesetzlich Versicherte erfolgt die Nutzung zunächst als Selbstzahlerleistung. Wir empfehlen, vorab ein Kostenerstattungsverfahren bei Ihrer Krankenkasse einzuleiten.</div><p class="hint">Bitte geben Sie Ihren aktuellen Versicherungsstatus an:</p><div class="chips" id="v50InsuranceChips"><button type="button" class="chip" data-value="privat_versichert">Privat versichert</button><button type="button" class="chip" data-value="beihilfeberechtigt">Beihilfeberechtigt</button><button type="button" class="chip" data-value="gesetzlich_versichert">Gesetzlich versichert</button><button type="button" class="chip" data-value="selbstzahler">Selbstzahler</button></div><h2>Aktuelle Behandlung</h2><p class="hint">Befinden Sie sich aktuell in psychotherapeutischer oder psychiatrischer Behandlung?</p><div class="chips" id="v50TreatmentChips"><button type="button" class="chip" data-value="nein">Nein</button><button type="button" class="chip" data-value="psychotherapie">Psychotherapie</button><button type="button" class="chip" data-value="psychiatrische_behandlung">Psychiatrische Behandlung</button><button type="button" class="chip" data-value="beides">Beides</button></div><h2>Für unsere Planung</h2><p class="hint">Können Sie aktuell schon einschätzen, ob Sie nach der Datenerhebung zusätzlich ein diagnostisches Abschlussgespräch in Anspruch nehmen möchten?</p><div class="chips" id="v50InterviewChips"><button type="button" class="chip" data-value="ja_wahrscheinlich">Ja, wahrscheinlich</button><button type="button" class="chip" data-value="vielleicht">Vielleicht</button><button type="button" class="chip" data-value="eher_nicht">Eher nicht</button><button type="button" class="chip" data-value="unsicher">Ich bin mir noch unsicher</button></div><div class="planning-note">Diese Angabe dient ausschließlich unserer Planung. Sie ist unverbindlich und kann jederzeit geändert werden.</div><p class="hint" style="margin-top:18px"><strong>Wurden Sie von einer Praxis oder einem Behandler auf Psynovia hingewiesen?</strong></p><div class="chips" id="v50ReferralChips"><button type="button" class="chip" data-value="nein">Nein</button><button type="button" class="chip" data-value="ja">Ja</button></div><div class="form-grid" id="v50ReferralWrap" style="display:none"><label><div class="label">Von wem wurden Sie auf Psynovia hingewiesen?</div><input id="v50ReferralSource" placeholder="Name der Praxis oder des Behandlers"></label></div><h2>Optional</h2><label><div class="label">Was hat Sie dazu bewegt, diese Diagnostik zu beginnen?</div><textarea id="v50BasisReason" placeholder="Zum Beispiel: Ich habe schon lange das Gefühl, anders zu funktionieren und möchte besser verstehen, warum bestimmte Dinge im Alltag so schwerfallen."></textarea></label><button type="button" class="nextbtn" id="v50BasisNext">Weiter</button></div>`);["v50SexAtBirthChips","v50InsuranceChips","v50TreatmentChips","v50InterviewChips","v50ReferralChips"].forEach(id=>{const chips=Array.from(p.querySelectorAll("#"+id+" .chip"));chips.forEach(chip=>chip.onclick=()=>{chips.forEach(x=>x.classList.remove("selected"));chip.classList.add("selected");const group=$(id);if(group){group.classList.remove("is-invalid");const next=group.nextElementSibling;if(next&&next.classList.contains("field-warning"))next.remove()}if(id==="v50ReferralChips"){const wrap=$("v50ReferralWrap");if(wrap)wrap.style.display=chip.dataset.value==="ja"?"grid":"none"}})});
 function basisIsUnder18(value){
   if(!value)return false;
   const match=String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
@@ -1363,6 +1542,7 @@ $("v50BasisNext").onclick=()=>{
       zip:required("v50BasisZip"),
       city:required("v50BasisCity"),
       country:required("v50BasisCountry"),
+      sex_at_birth:selected("#v50SexAtBirthChips .chip.selected"),
       insurance:selected("#v50InsuranceChips .chip.selected"),
       current_treatment:selected("#v50TreatmentChips .chip.selected"),
       interview_planning:selected("#v50InterviewChips .chip.selected"),
@@ -1405,7 +1585,7 @@ $("v50BasisNext").onclick=()=>{
   }
 };
 meta("Aufnahme","Phase 3","86%");show(p)}
-function routeToPrivacyFallback(){const p=panel("v50PrivacyPanel","panel question-panel",`<div class="q-card"><div class="q-top"><div class="q-kicker">Datenschutz</div><div class="q-count">Einwilligung</div></div><h1 class="question">Datenschutzhinweise</h1><p class="hint">Bitte öffnen und lesen Sie die Datenschutzhinweise vollständig. Die Datenschutz-Einwilligung wird erst nach dem Scrollen bis zum Ende freigegeben.</p><div class="privacy-summary-card"><p class="hint"><strong>Enthalten sind:</strong><br>Verarbeitung Ihrer Intake- und Gesundheitsdaten, Speicherung, Versand, Rechte und Kontakt.</p><button type="button" class="nextbtn" id="v50OpenPrivacyReader">Datenschutzhinweise lesen</button></div><div class="privacy-read-note" id="v50PrivacyReadNote">Bitte öffnen Sie die Datenschutzhinweise und scrollen Sie vollständig bis zum Ende.</div><label class="consent is-disabled" id="v50PrivacyConsentLabel"><input id="v50PrivacyConsent1" type="checkbox" disabled>Ich habe die Datenschutzhinweise vollständig gelesen und willige in die Verarbeitung meiner Daten im Rahmen der Intake- und Diagnostikleistung ein.</label><label class="consent optional-consent"><input id="v50EmailReportConsent" type="checkbox">Ich stimme ausdrücklich dem Erhalt des Ergebnisberichts per E-Mail zu.</label><label class="consent optional-consent"><input id="v50ResearchConsent" type="checkbox">Ich stimme der Verwendung vollständig anonymisierter Daten zu Forschungs- und Qualitätssicherungszwecken zu.</label><button type="button" class="nextbtn" id="v50PrivacyNext">Weiter</button></div><div id="v50PrivacyReaderOverlay" aria-hidden="true"><div class="reader-card" role="dialog" aria-modal="true" aria-label="Datenschutzhinweise"><div class="reader-head"><div class="reader-title">Datenschutzhinweise lesen</div><button type="button" class="reader-close" id="v50ClosePrivacyReader" aria-label="Schließen">×</button></div><div class="reader-body" id="v50PrivacyReaderBody">
+function routeToPrivacyFallback(){try{setProgressStep("privacy");}catch(e){}const p=panel("v50PrivacyPanel","panel question-panel",`<div class="q-card"><div class="q-top"><div class="q-kicker">Datenschutz</div><div class="q-count">Einwilligung</div></div><h1 class="question">Datenschutzhinweise</h1><p class="hint">Bitte öffnen und lesen Sie die Datenschutzhinweise vollständig. Die Datenschutz-Einwilligung wird erst nach dem Scrollen bis zum Ende freigegeben.</p><div class="privacy-summary-card"><p class="hint"><strong>Enthalten sind:</strong><br>Verarbeitung Ihrer Intake- und Gesundheitsdaten, Speicherung, Versand, Rechte und Kontakt.</p><button type="button" class="nextbtn" id="v50OpenPrivacyReader">Datenschutzhinweise lesen</button></div><div class="privacy-read-note" id="v50PrivacyReadNote">Bitte öffnen Sie die Datenschutzhinweise und scrollen Sie vollständig bis zum Ende.</div><label class="consent is-disabled" id="v50PrivacyConsentLabel"><input id="v50PrivacyConsent1" type="checkbox" disabled>Ich habe die Datenschutzhinweise vollständig gelesen und willige in die Verarbeitung meiner Daten im Rahmen der Intake- und Diagnostikleistung ein.</label><label class="consent optional-consent"><input id="v50EmailReportConsent" type="checkbox">Ich stimme ausdrücklich dem Erhalt des Ergebnisberichts per E-Mail zu.</label><label class="consent optional-consent"><input id="v50ResearchConsent" type="checkbox">Ich stimme der Verwendung vollständig anonymisierter Daten zu Forschungs- und Qualitätssicherungszwecken zu.</label><button type="button" class="nextbtn" id="v50PrivacyNext">Weiter</button></div><div id="v50PrivacyReaderOverlay" aria-hidden="true"><div class="reader-card" role="dialog" aria-modal="true" aria-label="Datenschutzhinweise"><div class="reader-head"><div class="reader-title">Datenschutzhinweise lesen</div><button type="button" class="reader-close" id="v50ClosePrivacyReader" aria-label="Schließen">×</button></div><div class="reader-body" id="v50PrivacyReaderBody">
 <h2>Psynovia Datenschutzhinweise Intake – Final</h2>
 
 <h3><strong>1. Verantwortlicher</strong></h3>
@@ -1551,7 +1731,7 @@ $("v50PrivacyNext").onclick=()=>{
   routeToContractFallback();
 };
 meta("Datenschutz","Phase 3","90%");show(p)}
-function routeToContractFallback(){const p=panel("v50ContractPanel","panel question-panel",`<div class="q-card"><div class="q-top"><div class="q-kicker">Behandlungsvertrag</div><div class="q-count">Einwilligung</div></div><h1 class="question">Behandlungsvertrag</h1><p class="hint">Bitte öffnen und lesen Sie den Behandlungsvertrag einschließlich Widerrufsbelehrung vollständig. Die Zustimmungen werden erst nach dem Scrollen bis zum Ende des Vertrags freigegeben.</p><div class="contract-summary-card"><p class="hint"><strong>Enthalten sind:</strong><br>Behandlungsvertrag, Widerrufsbelehrung und der Hinweis zum vorzeitigen Beginn der Leistungserbringung.</p><button type="button" class="nextbtn" id="v50OpenContractReader">Behandlungsvertrag lesen</button></div><div class="contract-read-note" id="v50ContractReadNote">Bitte öffnen Sie den Vertrag und scrollen Sie ihn vollständig bis zum Ende.</div><label class="consent is-disabled" id="v50ContractConsentLabel"><input id="v50ContractConsent1" type="checkbox" disabled>Ich habe den Behandlungsvertrag einschließlich Widerrufsbelehrung vollständig gelesen und akzeptiere ihn.</label><label class="consent is-disabled withdrawal-consent" id="v50WithdrawalConsentLabel"><input id="v50WithdrawalConsent1" type="checkbox" disabled>Ich verlange ausdrücklich, dass Psynovia bereits vor Ablauf der gesetzlichen Widerrufsfrist mit der Leistungserbringung beginnt. Mir ist bekannt, dass ich bei vollständiger Vertragserfüllung mein Widerrufsrecht verlieren kann.</label><button type="button" class="final-button" id="v50PayBtn">Datenerhebung buchen</button></div><div id="v50ContractReaderOverlay" aria-hidden="true"><div class="reader-card" role="dialog" aria-modal="true" aria-label="Behandlungsvertrag"><div class="reader-head"><div class="reader-title">Behandlungsvertrag lesen</div><button type="button" class="reader-close" id="v50CloseContractReader" aria-label="Schließen">×</button></div><div class="reader-body" id="v50ContractReaderBody"><h2>Behandlungsvertrag / Vereinbarung über digitale diagnostische Leistungen</h2><p>zwischen
+function routeToContractFallback(){try{setProgressStep("contract");}catch(e){}const p=panel("v50ContractPanel","panel question-panel",`<div class="q-card"><div class="q-top"><div class="q-kicker">Behandlungsvertrag</div><div class="q-count">Einwilligung</div></div><h1 class="question">Behandlungsvertrag</h1><p class="hint">Bitte öffnen und lesen Sie den Behandlungsvertrag einschließlich Widerrufsbelehrung vollständig. Die Zustimmungen werden erst nach dem Scrollen bis zum Ende des Vertrags freigegeben.</p><div class="contract-summary-card"><p class="hint"><strong>Enthalten sind:</strong><br>Behandlungsvertrag, Widerrufsbelehrung und der Hinweis zum vorzeitigen Beginn der Leistungserbringung.</p><button type="button" class="nextbtn" id="v50OpenContractReader">Behandlungsvertrag lesen</button></div><div class="contract-read-note" id="v50ContractReadNote">Bitte öffnen Sie den Vertrag und scrollen Sie ihn vollständig bis zum Ende.</div><label class="consent is-disabled" id="v50ContractConsentLabel"><input id="v50ContractConsent1" type="checkbox" disabled>Ich habe den Behandlungsvertrag einschließlich Widerrufsbelehrung vollständig gelesen und akzeptiere ihn.</label><label class="consent is-disabled withdrawal-consent" id="v50WithdrawalConsentLabel"><input id="v50WithdrawalConsent1" type="checkbox" disabled>Ich verlange ausdrücklich, dass Psynovia bereits vor Ablauf der gesetzlichen Widerrufsfrist mit der Leistungserbringung beginnt. Mir ist bekannt, dass ich bei vollständiger Vertragserfüllung mein Widerrufsrecht verlieren kann.</label><button type="button" class="final-button" id="v50PayBtn">Datenerhebung buchen</button></div><div id="v50ContractReaderOverlay" aria-hidden="true"><div class="reader-card" role="dialog" aria-modal="true" aria-label="Behandlungsvertrag"><div class="reader-head"><div class="reader-title">Behandlungsvertrag lesen</div><button type="button" class="reader-close" id="v50CloseContractReader" aria-label="Schließen">×</button></div><div class="reader-body" id="v50ContractReaderBody"><h2>Behandlungsvertrag / Vereinbarung über digitale diagnostische Leistungen</h2><p>zwischen
 
 Psynovia – Privatpraxis für Psychotherapie
 Inhaber: Tobias Winner
@@ -1833,7 +2013,7 @@ function prefillBasis(){
     if(!val)return;
     document.querySelectorAll("#"+groupId+" .chip").forEach(ch=>{if(ch.dataset.value===val)ch.classList.add("selected")});
   }
-  mark("v50InsuranceChips",b.insurance);
+  mark("v50SexAtBirthChips",b.sex_at_birth);mark("v50InsuranceChips",b.insurance);
   mark("v50TreatmentChips",b.current_treatment);
   mark("v50InterviewChips",b.interview_planning);
   mark("v50ReferralChips",b.referred_by_provider);
@@ -1907,6 +2087,135 @@ document.addEventListener("DOMContentLoaded",()=>{
 });
 })();
 </script>
+
+
+<script id="psynovia-v25-3-explicit-progress-resume">
+(function(){
+  const VALID_STEPS = new Set([
+    "screening_question",
+    "screening_result",
+    "medical",
+    "psych",
+    "medication",
+    "safety",
+    "safety_stop",
+    "safety_moderate",
+    "basis",
+    "privacy",
+    "contract"
+  ]);
+
+  function ensureState(){
+    if(!window.state || typeof window.state !== "object") window.state = {};
+    return window.state;
+  }
+
+  window.setProgressStep = function(step, extra){
+    if(!VALID_STEPS.has(step)) return;
+    const s = ensureState();
+    s.progress = s.progress || {};
+    s.progress.phase = "intake";
+    s.progress.step = step;
+    s.progress.updated_iso = new Date().toISOString();
+    if(extra && typeof extra === "object"){
+      Object.assign(s.progress, extra);
+    }
+    try{
+      if(window.psynoviaStorage && typeof window.psynoviaStorage.save === "function"){
+        window.psynoviaStorage.save();
+      }else if(typeof window.save === "function"){
+        window.save();
+      }else{
+        localStorage.setItem("psynovia_intake_v5_funnel", JSON.stringify(s));
+      }
+    }catch(e){}
+  };
+
+  function resumeByExplicitStep(){
+    const s = ensureState();
+    const step = s.progress && s.progress.step;
+    const flow = window.psynoviaV50Flow || {};
+    const legacy = window.psynoviaLegacyFlow || {};
+
+    /* Safety still has absolute priority, even over stored progress. */
+    const safety = s.context && s.context.safety;
+    if(safety && (safety.stop === true || safety.suicide_risk === "acute")){
+      if(typeof flow.routeToSafetyStop === "function") return flow.routeToSafetyStop();
+      if(typeof flow.routeToSafety === "function") return flow.routeToSafety();
+    }
+    if(safety && safety.suicide_risk === "moderate" && step !== "basis" && step !== "privacy" && step !== "contract"){
+      if(typeof flow.routeToSafetyModerate === "function") return flow.routeToSafetyModerate();
+      if(typeof flow.routeToSafety === "function") return flow.routeToSafety();
+    }
+
+    if(VALID_STEPS.has(step)){
+      switch(step){
+        case "screening_question":
+          if(typeof legacy.showQuestion === "function"){
+            const idx = Number.isInteger(s.progress.questionIndex) ? s.progress.questionIndex : 0;
+            return legacy.showQuestion(idx);
+          }
+          break;
+        case "screening_result":
+          if(typeof legacy.showResult === "function") return legacy.showResult();
+          break;
+        case "medical":
+          if(typeof flow.routeToMedical === "function") return flow.routeToMedical();
+          break;
+        case "psych":
+          if(typeof flow.routeToPsych === "function") return flow.routeToPsych();
+          break;
+        case "medication":
+          if(typeof flow.routeToMedication === "function") return flow.routeToMedication();
+          break;
+        case "safety":
+          if(typeof flow.routeToSafety === "function") return flow.routeToSafety();
+          break;
+        case "safety_stop":
+          if(typeof flow.routeToSafetyStop === "function") return flow.routeToSafetyStop();
+          if(typeof flow.routeToSafety === "function") return flow.routeToSafety();
+          break;
+        case "safety_moderate":
+          if(typeof flow.routeToSafetyModerate === "function") return flow.routeToSafetyModerate();
+          if(typeof flow.routeToSafety === "function") return flow.routeToSafety();
+          break;
+        case "basis":
+          if(typeof flow.routeToBasisFallback === "function") return flow.routeToBasisFallback();
+          break;
+        case "privacy":
+          if(typeof flow.routeToPrivacyFallback === "function") return flow.routeToPrivacyFallback();
+          break;
+        case "contract":
+          if(typeof flow.routeToContractFallback === "function") return flow.routeToContractFallback();
+          break;
+      }
+    }
+
+    /* Fallback to older heuristic only if explicit progress is missing/invalid. */
+    if(typeof window.routeResume === "function"){
+      return window.routeResume();
+    }
+    if(typeof legacy.resumeScreening === "function") return legacy.resumeScreening();
+  }
+
+  window.psynoviaResumeByExplicitStep = resumeByExplicitStep;
+
+  /* Override only the resume dialog continue action after DOM is ready.
+     This keeps the existing UI and storage logic, but routes through exact progress. */
+  document.addEventListener("click", function(e){
+    const btn = e.target && e.target.closest ? e.target.closest("#psynoviaResumeContinue") : null;
+    if(!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const overlay = document.getElementById("psynoviaResumeOverlay");
+    if(overlay) overlay.classList.remove("is-open");
+    document.body.classList.remove("psynovia-resume-open");
+    setTimeout(resumeByExplicitStep, 30);
+  }, true);
+})();
+</script>
+
+
 
 </body>
 </html>
