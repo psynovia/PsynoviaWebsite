@@ -1,0 +1,1912 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Psynovia – Intake V7</title>
+
+
+
+
+<style id="psynovia-clean-mobile-ui">
+:root{--navy:#07335f;--blue:#62bee3;--orange:#ef9f43;--paper:rgba(255,255,255,.88);--line:rgba(126,179,205,.32);--muted:#58758b;--shadow:0 18px 42px rgba(7,51,95,.095)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--navy);background:#f2f9fd;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}body{background:radial-gradient(circle at 15% 4%,rgba(98,190,227,.22),transparent 29%),radial-gradient(circle at 96% 82%,rgba(239,159,67,.12),transparent 32%),linear-gradient(180deg,#f8fdff 0%,#eef8fd 54%,#f8fbff 100%)}
+.app{width:100vw;height:100dvh;overflow:hidden;display:flex;justify-content:center;align-items:stretch}.phone{width:100%;max-width:560px;height:100dvh;min-height:0;display:flex;flex-direction:column;overflow:hidden;position:relative;padding:calc(env(safe-area-inset-top) + clamp(12px,3.5vw,20px)) clamp(18px,5vw,34px) calc(env(safe-area-inset-bottom) + clamp(12px,3.5vw,20px))}.topbar{flex:0 0 auto;min-height:clamp(42px,7.2dvh,56px);display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative;z-index:5}.brand{display:flex;align-items:center;gap:clamp(8px,2.6vw,12px);min-width:0}.brand img{width:clamp(30px,8vw,42px);height:clamp(30px,8vw,42px);object-fit:contain;flex:0 0 auto}.brand-copy{display:flex;flex-direction:column;min-width:0;line-height:1.03}.brand-name{font-size:clamp(19px,5.7vw,28px);font-weight:900;letter-spacing:-.055em;color:var(--navy)}.brand-sub{margin-top:2px;font-size:clamp(8.5px,2.45vw,12px);font-weight:760;color:#617a8f;white-space:nowrap}.step-label{flex:0 0 auto;font-size:clamp(11px,2.9vw,13px);font-weight:850;color:#55748b;background:rgba(255,255,255,.68);border:1px solid var(--line);border-radius:999px;padding:.58em .86em;white-space:nowrap}.progress-wrap{flex:0 0 auto;margin-top:clamp(8px,2.1dvh,15px);position:relative;z-index:5}.progress-meta{display:flex;align-items:center;justify-content:space-between;font-size:clamp(11px,2.85vw,13px);font-weight:800;color:#55758e;margin-bottom:clamp(5px,.85dvh,8px)}.progress{height:clamp(6px,1.1dvh,8px);border-radius:999px;background:rgba(187,221,236,.50);overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}.progress>span{display:block;width:0%;height:100%;border-radius:999px;background:linear-gradient(90deg,#43afd6,#ef9f43);transition:width .26s ease}.main{flex:1 1 auto;min-height:0;display:block;position:relative;z-index:2}.panel{width:100%;height:100%;min-height:0;display:none;overflow:hidden;animation:softIn .18s ease both}.panel.active{display:flex;flex-direction:column}@keyframes softIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.welcome{padding-top:clamp(18px,4dvh,32px)}.welcome h1{margin:0;max-width:92%;font-size:clamp(34px,10.2vw,54px);line-height:1.02;letter-spacing:-.064em;font-weight:920;color:var(--navy)}.lead-card{margin-top:clamp(16px,3dvh,24px);border:1px solid var(--line);border-radius:clamp(22px,6vw,30px);background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(255,255,255,.62));box-shadow:0 12px 30px rgba(7,51,95,.065);padding:clamp(15px,4vw,22px);backdrop-filter:blur(10px)}.lead-card p{margin:0;color:#2f5573;font-size:clamp(13.2px,3.8vw,17px);line-height:1.43;letter-spacing:-.01em}.lead-card p+p{margin-top:.72em}.micro{margin-top:clamp(12px,2.3dvh,18px);border-left:4px solid var(--orange);border-radius:0 16px 16px 0;background:rgba(255,250,242,.72);color:#294f6d;padding:clamp(9px,2.6vw,12px) clamp(11px,3vw,14px);font-size:clamp(12px,3.3vw,14px);line-height:1.38;font-weight:700}.welcome-bottom{margin-top:auto;position:relative;min-height:clamp(150px,24dvh,230px);display:flex;flex-direction:column;justify-content:flex-end;padding-top:clamp(14px,2.8dvh,22px);padding-bottom:clamp(2px,.6dvh,8px);overflow:visible}.novi{position:absolute;right:0;bottom:clamp(52px,8.8dvh,76px);width:clamp(96px,27vw,142px);max-height:clamp(110px,23dvh,176px);object-fit:contain;z-index:1;pointer-events:none;filter:drop-shadow(0 16px 22px rgba(7,51,95,.12))}.cta{position:relative;z-index:3;width:calc(100% - clamp(110px,31vw,164px));min-width:190px;max-width:430px;min-height:clamp(48px,7dvh,58px);border:0;border-radius:clamp(16px,4.2vw,22px);background:linear-gradient(135deg,#07335f,#0e5c8d);color:white;font-size:clamp(14px,3.9vw,17px);font-weight:900;letter-spacing:-.018em;display:flex;align-items:center;justify-content:center;box-shadow:0 18px 32px rgba(7,51,95,.22);padding:0 14px;cursor:pointer}.usps{position:relative;z-index:3;display:flex;gap:8px;margin-top:clamp(10px,1.8dvh,14px);width:calc(100% - clamp(110px,31vw,164px));min-width:190px;max-width:430px}.usp{flex:1;min-height:clamp(36px,5.2dvh,46px);border:1px solid rgba(132,185,211,.30);border-radius:15px;background:rgba(255,255,255,.62);color:#42677f;padding:clamp(7px,2vw,10px);font-size:clamp(10px,2.7vw,12px);font-weight:820;line-height:1.18;display:flex;align-items:center;gap:6px}.usp b{color:var(--navy)}
+.question-panel{padding-top:clamp(12px,3dvh,24px)}.q-card{width:100%;height:100%;min-height:0;border:1px solid var(--line);border-radius:clamp(20px,5vw,30px);background:var(--paper);box-shadow:var(--shadow);backdrop-filter:blur(10px);padding:clamp(16px,4.6vw,24px);display:flex;flex-direction:column;overflow:hidden}.q-top{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:clamp(12px,2.2dvh,17px)}.q-kicker{color:#5b7f98;background:#eef9fd;border:1px solid rgba(98,190,227,.25);border-radius:999px;padding:7px 10px;font-size:clamp(11px,2.8vw,13px);font-weight:880}.q-count{color:#7c91a3;font-size:clamp(11px,2.8vw,13px);font-weight:850}.q-icon{display:none}.question{flex:0 0 auto;margin:0;color:var(--navy);font-size:clamp(23px,7.1vw,38px);line-height:1.1;letter-spacing:-.048em;font-weight:900}.hint{flex:0 0 auto;margin:clamp(10px,1.9dvh,15px) 0 0;color:#5a7287;font-size:clamp(12.4px,3.4vw,15.5px);line-height:1.43}.answers{flex:0 0 auto;margin-top:auto;display:grid;gap:clamp(8px,1.45dvh,12px)}.answer{width:100%;min-height:clamp(52px,7.8dvh,74px);border:1px solid rgba(141,190,214,.44);border-radius:clamp(16px,4.3vw,22px);background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(250,254,255,.74));box-shadow:0 8px 20px rgba(7,51,95,.045);color:var(--navy);display:flex;align-items:center;gap:clamp(10px,2.8vw,14px);padding:clamp(10px,3vw,15px) clamp(12px,3.5vw,18px);text-align:left;cursor:pointer;transition:transform .14s ease,border-color .14s ease,background .14s ease}.answer:active{transform:scale(.986)}.answer .ico{width:clamp(34px,8.8vw,43px);height:clamp(34px,8.8vw,43px);flex:0 0 clamp(34px,8.8vw,43px);border-radius:clamp(12px,3.4vw,16px);display:grid;place-items:center;background:linear-gradient(145deg,#e8f8fd,#fffaf1);color:#0d426f;font-size:clamp(16px,4.5vw,21px);box-shadow:inset 0 0 0 1px rgba(98,190,227,.22)}.answer-copy{min-width:0}.answer strong{display:block;font-size:clamp(13.2px,3.7vw,16.5px);line-height:1.18;letter-spacing:-.012em}.answer span.txt{display:block;margin-top:3px;color:#60788d;font-size:clamp(11px,2.95vw,13px);line-height:1.28}.nav-row,.back,.skip{display:none!important}
+.result-card{margin-top:clamp(14px,3dvh,22px);border:1px solid var(--line);border-radius:clamp(24px,6vw,32px);background:var(--paper);box-shadow:var(--shadow);padding:clamp(18px,5vw,26px)}.result-card h2{margin:0;color:var(--navy);font-size:clamp(24px,7vw,38px);line-height:1.05;letter-spacing:-.055em}.result-card p{margin:14px 0 0;color:#365c78;font-size:clamp(13px,3.65vw,16px);line-height:1.45}.check{margin-top:14px;border:1px solid rgba(98,190,227,.24);border-radius:18px;background:rgba(238,249,253,.78);color:#29516c;padding:12px;font-size:clamp(12px,3.25vw,14px);line-height:1.38;font-weight:760}.form-grid{display:grid;gap:clamp(10px,2dvh,14px);margin-top:clamp(12px,2.2dvh,16px)}input,textarea{width:100%;border:1px solid rgba(134,184,209,.45);border-radius:17px;background:rgba(255,255,255,.90);color:var(--navy);padding:clamp(12px,3.5vw,16px);font:inherit;outline:0}textarea{min-height:clamp(74px,13dvh,108px);resize:none}.label{margin:0 0 5px 3px;color:#5a7287;font-size:clamp(11px,3vw,13px);font-weight:850}.nextbtn,.final-button{width:100%;min-height:clamp(48px,7.1dvh,58px);margin-top:clamp(12px,2.4dvh,18px);border:0;border-radius:18px;color:white;font-size:clamp(14px,3.9vw,17px);font-weight:900}.nextbtn{background:linear-gradient(135deg,#07335f,#0e5c8d);box-shadow:0 16px 30px rgba(7,51,95,.18)}.final-button{background:linear-gradient(135deg,#ef9f43,#e07f22);box-shadow:0 18px 32px rgba(224,127,34,.22)}.notice{margin-top:14px;border-radius:17px;padding:13px 14px;font-size:clamp(12px,3.25vw,14px);line-height:1.38}.notice.warn{background:#fff7e6;color:#956400;border:1px solid #f0d393}.notice.bad{background:#fff0ef;color:#a13a31;border:1px solid #edb9b4}.legal{display:grid;gap:10px;margin-top:14px}details{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.70);padding:13px 14px}summary{color:var(--navy);font-weight:900;cursor:pointer}details p,details li{color:#4e6c82;font-size:clamp(11.5px,3.05vw,13px);line-height:1.42}.consent{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.56);color:#3d617b;padding:12px;font-size:clamp(11.8px,3.15vw,13px);line-height:1.32}.consent input{width:auto;margin-top:3px}.chips{display:flex;flex-wrap:wrap;gap:clamp(7px,2vw,10px);margin-top:clamp(12px,2.4dvh,16px)}.chip{border:1px solid rgba(134,184,209,.45);border-radius:999px;background:rgba(255,255,255,.75);color:#3c6581;padding:clamp(8px,2.4vw,11px) clamp(10px,3vw,14px);font-size:clamp(11.5px,3.05vw,14px);font-weight:820;cursor:pointer}.chip.selected{background:#eaf9fd;border-color:#62bee3;color:#07335f;box-shadow:0 5px 16px rgba(98,190,227,.12)}
+
+@media (max-height:700px){.phone{padding-top:calc(env(safe-area-inset-top) + 10px);padding-bottom:calc(env(safe-area-inset-bottom) + 10px)}.progress-wrap{margin-top:8px}.welcome{padding-top:12px}.welcome h1{font-size:clamp(29px,8.5vw,42px)}.lead-card{padding:13px;margin-top:12px}.lead-card p{font-size:12.5px;line-height:1.35}.micro{font-size:11.7px;margin-top:10px}.welcome-bottom{min-height:132px}.novi{width:92px;bottom:48px}.cta,.usps{width:calc(100% - 104px)}.q-card{padding:14px}.question{font-size:clamp(20px,6.1vw,27px)}.hint{font-size:clamp(11.5px,3.05vw,13px);line-height:1.34;margin-top:8px}.answer{min-height:48px;padding:9px 11px}.answer .ico{width:30px;height:30px;flex-basis:30px;font-size:15px}.answer span.txt{display:none}}
+
+/* v22 context diagnosis cards */
+.context-card{
+  border:1px solid var(--line);
+  border-radius:22px;
+  background:rgba(255,255,255,.70);
+  padding:clamp(13px,3.6vw,18px);
+  margin-top:clamp(12px,2.2dvh,16px);
+}
+
+.context-card h3{
+  margin:0 0 6px;
+  color:var(--navy);
+  font-size:clamp(16px,4.4vw,20px);
+  line-height:1.15;
+  letter-spacing:-.025em;
+}
+
+.context-card p{
+  margin:0 0 12px;
+  color:#58758b;
+  font-size:clamp(12px,3.2vw,14px);
+  line-height:1.38;
+}
+
+.context-card .chips{
+  margin-top:0;
+}
+
+
+/* v23 interaction safety */
+.answer,.chip,.cta,.nextbtn,.final-button,.task-tap{
+  pointer-events:auto;
+}
+.panel:not(.active){
+  pointer-events:none;
+}
+.panel.active{
+  pointer-events:auto;
+}
+
+
+
+/* v25 Mini-Go/No-Go rebuilt from scratch: scoped, no legacy classes */
+.ps-mini{
+  flex:1 1 auto;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  gap:clamp(10px,1.8dvh,14px);
+  margin-top:clamp(12px,2dvh,16px);
+}
+.ps-mini-copy{
+  margin:0;
+  border:1px solid rgba(134,184,209,.26);
+  border-radius:18px;
+  background:rgba(255,255,255,.74);
+  color:#315875;
+  padding:clamp(10px,3vw,14px);
+  font-size:clamp(12px,3.15vw,14px);
+  line-height:1.36;
+}
+.ps-mini-rule{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  width:max-content;
+  max-width:100%;
+  padding:10px 12px;
+  border-radius:999px;
+  background:rgba(234,247,252,.82);
+  border:1px solid rgba(98,190,227,.25);
+  color:#285875;
+  font-size:clamp(11px,2.85vw,13px);
+  font-weight:850;
+}
+.ps-mini-dot{
+  width:13px;
+  height:13px;
+  border-radius:50%;
+  background:linear-gradient(180deg,#79d2ee,#3faed5);
+  box-shadow:0 0 0 4px rgba(98,190,227,.12);
+  flex:0 0 13px;
+}
+.ps-mini-stage{
+  flex:1 1 auto;
+  min-height:clamp(180px,30dvh,260px);
+  max-height:36dvh;
+  width:100%;
+  border:1px solid rgba(98,190,227,.24);
+  border-radius:clamp(24px,6vw,34px);
+  background:
+    radial-gradient(circle at 50% 42%,rgba(98,190,227,.23),transparent 48%),
+    radial-gradient(circle at 82% 20%,rgba(239,159,67,.11),transparent 36%),
+    linear-gradient(180deg,#fbfeff,#edf8fd);
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 12px 30px rgba(7,51,95,.07);
+}
+.ps-mini-stage::after{
+  content:"";
+  position:absolute;
+  inset:clamp(10px,3vw,16px);
+  border-radius:clamp(18px,5vw,28px);
+  border:1px dashed rgba(98,190,227,.14);
+  pointer-events:none;
+}
+.ps-mini-ball{
+  position:absolute;
+  width:clamp(68px,18vw,92px);
+  height:clamp(68px,18vw,92px);
+  border:0;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  color:white;
+  font-size:clamp(29px,7.5vw,42px);
+  font-weight:950;
+  background:linear-gradient(180deg,#79d2ee,#3faed5);
+  box-shadow:0 18px 34px rgba(7,51,95,.16), inset 0 1px 0 rgba(255,255,255,.38);
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  z-index:2;
+  user-select:none;
+  touch-action:manipulation;
+  transition:transform .12s ease, opacity .12s ease, background .12s ease;
+}
+.ps-mini-ball.is-no{background:linear-gradient(180deg,#ffc083,#ef9f43)}
+.ps-mini-ball:active{transform:translate(-50%,-50%) scale(.95)}
+.ps-mini-ball.is-hidden{opacity:0;pointer-events:none}
+.ps-mini-feedback{
+  min-height:20px;
+  text-align:center;
+  color:#315875;
+  font-size:clamp(12px,3.25vw,14px);
+  font-weight:850;
+}
+.ps-mini-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  color:#6b8398;
+  font-size:clamp(11px,2.9vw,13px);
+  font-weight:800;
+}
+.ps-mini-button{
+  width:100%;
+  min-height:clamp(48px,7dvh,58px);
+  border:0;
+  border-radius:17px;
+  background:linear-gradient(135deg,#07335f,#0e5c8d);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:clamp(14px,3.8vw,17px);
+  font-weight:900;
+  box-shadow:0 14px 27px rgba(7,51,95,.17);
+  cursor:pointer;
+}
+.ps-mini-button:disabled{opacity:.65;cursor:default}
+.ps-mini-button.is-secondary{background:#fff;color:#07335f;border:1px solid rgba(134,184,209,.45);box-shadow:none}
+.ps-mini-note{
+  margin-top:10px;
+  border:1px solid rgba(239,159,67,.22);
+  border-radius:18px;
+  background:rgba(255,250,242,.72);
+  color:#315875;
+  padding:12px 13px;
+  font-size:clamp(11.5px,3.05vw,13px);
+  line-height:1.36;
+}
+@media (max-height:700px){
+  .ps-mini{gap:8px;margin-top:10px}
+  .ps-mini-copy{font-size:11.7px;padding:10px}
+  .ps-mini-stage{min-height:142px;max-height:29dvh}
+  .ps-mini-ball{width:62px;height:62px;font-size:27px}
+  .ps-mini-note{font-size:11.2px;padding:10px}
+}
+
+
+/* v28 flow/layout fixes: result/context buttons always reachable */
+#resultPanel{
+  padding-top:clamp(12px,3dvh,22px);
+  gap:clamp(12px,2dvh,18px);
+}
+#resultPanel .result-card{
+  flex:1 1 auto;
+  min-height:0;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+#resultPanel #contextBtn{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-top:auto;
+}
+.result-grid{
+  display:grid;
+  gap:8px;
+  margin-top:12px;
+}
+.result-mini{
+  border:1px solid rgba(98,190,227,.20);
+  background:rgba(238,249,253,.58);
+  border-radius:14px;
+  padding:9px 10px;
+  color:#365c78;
+  font-size:clamp(11px,3vw,12.5px);
+  line-height:1.28;
+}
+.result-mini strong{display:block;color:var(--navy);font-size:clamp(11.5px,3.1vw,13px);margin-bottom:2px}
+#formPanel .result-card{
+  height:100%;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+#formBody{
+  flex:1 1 auto;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+#formBody > .nextbtn, #formBody > .final-button{
+  flex:0 0 auto;
+  margin-top:auto;
+}
+.context-card{
+  border:1px solid var(--line);
+  border-radius:22px;
+  background:rgba(255,255,255,.70);
+  padding:clamp(13px,3.6vw,18px);
+  margin-top:clamp(10px,2dvh,14px);
+  flex:0 1 auto;
+  min-height:0;
+}
+.context-card h3{margin:0 0 6px;color:var(--navy);font-size:clamp(16px,4.4vw,20px);line-height:1.15;letter-spacing:-.025em}
+.context-card p{margin:0 0 12px;color:#58758b;font-size:clamp(12px,3.2vw,14px);line-height:1.38}
+.context-card .chips{margin-top:0}
+@media (max-height:700px){
+  .result-grid{display:none}
+  #resultPanel .result-card p{margin-top:8px;line-height:1.32}
+  .check{margin-top:9px;padding:9px}
+  .context-card{padding:11px;margin-top:8px}
+}
+
+</style>
+<style id="psynovia-v40-flat-psych-context">
+#formBody > .hint{
+  margin:0 0 clamp(14px,2.4dvh,18px);
+}
+#formBody > #psyChips{
+  margin-top:0;
+}
+#formBody > #psychNext{
+  margin-top:clamp(14px,2.6dvh,20px);
+}
+</style>
+
+
+<style id="psynovia-v50-flow-clean-css">
+.context-screen .chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:clamp(8px,2vw,10px);
+  margin-top:clamp(14px,2.4dvh,18px);
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  padding-bottom:4px;
+  max-height:clamp(250px,43dvh,410px);
+}
+.context-screen .chip{flex:0 0 auto}
+.context-screen .context-next{
+  margin-top:auto;
+  padding-top:clamp(12px,2dvh,16px);
+  flex:0 0 auto;
+}
+.context-screen .nextbtn,
+#medicationNextBtn,
+#safetyContinueBtn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.medication-followup textarea{
+  min-height:clamp(120px,24dvh,190px);
+}
+</style>
+
+
+<style id="ps-mini-intro-clean-v1">
+/* Go/No-Go Intro: normaler Text, keine Hinweisblase. */
+.ps-mini-intro{
+  margin:0;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:#315875;
+  font-size:clamp(12px,3.15vw,14px);
+  line-height:1.42;
+}
+.ps-mini-intro p{
+  margin:0;
+}
+.ps-mini-intro p + p{
+  margin-top:8px;
+}
+.ps-mini-intro strong{
+  font-weight:900;
+  color:#07335f;
+}
+</style>
+
+
+<style id="ps-mini-layout-clean-v1">
+/* Go/No-Go: Text sauber zwischen Überschrift und Aufgabe platzieren. */
+#questionPanel.is-mini-gonogo .q-card{
+  gap:0 !important;
+}
+#questionPanel.is-mini-gonogo #qHint{
+  display:none !important;
+  margin:0 !important;
+}
+#questionPanel.is-mini-gonogo #extraArea{
+  flex:1 1 auto;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  margin-top:clamp(10px,1.8dvh,14px);
+}
+#questionPanel.is-mini-gonogo .ps-mini{
+  flex:1 1 auto;
+  min-height:0;
+  margin-top:0 !important;
+  gap:clamp(8px,1.45dvh,12px) !important;
+}
+#questionPanel.is-mini-gonogo .ps-mini-intro{
+  flex:0 0 auto;
+  margin:0 0 clamp(8px,1.3dvh,12px) !important;
+}
+#questionPanel.is-mini-gonogo .ps-mini-rule{
+  flex:0 0 auto;
+}
+#questionPanel.is-mini-gonogo .ps-mini-stage{
+  flex:1 1 auto;
+  min-height:clamp(150px,24dvh,230px) !important;
+  max-height:30dvh !important;
+}
+#questionPanel.is-mini-gonogo .ps-mini-feedback,
+#questionPanel.is-mini-gonogo .ps-mini-meta,
+#questionPanel.is-mini-gonogo .ps-mini-button{
+  flex:0 0 auto;
+}
+@media (max-height:700px){
+  #questionPanel.is-mini-gonogo #extraArea{
+    margin-top:8px;
+  }
+  #questionPanel.is-mini-gonogo .ps-mini{
+    gap:7px !important;
+  }
+  #questionPanel.is-mini-gonogo .ps-mini-intro{
+    font-size:11.5px !important;
+    line-height:1.34 !important;
+    margin-bottom:7px !important;
+  }
+  #questionPanel.is-mini-gonogo .ps-mini-stage{
+    min-height:118px !important;
+    max-height:24dvh !important;
+  }
+}
+</style>
+
+<style id="psynovia-final-intake-flow-v1">
+#resultPanel .result-card,.context-screen .q-card,#v50BasisPanel .q-card,#v50PrivacyPanel .q-card,#v50ContractPanel .q-card{overflow-y:auto!important;-webkit-overflow-scrolling:touch!important}
+#resultPanel .result-card p{font-size:clamp(12.4px,3.25vw,14.5px);line-height:1.43}
+.context-screen .chips{max-height:clamp(180px,32dvh,330px)!important}
+.context-screen .form-grid textarea{min-height:clamp(72px,13dvh,120px)}
+#v50SafetyPanel .answers{margin-top:clamp(16px,2.8dvh,22px)}
+</style>
+
+<style id="psynovia-moderate-safety-screen-v1">
+#v50SafetyModeratePanel .q-card{
+  border-color:rgba(239,159,67,.34)!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.90),rgba(255,250,242,.78))!important;
+}
+#v50SafetyModeratePanel .q-kicker{
+  background:rgba(255,247,230,.88)!important;
+  border-color:rgba(239,159,67,.28)!important;
+  color:#8a5a00!important;
+}
+#v50SafetyModeratePanel .notice.warn{
+  display:block!important;
+  background:#fff7e6!important;
+  color:#7a5200!important;
+  border:1px solid #f0d393!important;
+}
+</style>
+
+
+<style id="psynovia-v5-basisdaten-css">
+#v50BasisPanel .q-card h2{
+  margin:clamp(18px,3dvh,24px) 0 0;
+  color:#07335f;
+  font-size:clamp(17px,4.6vw,22px);
+  line-height:1.15;
+  letter-spacing:-.025em;
+}
+#v50BasisPanel .billing-hint{
+  margin-top:clamp(10px,1.9dvh,14px);
+  border:1px solid rgba(98,190,227,.24);
+  border-radius:18px;
+  background:rgba(238,249,253,.64);
+  color:#315875;
+  padding:clamp(11px,3vw,14px);
+  font-size:clamp(12px,3.15vw,14px);
+  line-height:1.42;
+}
+#v50BasisPanel .planning-note{
+  margin-top:10px;
+  color:#60788d;
+  font-size:clamp(11.5px,3.05vw,13px);
+  line-height:1.36;
+}
+#v50BasisPanel textarea{
+  min-height:clamp(92px,17dvh,140px);
+}
+#v50BasisPanel .form-grid{
+  margin-top:clamp(10px,1.9dvh,14px);
+}
+</style>
+
+
+
+
+
+
+<style id="psynovia-basis-validation-v1">
+#v50BasisPanel input.is-invalid,
+#v50BasisPanel textarea.is-invalid{
+  border-color:rgba(239,159,67,.88)!important;
+  box-shadow:0 0 0 4px rgba(239,159,67,.14)!important;
+  background:#fffaf2!important;
+}
+#v50BasisPanel .chips.is-invalid{
+  border:1px solid rgba(239,159,67,.50)!important;
+  border-radius:18px!important;
+  background:rgba(255,247,230,.52)!important;
+  padding:8px!important;
+}
+#v50BasisPanel .field-warning{
+  margin-top:7px;
+  border:1px solid rgba(239,159,67,.34);
+  border-radius:14px;
+  background:#fff7e6;
+  color:#7a5200;
+  padding:10px 12px;
+  font-size:clamp(11.5px,3.05vw,13px);
+  line-height:1.35;
+  font-weight:760;
+}
+#v50BasisPanel #v50BirthWarning{
+  margin-top:7px;
+  border:1px solid rgba(239,159,67,.34);
+  border-radius:14px;
+  background:#fff7e6;
+  color:#7a5200;
+  padding:10px 12px;
+  font-size:clamp(11.5px,3.05vw,13px);
+  line-height:1.35;
+  font-weight:760;
+}
+</style>
+
+
+
+
+
+
+<style id="psynovia-contract-reader-modal-v1">
+#v50ContractPanel .contract-summary-card{
+  margin-top:clamp(12px,2dvh,16px);
+  border:1px solid rgba(134,184,209,.38);
+  border-radius:20px;
+  background:rgba(255,255,255,.80);
+  padding:clamp(14px,3.8vw,18px);
+  color:#365c78;
+}
+#v50ContractPanel .contract-read-note{
+  margin-top:10px;
+  border:1px solid rgba(98,190,227,.24);
+  border-radius:15px;
+  background:rgba(238,249,253,.72);
+  color:#29516c;
+  padding:10px 12px;
+  font-size:clamp(11.5px,3vw,13px);
+  line-height:1.35;
+  font-weight:760;
+}
+#v50ContractPanel .contract-read-note.is-ok{
+  background:rgba(238,249,253,.86);
+  border-color:rgba(98,190,227,.32);
+}
+#v50ContractPanel .consent.is-disabled{opacity:.58}
+#v50ContractPanel .consent input:disabled{opacity:.65}
+#v50ContractPanel .withdrawal-consent{margin-top:10px}
+
+#v50ContractReaderOverlay{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:none;
+  background:rgba(7,51,95,.28);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  padding:clamp(10px,3vw,18px);
+}
+#v50ContractReaderOverlay.is-open{
+  display:flex;
+  align-items:stretch;
+  justify-content:center;
+}
+#v50ContractReaderOverlay .reader-card{
+  width:min(100%,760px);
+  height:100%;
+  max-height:calc(100dvh - clamp(20px,6vw,36px));
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  border-radius:24px;
+  background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(246,252,255,.97));
+  border:1px solid rgba(190,223,239,.78);
+  box-shadow:0 22px 70px rgba(7,51,95,.24);
+  overflow:hidden;
+}
+#v50ContractReaderOverlay .reader-head{
+  flex:0 0 auto;
+  min-height:48px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 12px 9px 16px;
+  border-bottom:1px solid rgba(190,223,239,.66);
+  background:rgba(255,255,255,.92);
+}
+#v50ContractReaderOverlay .reader-title{
+  font-weight:880;
+  color:#07335f;
+  letter-spacing:-.035em;
+  font-size:clamp(15px,4vw,18px);
+  line-height:1.1;
+}
+#v50ContractReaderOverlay .reader-close{
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:999px;
+  background:rgba(238,249,253,.96);
+  color:#07335f;
+  font-size:24px;
+  line-height:1;
+  font-weight:760;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+}
+#v50ContractReaderOverlay .reader-body{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  padding:clamp(16px,4.4vw,28px);
+  color:#365c78;
+}
+#v50ContractReaderOverlay .reader-body h2{
+  margin:0 0 14px;
+  color:#07335f;
+  font-size:clamp(19px,5.2vw,27px);
+  line-height:1.12;
+}
+#v50ContractReaderOverlay .reader-body h3{
+  margin:22px 0 9px;
+  color:#07335f;
+  font-size:clamp(15px,4vw,19px);
+  line-height:1.22;
+}
+#v50ContractReaderOverlay .reader-body p,
+#v50ContractReaderOverlay .reader-body li{
+  font-size:clamp(13px,3.35vw,15.5px);
+  line-height:1.52;
+  margin:0 0 10px;
+}
+#v50ContractReaderOverlay .reader-body ul{
+  margin:0 0 12px 20px;
+  padding:0;
+}
+#v50ContractReaderOverlay .reader-foot{
+  flex:0 0 auto;
+  padding:10px 14px 13px;
+  border-top:1px solid rgba(190,223,239,.66);
+  background:rgba(255,255,255,.94);
+}
+#v50ContractReaderOverlay .reader-progress-note{
+  font-size:clamp(11.5px,3vw,13px);
+  line-height:1.35;
+  color:#29516c;
+  font-weight:760;
+}
+#v50ContractReaderOverlay .reader-progress-note.is-ok{
+  color:#1f6b7a;
+}
+body.v50-contract-reader-open{
+  overflow:hidden!important;
+}
+</style>
+
+
+<style id="psynovia-privacy-reader-modal-v1">
+#v50PrivacyPanel .privacy-summary-card{
+  margin-top:clamp(12px,2dvh,16px);
+  border:1px solid rgba(134,184,209,.38);
+  border-radius:20px;
+  background:rgba(255,255,255,.80);
+  padding:clamp(14px,3.8vw,18px);
+  color:#365c78;
+}
+#v50PrivacyPanel .privacy-read-note{
+  margin-top:10px;
+  border:1px solid rgba(98,190,227,.24);
+  border-radius:15px;
+  background:rgba(238,249,253,.72);
+  color:#29516c;
+  padding:10px 12px;
+  font-size:clamp(11.5px,3vw,13px);
+  line-height:1.35;
+  font-weight:760;
+}
+#v50PrivacyPanel .privacy-read-note.is-ok{
+  background:rgba(238,249,253,.86);
+  border-color:rgba(98,190,227,.32);
+}
+#v50PrivacyPanel .consent.is-disabled{opacity:.58}
+#v50PrivacyPanel .consent input:disabled{opacity:.65}
+#v50PrivacyPanel .optional-consent{
+  margin-top:10px;
+}
+
+#v50PrivacyReaderOverlay{
+  position:fixed;
+  inset:0;
+  z-index:9998;
+  display:none;
+  background:rgba(7,51,95,.28);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  padding:clamp(10px,3vw,18px);
+}
+#v50PrivacyReaderOverlay.is-open{
+  display:flex;
+  align-items:stretch;
+  justify-content:center;
+}
+#v50PrivacyReaderOverlay .reader-card{
+  width:min(100%,760px);
+  height:100%;
+  max-height:calc(100dvh - clamp(20px,6vw,36px));
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  border-radius:24px;
+  background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(246,252,255,.97));
+  border:1px solid rgba(190,223,239,.78);
+  box-shadow:0 22px 70px rgba(7,51,95,.24);
+  overflow:hidden;
+}
+#v50PrivacyReaderOverlay .reader-head{
+  flex:0 0 auto;
+  min-height:48px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 12px 9px 16px;
+  border-bottom:1px solid rgba(190,223,239,.66);
+  background:rgba(255,255,255,.92);
+}
+#v50PrivacyReaderOverlay .reader-title{
+  font-weight:880;
+  color:#07335f;
+  letter-spacing:-.035em;
+  font-size:clamp(15px,4vw,18px);
+  line-height:1.1;
+}
+#v50PrivacyReaderOverlay .reader-close{
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:999px;
+  background:rgba(238,249,253,.96);
+  color:#07335f;
+  font-size:24px;
+  line-height:1;
+  font-weight:760;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+}
+#v50PrivacyReaderOverlay .reader-body{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  padding:clamp(16px,4.4vw,28px);
+  color:#365c78;
+}
+#v50PrivacyReaderOverlay .reader-body h2{
+  margin:0 0 14px;
+  color:#07335f;
+  font-size:clamp(19px,5.2vw,27px);
+  line-height:1.12;
+}
+#v50PrivacyReaderOverlay .reader-body h3{
+  margin:22px 0 9px;
+  color:#07335f;
+  font-size:clamp(15px,4vw,19px);
+  line-height:1.22;
+}
+#v50PrivacyReaderOverlay .reader-body p,
+#v50PrivacyReaderOverlay .reader-body li{
+  font-size:clamp(13px,3.35vw,15.5px);
+  line-height:1.52;
+  margin:0 0 10px;
+}
+#v50PrivacyReaderOverlay .reader-body ul{
+  margin:0 0 12px 20px;
+  padding:0;
+}
+#v50PrivacyReaderOverlay .reader-foot{
+  flex:0 0 auto;
+  padding:10px 14px 13px;
+  border-top:1px solid rgba(190,223,239,.66);
+  background:rgba(255,255,255,.94);
+}
+#v50PrivacyReaderOverlay .reader-progress-note{
+  font-size:clamp(11.5px,3vw,13px);
+  line-height:1.35;
+  color:#29516c;
+  font-weight:760;
+}
+#v50PrivacyReaderOverlay .reader-progress-note.is-ok{
+  color:#1f6b7a;
+}
+body.v50-privacy-reader-open{
+  overflow:hidden!important;
+}
+</style>
+
+
+<style id="psynovia-local-resume-v1">
+#psynoviaResumeOverlay{
+  position:fixed;
+  inset:0;
+  z-index:10050;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:clamp(16px,5vw,28px);
+  background:rgba(7,51,95,.30);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+#psynoviaResumeOverlay.is-open{display:flex}
+#psynoviaResumeOverlay .resume-card{
+  width:min(100%,520px);
+  border:1px solid rgba(190,223,239,.78);
+  border-radius:26px;
+  background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(246,252,255,.96));
+  box-shadow:0 24px 72px rgba(7,51,95,.24);
+  padding:clamp(18px,5vw,26px);
+  color:#365c78;
+}
+#psynoviaResumeOverlay .resume-kicker{
+  display:inline-flex;
+  color:#5b7f98;
+  background:#eef9fd;
+  border:1px solid rgba(98,190,227,.25);
+  border-radius:999px;
+  padding:7px 10px;
+  font-size:clamp(11px,2.8vw,13px);
+  font-weight:880;
+  margin-bottom:12px;
+}
+#psynoviaResumeOverlay h2{
+  margin:0;
+  color:#07335f;
+  font-size:clamp(24px,7vw,34px);
+  line-height:1.08;
+  letter-spacing:-.045em;
+}
+#psynoviaResumeOverlay p{
+  margin:12px 0 0;
+  font-size:clamp(13px,3.5vw,15.5px);
+  line-height:1.45;
+}
+#psynoviaResumeOverlay .resume-actions{
+  display:grid;
+  gap:10px;
+  margin-top:18px;
+}
+#psynoviaResumeOverlay .resume-primary,
+#psynoviaResumeOverlay .resume-secondary{
+  width:100%;
+  min-height:clamp(48px,7dvh,56px);
+  border-radius:18px;
+  font-size:clamp(14px,3.9vw,17px);
+  font-weight:900;
+  cursor:pointer;
+}
+#psynoviaResumeOverlay .resume-primary{
+  border:0;
+  color:#fff;
+  background:linear-gradient(135deg,#07335f,#0e5c8d);
+  box-shadow:0 16px 30px rgba(7,51,95,.18);
+}
+#psynoviaResumeOverlay .resume-secondary{
+  color:#07335f;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(134,184,209,.45);
+}
+body.psynovia-resume-open{overflow:hidden!important}
+</style>
+
+</head>
+<body>
+<div class="app"><div class="phone">
+  <div class="topbar">
+    <div class="brand"><img src="data:image/png;base64,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" alt="Psynovia Logo"><div class="brand-copy"><div class="brand-name">Psynovia</div><div class="brand-sub">Spezialpraxis für klinische Diagnostik</div></div></div>
+    <div class="step-label" id="stepLabel">Start</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-meta"><span id="phaseText">Ersteinschätzung</span><span id="percentText">0&nbsp;%</span></div>
+    <div class="progress"><span id="bar"></span></div>
+  </div>
+  <main class="main" id="main">
+    <section class="panel welcome active" id="welcomePanel">
+      
+      <h1>Herzlich willkommen<br>bei Psynovia</h1>
+      <div class="lead-card">
+        <p>Um für Sie möglichst transparent zu machen, ob eine ausführliche Diagnostik aktuell sinnvoll sein könnte, starten wir zunächst mit einer kurzen Ersteinschätzung.</p>
+        <p>So können Sie deutlich besser entscheiden, ob Sie wirklich Zeit und Geld in eine ausführliche diagnostische Abklärung investieren möchten.</p>
+        <p>Direkt danach folgen — nur wenn Sie möchten — die organisatorischen und rechtlichen Schritte sowie anschließend der Zugang zum Diagnostiksystem.</p>
+      </div>
+      <div class="micro">Psynovia versucht, aus einzelnen Erfahrungen ein verständliches Gesamtbild zu machen.</div>
+      <div class="welcome-bottom">
+        <img class="novi" src="data:image/webp;base64,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" alt="Novi Begrüßung">
+        <button type="button" class="cta" id="startBtn">Ersteinschätzung starten →</button>
+        <div class="usps"><div class="usp">✓ <b>Transparent</b></div><div class="usp">✓ <b>In Ihrem Tempo</b></div></div>
+      </div>
+    </section>
+    <section class="panel question-panel" id="questionPanel">
+      <div class="q-card">
+        <div class="q-top"><span class="q-kicker" id="qKicker"></span><span class="q-count" id="qCount"></span></div>
+        <div class="q-icon" id="qIcon">○</div>
+        <h2 class="question" id="qTitle"></h2>
+        <p class="hint" id="qHint"></p>
+        <div class="answers" id="answers"></div>
+        <div id="extraArea"></div>
+      </div>
+    </section>
+    <section class="panel" id="resultPanel">
+      <div class="result-card" id="resultCard"></div>
+      <button type="button" class="nextbtn" id="contextBtn">Weiter zum klinischen Kontext</button>
+    </section>
+    <section class="panel" id="formPanel">
+      <div class="result-card"><h2 id="formTitle"></h2><p id="formIntro"></p><div id="formBody"></div></div>
+    </section>
+  
+<section class="panel question-panel" id="safetyStopPanel" aria-live="polite">
+  <div class="q-card">
+    <div class="q-top">
+      <div class="q-kicker">Versorgungsgrenze</div>
+      <div class="q-count">Intake beendet</div>
+    </div>
+    <h1 class="question">Aktuell ist eine digitale Diagnostik nicht passend.</h1>
+    <p class="hint">
+      Auf Grundlage Ihrer Angabe scheint derzeit unmittelbare persönliche Unterstützung wichtiger zu sein
+      als eine digitale ambulante Diagnostik.
+    </p>
+    <div class="notice bad">
+      Wenn Sie sich aktuell akut gefährdet fühlen oder unmittelbare Hilfe benötigen:<br><br>
+      <strong>Notruf: 112</strong><br>
+      Ärztlicher Bereitschaftsdienst: <strong>116117</strong><br>
+      Telefonseelsorge: <strong>0800 1110111</strong>
+    </div>
+    <p class="hint">
+      Der Intake endet an dieser Stelle. Bitte wenden Sie sich zunächst an eine geeignete persönliche
+      Versorgungsstelle.
+    </p>
+  </div>
+</section>
+
+</main>
+</div></div>
+<script>
+(function(){
+const paymentUrl = '#zahlung-spaeter';
+const STORAGE_KEY = 'psynovia_intake_v5_funnel';
+const state = {answers:{}, screening:{schema_version:'psynovia_intake_screening_v1', raw_items:{}, scores:{}, levels:{}, result_group:null, completed_iso:null}, context:{medical:[], psych:[], notes:''}, basis:{}, consents:{}, miniTask:null, createdAt:new Date().toISOString()};
+window.state = state;
+
+const scale5 = [['0','Nein / kaum',''],['1','Selten',''],['2','Manchmal',''],['3','Häufig',''],['4','Sehr häufig','']];
+const yesScale = [['0','Nein',''],['1','Unsicher',''],['2','Ja, eher schon',''],['3','Ja, deutlich','']];
+const questions = [
+ {id:'energy_cost',phase:'Ersteinschätzung',k:'Belastung 1/12',icon:'🔋',dim:'burden',q:'Haben Sie oft das Gefühl, dass alltägliche Dinge deutlich mehr Energie kosten als sie sollten?',hint:'Es geht um den inneren Aufwand – nicht darum, wie gut es nach außen aussieht.',opts:scale5},
+ {id:'overload_exhaustion',phase:'Ersteinschätzung',k:'Belastung 2/12',icon:'🌙',dim:'burden',q:'Führen Ihre Schwierigkeiten regelmäßig zu Überforderung, Erschöpfung oder Selbstzweifeln?',hint:'Hier geht es um die Kosten im Alltag – auch dann, wenn Sie nach außen funktionieren.',opts:scale5},
+ {id:'potential_gap',phase:'Ersteinschätzung',k:'Belastung 3/12',icon:'🏙️',dim:'burden',q:'Haben Sie häufig das Gefühl, trotz großer Anstrengung hinter Ihren eigenen Möglichkeiten zurückzubleiben?',hint:'Viele Betroffene beschreiben weniger ein fehlendes Können, sondern ein unzuverlässiges Umsetzen.',opts:scale5},
+ {id:'sorting',phase:'Ersteinschätzung',k:'Funktion 4/12',icon:'🧭',dim:'core',q:'Haben Sie manchmal das Gefühl, dass zu viele Gedanken, Aufgaben oder Eindrücke gleichzeitig auf Sie einwirken?',hint:'Zum Beispiel wenn viele Dinge gleichzeitig Aufmerksamkeit verlangen und es schwerfällt, den Überblick zu behalten oder Prioritäten zu setzen.',opts:scale5},
+ {id:'finish_tasks',phase:'Ersteinschätzung',k:'Funktion 5/12',icon:'⏳',dim:'core',q:'Erleben Sie regelmäßig Schwierigkeiten, Aufgaben strukturiert zu beginnen oder abzuschließen?',hint:'Zum Beispiel Anfangen, Dranbleiben, Priorisieren, rechtzeitig fertig werden oder wieder einsteigen.',opts:scale5},
+ {id:'organisation',phase:'Ersteinschätzung',k:'Funktion 6/12',icon:'📅',dim:'core',q:'Verlieren Sie häufiger den Überblick über Termine, Fristen oder mehrere gleichzeitige Aufgaben?',hint:'Gemeint ist der praktische Überblick im Alltag – nicht, ob es am Ende irgendwie doch funktioniert.',opts:scale5},
+ {id:'attention',phase:'Ersteinschätzung',k:'Aufmerksamkeit 7/12',icon:'🎯',dim:'core',q:'Fällt es Ihnen schwer, Ihre Aufmerksamkeit über längere Zeit bewusst aufrechtzuerhalten?',hint:'Zum Beispiel bei Gesprächen, Lesen, Arbeit, Lernen oder längeren Aufgaben.',opts:scale5},
+ {id:'impulsivity',phase:'Ersteinschätzung',k:'Impulsivität 8/12',icon:'⚡',dim:'core',q:'Handeln oder antworten Sie manchmal schneller, als Sie es eigentlich möchten?',hint:'Es geht um vorschnelles Reagieren, innere Ungeduld oder Schwierigkeiten kurz innezuhalten.',opts:scale5},
+ {id:'mini_gonogo_intro',type:'mini_gonogo',phase:'Ersteinschätzung',k:'Aufgabe',icon:'●',dim:'demo',q:'Kurze Aufmerksamkeitsprobe',hint:'',opts:[]},
+ {id:'calm_down',phase:'Ersteinschätzung',k:'Regulation 9/12',icon:'🌊',dim:'burden',q:'Haben Sie Schwierigkeiten, nach Stress, Konflikten oder Reizüberflutung wieder innerlich zur Ruhe zu kommen?',hint:'Auch das Wieder-Runterkommen nach Belastung kann für das Gesamtbild relevant sein.',opts:scale5},
+ {id:'before_12',phase:'Ersteinschätzung',k:'Entwicklung 10/12',icon:'🌱',dim:'persistence',q:'Bestanden die geschilderten Schwierigkeiten nach Ihrer Erinnerung bereits vor dem 12. Lebensjahr?',hint:'Unsichere Erinnerungen sind normal. Wichtig ist, ob es frühe Hinweise auf ein wiederkehrendes Muster gab.',opts:yesScale},
+ {id:'school_descriptions',phase:'Ersteinschätzung',k:'Entwicklung 11/12',icon:'🧩',dim:'persistence',q:'Wurden Sie in Kindheit oder Schulzeit häufiger als verträumt, chaotisch, impulsiv, unruhig oder sehr vergesslich beschrieben?',hint:'Auch Hinweise aus Zeugnissen, Familie oder früheren Rückmeldungen können hier gemeint sein.',opts:yesScale},
+ {id:'early_compensation',phase:'Ersteinschätzung',k:'Entwicklung 12/12',icon:'📚',dim:'persistence',q:'Mussten Sie schon früh deutlich stärker gegensteuern oder sich stärker strukturieren als andere?',hint:'Zum Beispiel durch Listen, Kontrolle, Anpassung, hohen Druck oder starke Kompensation.',opts:yesScale}
+];
+let qIndex=-1;
+const $=id=>document.getElementById(id);
+
+function setPanel(id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active')); if(id!=='questionPanel' && $('questionPanel')) $('questionPanel').classList.remove('is-mini-gonogo'); $(id).classList.add('active'); window.scrollTo({top:0,behavior:'smooth'});}
+function isScoredQuestion(x){return !!(x && x.type!=='mini_gonogo' && x.opts);}
+function totalScoredQuestions(){return questions.filter(isScoredQuestion).length;}
+function scoredQuestionNumber(i){return questions.slice(0,i+1).filter(isScoredQuestion).length;}
+function pct(){ if(qIndex<0) return 0; return Math.min(48, Math.round((scoredQuestionNumber(qIndex)/Math.max(1,totalScoredQuestions()))*42)+6); }
+function updateProgress(label, percent){ $('phaseText').textContent=label; $('percentText').innerHTML=percent+'&nbsp;%'; $('bar').style.width=percent+'%'; $('stepLabel').textContent = percent<50?'Phase 1':percent<72?'Phase 2':percent<90?'Phase 3':'Freigabe'; }
+function iconFor(v){return ['○','◔','◐','●','◆'][Number(v)]||'○'}
+function save(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){ /* localStorage may be unavailable in some preview contexts */ } }
+window.save = save;
+window.psynoviaStorage = {
+  key: STORAGE_KEY,
+  getState: () => state,
+  save: () => save(),
+  load: () => {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "null"); } catch(e) { return null; }
+  },
+  clearDraft: () => {
+    try { if(window.psynoviaStorage&&typeof window.psynoviaStorage.clearDraft==="function")window.psynoviaStorage.clearDraft();else localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  },
+  markCompleted: () => {
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem("psynovia_intake_v5_completed");
+      localStorage.setItem("psynovia_intake_v5_completed", new Date().toISOString());
+    } catch(e) {}
+  }
+};
+window.state=state;
+function next(){ if(qIndex < questions.length-1) showQuestion(qIndex+1); else showResult(); }
+
+function showQuestion(i){
+  qIndex=i; const x=questions[i]; setPanel('questionPanel'); updateProgress(x.phase,pct()); $('questionPanel').classList.toggle('is-mini-gonogo', x.type==='mini_gonogo');
+  $('qKicker').textContent=x.k; $('qCount').textContent=isScoredQuestion(x)?(scoredQuestionNumber(i)+' / '+totalScoredQuestions()):'Vorgeschmack'; $('qIcon').textContent=x.icon; $('qTitle').textContent=x.q; $('qHint').textContent=x.hint||''; $('extraArea').innerHTML=''; $('answers').innerHTML='';
+  if(x.type==='mini_gonogo') return renderMiniTask();
+  x.opts.forEach(o=>{ const b=document.createElement('button'); b.className='answer'; b.type='button'; b.innerHTML=`<span class="ico">${iconFor(o[0])}</span><span class="answer-copy"><strong>${o[1]}</strong>${o[2]?`<span class="txt">${o[2]}</span>`:''}</span>`; b.onclick=()=>{ const value=Number(o[0]); state.answers[x.id]=value; ensureScreeningContainer().raw_items[x.id]=value; save(); setTimeout(()=>next(),90); }; $('answers').appendChild(b); });
+}
+
+function renderMiniTask(){
+  $('answers').innerHTML = '';
+  $('extraArea').innerHTML = `<div class="ps-mini" id="psMini">
+    <div class="ps-mini-intro">
+      <p><strong>Bei dieser kurzen Aufgabe sollen Sie nur auf die blauen Kreise reagieren und die orangenen Kreise ignorieren.</strong></p>
+      <p>Solche Aufgaben werden in der Diagnostik genutzt, um Aufmerksamkeit und die Fähigkeit zu untersuchen, automatische Reaktionen zu kontrollieren.</p>
+    </div>
+    <div class="ps-mini-rule"><span class="ps-mini-dot"></span> Tippen Sie nur auf Blau</div>
+    <div class="ps-mini-stage" id="psMiniStage">
+      <button type="button" id="psMiniBall" class="ps-mini-ball is-hidden" aria-label="Ziel">●</button>
+    </div>
+    <div class="ps-mini-feedback" id="psMiniFeedback">Bereit</div>
+    <div class="ps-mini-meta"><span id="psMiniCount">0 / 12</span><span id="psMiniInfo">Vorgeschmack</span></div>
+    <button type="button" id="psMiniButton" class="ps-mini-button">Aufgabe starten</button>
+  </div>
+  `;
+
+  const btn=$('psMiniButton'), ball=$('psMiniBall'), stage=$('psMiniStage'), count=$('psMiniCount'), info=$('psMiniInfo'), feedback=$('psMiniFeedback');
+  const seq=['go','no','go','go','no','go','no','go','go','no','go','go'];
+  let trials=[], active=false, current=null, started=0, trialNo=0, timer=null, running=false;
+
+  function setBallCentered(){
+    ball.style.left='50%';
+    ball.style.top='50%';
+    ball.style.transform='translate(-50%,-50%)';
+  }
+
+  function placeBall(){
+    const s=stage.getBoundingClientRect();
+    const b=ball.getBoundingClientRect();
+    const margin=Math.max(18, Math.round(Math.min(s.width,s.height)*0.10));
+    const minX=margin + b.width/2;
+    const maxX=Math.max(minX, s.width - margin - b.width/2);
+    const minY=margin + b.height/2;
+    const maxY=Math.max(minY, s.height - margin - b.height/2);
+    const x=minX + Math.random()*(maxX-minX);
+    const y=minY + Math.random()*(maxY-minY);
+    ball.style.left=x+'px';
+    ball.style.top=y+'px';
+    ball.style.transform='translate(-50%,-50%)';
+  }
+
+  function nextTrial(){
+    if(trialNo>=seq.length){ finish(); return; }
+    current=seq[trialNo];
+    active=true;
+    started=performance.now();
+    ball.textContent='●';
+    ball.className='ps-mini-ball '+(current==='no'?'is-no':'');
+    placeBall();
+    count.textContent=(trialNo+1)+' / '+seq.length;
+    info.textContent=current==='go'?'Blau: tippen':'Orange: nicht tippen';
+    feedback.textContent=current==='go'?'Blauer Kreis: tippen':'Orange: kurz warten';
+    clearTimeout(timer);
+    timer=setTimeout(()=>{
+      if(!active) return;
+      trials.push({trial:trialNo+1,stimulus:current,response:false,correct:current==='no',rt_ms:null});
+      active=false;
+      ball.classList.add('is-hidden');
+      trialNo++;
+      count.textContent=trialNo+' / '+seq.length;
+      setTimeout(nextTrial,240);
+    }, current==='no'?850:1100);
+  }
+
+  function respond(){
+    if(!running || !active) return;
+    clearTimeout(timer);
+    const rt=Math.round(performance.now()-started);
+    const correct=current==='go';
+    trials.push({trial:trialNo+1,stimulus:current,response:true,correct,rt_ms:rt});
+    feedback.textContent=correct?'✓ übernommen':'Orange bitte ignorieren';
+    active=false;
+    ball.classList.add('is-hidden');
+    trialNo++;
+    count.textContent=trialNo+' / '+seq.length;
+    setTimeout(nextTrial, correct?180:360);
+  }
+
+  function finish(){
+    running=false;
+    active=false;
+    clearTimeout(timer);
+    ball.className='ps-mini-ball';
+    ball.textContent='✓';
+    setBallCentered();
+    feedback.textContent='Aufgabe abgeschlossen';
+    info.textContent='Danke';
+    count.textContent=seq.length+' / '+seq.length;
+    btn.disabled=false;
+    btn.textContent='Weiter';
+    btn.classList.add('is-secondary');
+    const correct=trials.filter(t=>t.correct).length;
+    state.miniTask={schema:'psynovia_intake_mini_gonogo_demo_v3',completedAt:new Date().toISOString(),trials,summary:{trials:trials.length,correct}};
+    save();
+    btn.onclick=()=>next();
+  }
+
+  ball.onclick=respond;
+  btn.onclick=()=>{
+    running=true;
+    btn.disabled=true;
+    btn.textContent='Läuft …';
+    feedback.textContent='Los geht’s';
+    setBallCentered();
+    setTimeout(nextTrial,350);
+  };
+}
+
+function ensureScreeningContainer(){
+  if(!state.screening){
+    state.screening={schema_version:'psynovia_intake_screening_v1',raw_items:{},scores:{},levels:{},result_group:null,completed_iso:null};
+  }
+  if(!state.screening.raw_items) state.screening.raw_items={};
+  if(!state.screening.scores) state.screening.scores={};
+  if(!state.screening.levels) state.screening.levels={};
+  return state.screening;
+}
+function itemValue(id){return Number(state.answers[id] ?? ensureScreeningContainer().raw_items[id] ?? 0) || 0;}
+function score(ids){return ids.reduce((s,id)=>s+itemValue(id),0)}
+function level(value, lowMax, midMax){return value<=lowMax?'low':value<=midMax?'medium':'high'}
+function computeScreeningResult(){
+  const raw = Object.assign({}, state.answers || {});
+  const val = id => Number(raw[id] ?? 0);
+  const burdenItems=['energy_cost','overload_exhaustion','potential_gap','sorting','finish_tasks','organisation','attention','impulsivity','calm_down'];
+  const coreItems=['sorting','finish_tasks','organisation','attention','impulsivity'];
+  const persistenceItems=['before_12','school_descriptions','early_compensation'];
+  const sum = arr => arr.reduce((acc,id)=>acc+val(id),0);
+  const burdenScore=sum(burdenItems), coreScore=sum(coreItems), persistenceScore=sum(persistenceItems);
+  const level = (score, lowMax, midMax) => score<=lowMax ? 'low' : score<=midMax ? 'medium' : 'high';
+  let group='C';
+  if(burdenScore>=24 || coreScore>=14 || (persistenceScore>=6 && coreScore>=10)) group='A';
+  else if(burdenScore>=12 || coreScore>=7 || persistenceScore>=3) group='B';
+  return {
+    schema_version:'psynovia_intake_screening_v1',
+    raw_items:raw,
+    scores:{burden:burdenScore, core:coreScore, persistence:persistenceScore},
+    levels:{burden:level(burdenScore,11,23), core:level(coreScore,6,13), persistence:level(persistenceScore,2,5)},
+    result_group:group,
+    childhood_red_flag:persistenceScore>=6,
+    completed_iso:new Date().toISOString()
+  };
+}
+
+function showResult(){
+  const result = computeScreeningResult();
+  state.screening = result;
+  save();
+  const texts = {
+    A: {
+      title: 'Ihre Angaben sprechen klar für eine weiterführende ADHS-Abklärung',
+      body: [
+        'Ihre Antworten zeigen mehrere Muster, die häufig mit Schwierigkeiten in den Bereichen Aufmerksamkeit, Organisation, Selbststeuerung oder mentaler Belastbarkeit verbunden sind.',
+        'Viele Menschen berichten, dass sie ihren Alltag nur mit deutlich mehr Anstrengung bewältigen als andere oder das Gefühl haben, dauerhaft gegen unsichtbare Widerstände zu arbeiten.',
+        'Eine weiterführende ADHS-Diagnostik erscheint auf Grundlage Ihrer Angaben klar empfehlenswert.',
+        'Im nächsten Schritt erfassen wir systematisch die verschiedenen Bereiche, die bei ADHS eine Rolle spielen können. Dazu gehören unter anderem Aufmerksamkeit, Organisation, Impulsivität, emotionale Regulation, Alltagsbeeinträchtigung sowie objektive Aufmerksamkeits- und Leistungsmaße.',
+        'Aus diesen Informationen entsteht ein nachvollziehbares Neuroprofil, das Ihre individuellen Stärken, Herausforderungen und Muster sichtbar macht. Sie erhalten eine strukturierte Aufbereitung Ihrer Ergebnisse sowie konkrete Empfehlungen für die weitere Behandlung, Diagnostik oder Unterstützung.',
+        'Unser Ziel ist nicht nur eine diagnostische Einordnung, sondern vor allem ein besseres Verständnis dafür, wie Ihr Gehirn arbeitet und welche Wege im Alltag tatsächlich zu Ihnen passen.'
+      ],
+      cta: 'Weiter'
+    },
+    B: {
+      title: 'Ihre Angaben zeigen mehrere relevante Hinweise',
+      body: [
+        'Ihre Antworten zeigen einige Muster, die bei einer weiterführenden ADHS-Abklärung genauer betrachtet werden sollten.',
+        'Viele Menschen erleben über Jahre hinweg, dass alltägliche Anforderungen deutlich mehr Energie, Planung oder Selbststeuerung erfordern als bei anderen. Häufig entsteht dabei das Gefühl, das eigene Potenzial nicht zuverlässig abrufen zu können, obwohl Wissen, Motivation oder Anstrengungsbereitschaft grundsätzlich vorhanden sind.',
+        'Solche Erfahrungen haben nicht nur eine mögliche Ursache. Sie können mit ADHS zusammenhängen, durch andere Faktoren beeinflusst werden oder aus mehreren gleichzeitig wirkenden Einflüssen entstehen. Genau deshalb lohnt sich eine strukturierte diagnostische Betrachtung.',
+        'Eine weiterführende diagnostische Abklärung erscheint auf Grundlage Ihrer Angaben sinnvoll.',
+        'Im nächsten Schritt erfassen wir systematisch die verschiedenen Bereiche, die bei ADHS eine Rolle spielen können. Dazu gehören unter anderem Aufmerksamkeit, Organisation, Impulsivität, emotionale Regulation, Alltagsbeeinträchtigung sowie objektive Aufmerksamkeits- und Leistungsmaße.',
+        'Aus diesen Informationen entsteht ein nachvollziehbares Neuroprofil, das Ihre individuellen Stärken, Herausforderungen und Muster sichtbar macht. Sie erhalten eine strukturierte Aufbereitung Ihrer Ergebnisse sowie konkrete Empfehlungen für die weitere Behandlung, Diagnostik oder Unterstützung.',
+        'Unser Ziel ist nicht nur eine diagnostische Einordnung, sondern vor allem ein besseres Verständnis dafür, warum bestimmte Herausforderungen entstehen und welche Strategien, Hilfen oder Behandlungsansätze tatsächlich zu Ihrer Situation passen.'
+      ],
+      cta: 'Weiter'
+    },
+    C: {
+      title: 'Ihre Antworten zeigen kein eindeutig ausgeprägtes Muster',
+      body: [
+        'Menschen suchen in der Regel nicht ohne Grund nach einer Erklärung für ihre Schwierigkeiten. Wenn Sie sich mit Themen wie Aufmerksamkeit, Organisation, Überforderung, Erschöpfung oder innerer Unruhe beschäftigen, steckt dahinter meist eine persönliche Erfahrung, die ernst genommen werden sollte.',
+        'Ihre Antworten ergeben aktuell kein klar abgegrenztes Bild. Das bedeutet jedoch nicht automatisch, dass keine relevanten Zusammenhänge bestehen. Manche Menschen entwickeln über viele Jahre sehr wirksame Strategien, gleichen Schwierigkeiten erfolgreich aus oder erleben ihre Belastungen in Bereichen, die sich in einer kurzen Ersteinschätzung nur begrenzt abbilden lassen.',
+        'Eine weiterführende diagnostische Abklärung ist auf Grundlage Ihrer Angaben nicht zwingend erforderlich, kann aber sinnvoll sein, wenn Sie Ihre Situation besser verstehen möchten oder das Gefühl haben, dass wichtige Fragen bisher unbeantwortet geblieben sind.',
+        'Im nächsten Schritt erfassen wir systematisch die verschiedenen Bereiche, die bei ADHS eine Rolle spielen können. Dazu gehören unter anderem Aufmerksamkeit, Organisation, Impulsivität, emotionale Regulation, Alltagsbeeinträchtigung sowie objektive Aufmerksamkeits- und Leistungsmaße.',
+        'Aus diesen Informationen entsteht ein nachvollziehbares Neuroprofil, das Ihre individuellen Stärken, Herausforderungen und Muster sichtbar macht. Sie erhalten eine strukturierte Aufbereitung Ihrer Ergebnisse sowie konkrete Empfehlungen für die weitere Behandlung, Diagnostik oder Unterstützung.',
+        'Unser Ziel ist nicht nur eine diagnostische Einordnung, sondern vor allem ein besseres Verständnis dafür, wie Sie funktionieren, wo mögliche Ursachen Ihrer Schwierigkeiten liegen und welche nächsten Schritte für Sie sinnvoll sein können.'
+      ],
+      cta: 'Weiter'
+    }
+  };
+  const t = texts[result.result_group] || texts.B;
+  setPanel('resultPanel');
+  updateProgress('Ersteinschätzung',58);
+  $('resultCard').innerHTML = '<h2>'+t.title+'</h2>' + t.body.map(p=>'<p>'+p+'</p>').join('');
+  $('contextBtn').textContent = t.cta;
+  $('contextBtn').onclick = () => {
+    if(window.psynoviaV50Flow && typeof window.psynoviaV50Flow.routeToMedical === 'function'){
+      window.psynoviaV50Flow.routeToMedical();
+    }else{
+      console.error('Psynovia V50 flow is not available.');
+      alert('Der nächste Schritt konnte nicht geladen werden. Bitte laden Sie die Seite neu.');
+    }
+  };
+}
+
+/* Legacy context/legal flow removed in V21.
+   Active flow after screening is V50:
+   routeToMedical -> routeToPsych -> routeToMedication -> routeToSafety -> routeToBasisFallback -> routeToPrivacyFallback -> routeToContractFallback.
+*/
+
+window.psynoviaLegacyFlow={
+  showQuestion,
+  showResult,
+  setPanel,
+  updateProgress,
+  resumeScreening:function(){
+    let idx=questions.findIndex(q=>isScoredQuestion(q)&&typeof state.answers[q.id]==="undefined");
+    if(idx<0){
+      showResult();
+    }else{
+      showQuestion(idx);
+    }
+  }
+};
+$('startBtn').onclick=()=>showQuestion(0);
+$('contextBtn').onclick=()=>{
+  if(window.psynoviaV50Flow && typeof window.psynoviaV50Flow.routeToMedical === 'function'){
+    window.psynoviaV50Flow.routeToMedical();
+  }
+};
+updateProgress('Ersteinschätzung',0);
+
+function applyViewportClass(){
+  const h = window.innerHeight || document.documentElement.clientHeight || 800;
+  document.body.classList.toggle('short-view', h < 700);
+}
+applyViewportClass();
+window.addEventListener('resize', applyViewportClass);
+
+})();
+</script>
+
+
+<script id="psynovia-v50-flow-clean-js">
+
+(function(){
+const $=id=>document.getElementById(id);
+function getState(){if(!window.state)window.state={answers:{},context:{},basis:{},consents:{},miniTask:null,createdAt:new Date().toISOString()};if(!window.state.context)window.state.context={};if(!window.state.consents)window.state.consents={};return window.state}
+function persistState(){if(window.psynoviaStorage&&typeof window.psynoviaStorage.save==="function")return window.psynoviaStorage.persistState();if(typeof window.save==="function")return window.persistState();}
+function show(p){document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));p.classList.add("active");window.scrollTo({top:0,behavior:"smooth"})}
+function panel(id,cls,content){let p=$(id);if(!p){p=document.createElement("section");p.id=id;p.className=cls||"panel question-panel";document.querySelector("main").appendChild(p)}p.innerHTML=content;return p}
+function meta(a,b,c){
+  const raw=String(c||"").trim();
+  const num=raw.replace(/%/g,"");
+  const css=raw.endsWith("%")?raw:(num+"%");
+  if($("phaseText"))$("phaseText").textContent=a;
+  if($("percentText"))$("percentText").innerHTML=num+"&nbsp;%";
+  if($("bar"))$("bar").style.width=css;
+  if($("stepLabel"))$("stepLabel").textContent=b;
+}
+function sel(p){return Array.from(p.querySelectorAll(".chip.selected")).map(b=>b.dataset.value).filter(Boolean)}
+function chips(p){p.querySelectorAll(".chip").forEach(b=>{b.onclick=()=>{b.classList.toggle("selected");b.setAttribute("aria-pressed",b.classList.contains("selected")?"true":"false")}})}
+function routeToMedical(){const p=panel("v50MedicalPanel","panel question-panel context-screen",`<div class="q-card"><div class="q-top"><div class="q-kicker">Klinischer Kontext</div><div class="q-count">Körperliche Faktoren</div></div><h1 class="question">Gibt es körperliche oder neurologische Faktoren, die für die Einordnung wichtig sein könnten?</h1><p class="hint">Manche körperlichen oder neurologischen Faktoren können Aufmerksamkeit, Antrieb, Schlaf oder Konzentration beeinflussen. Bitte wählen Sie aus, was bei Ihnen bekannt ist.</p><div class="chips"><button type="button" class="chip" data-value="none">Keine bekannt</button><button type="button" class="chip" data-value="thyroid">Schilddrüsenerkrankung</button><button type="button" class="chip" data-value="epilepsy">Epilepsie / Krampfanfälle</button><button type="button" class="chip" data-value="tbi">Schädel-Hirn-Trauma / Gehirnerschütterungen</button><button type="button" class="chip" data-value="sleep_apnea">Schlafstörung / Schlafapnoe</button><button type="button" class="chip" data-value="chronic_pain">Chronische Schmerzen</button><button type="button" class="chip" data-value="migraine_neuro">Migräne / neurologische Erkrankung</button><button type="button" class="chip" data-value="cardio">Herz-Kreislauf-Erkrankung</button><button type="button" class="chip" data-value="hormonal">Hormonelle Erkrankung</button><button type="button" class="chip" data-value="pregnancy_postpartum">Schwangerschaft / Wochenbett</button><button type="button" class="chip" data-value="other">Sonstige relevante Erkrankung</button></div><div class="form-grid"><label><div class="label">Falls relevant: Welche Erkrankung oder medizinische Besonderheit?</div><textarea id="medicalNotes" placeholder="Optional"></textarea></label></div><div class="context-next"><button type="button" class="nextbtn" id="medicalNextBtn">Weiter</button></div></div>`);chips(p);$("medicalNextBtn").onclick=()=>{const s=getState();s.context.medical={selected:sel(p),notes:($("medicalNotes").value||"").trim()};persistState();routeToPsych()};meta("Klinischer Kontext","Phase 2","66%");show(p)}
+function routeToPsych(){const p=panel("v50PsychPanel","panel question-panel context-screen",`<div class="q-card"><div class="q-top"><div class="q-kicker">Klinischer Kontext</div><div class="q-count">Psychische Vorerkrankungen</div></div><h1 class="question">Gab oder gibt es psychische Diagnosen oder Behandlungen?</h1><p class="hint">Einige psychische Belastungen können ADHS ähneln, ADHS begleiten oder die Einordnung erschweren. Bitte wählen Sie aus, was bei Ihnen bekannt ist oder früher diagnostiziert wurde.</p><div class="chips"><button type="button" class="chip" data-value="none">Keine bekannt</button><button type="button" class="chip" data-value="depression">Depression</button><button type="button" class="chip" data-value="anxiety_panic">Angststörung / Panikstörung</button><button type="button" class="chip" data-value="ocd">Zwangsstörung</button><button type="button" class="chip" data-value="eating_disorder">Essstörung</button><button type="button" class="chip" data-value="ptsd">Traumafolgestörung / PTBS</button><button type="button" class="chip" data-value="bipolar">Bipolare Störung</button><button type="button" class="chip" data-value="psychosis">Psychose</button><button type="button" class="chip" data-value="substance">Substanzproblematik</button><button type="button" class="chip" data-value="autism">Autismus-Spektrum</button><button type="button" class="chip" data-value="personality">Persönlichkeitsproblematik</button><button type="button" class="chip" data-value="psychotherapy">Frühere oder aktuelle Psychotherapie</button><button type="button" class="chip" data-value="psychiatry">Frühere oder aktuelle psychiatrische Behandlung</button><button type="button" class="chip" data-value="other">Sonstiges</button></div><div class="form-grid"><label><div class="label">Falls relevant: Was wurde diagnostiziert oder behandelt?</div><textarea id="psychNotes" placeholder="Optional"></textarea></label></div><div class="context-next"><button type="button" class="nextbtn" id="psychNextBtn">Weiter</button></div></div>`);chips(p);$("psychNextBtn").onclick=()=>{const s=getState();s.context.psych={selected:sel(p),notes:($("psychNotes").value||"").trim()};persistState();routeToMedication()};meta("Klinischer Kontext","Phase 2","72%");show(p)}
+function routeToMedication(){const p=panel("v50MedicationPanel","panel question-panel context-screen",`<div class="q-card"><div class="q-top"><div class="q-kicker">Klinischer Kontext</div><div class="q-count">Aktuelle Medikation</div></div><h1 class="question">Nehmen Sie aktuell Medikamente ein?</h1><p class="hint">Medikamente können Aufmerksamkeit, Schlaf, Antrieb oder emotionale Regulation beeinflussen. Diese Angabe hilft, die späteren Ergebnisse fachlich sinnvoll einzuordnen.</p><div class="chips" id="medicationStatusChips"><button type="button" class="chip" data-value="no">Nein</button><button type="button" class="chip" data-value="yes">Ja</button></div><div class="form-grid medication-followup" id="medicationDetailsWrap" style="display:none"><label><div class="label">Bitte tragen Sie Medikament, Dosis und Einnahmezeitpunkt ein, soweit bekannt.</div><textarea id="medicationDetails" placeholder="Beispiel: Medikinet adult 20 mg morgens, Sertralin 50 mg morgens."></textarea></label></div><div class="context-next"><button type="button" class="nextbtn" id="medicationNextBtn">Weiter</button></div></div>`);const cs=Array.from(p.querySelectorAll("#medicationStatusChips .chip"));cs.forEach(b=>b.onclick=()=>{cs.forEach(x=>x.classList.remove("selected"));b.classList.add("selected");$("medicationDetailsWrap").style.display=b.dataset.value==="yes"?"grid":"none"});$("medicationNextBtn").onclick=()=>{const s=p.querySelector("#medicationStatusChips .chip.selected");if(!s){alert("Bitte wählen Sie aus, ob Sie aktuell Medikamente einnehmen.");return}const st=getState();st.context.medication={status:s.dataset.value,details:($("medicationDetails")?.value||"").trim()};persistState();routeToSafety()};meta("Klinischer Kontext","Phase 2","78%");show(p)}
+function routeToSafety(){const p=panel("v50SafetyPanel","panel question-panel context-screen",`<div class="q-card"><div class="q-top"><div class="q-kicker">Belastung und Sicherheit</div><div class="q-count">Versorgungsgrenze</div></div><h1 class="question">Hatten Sie in den letzten zwei Wochen Gedanken daran, nicht mehr leben zu wollen oder sich etwas anzutun?</h1><p class="hint">Bitte beantworten Sie diese Frage möglichst ehrlich. Psynovia ist keine Notfallversorgung.</p><div class="answers"><button type="button" class="answer" data-risk="none"><span class="ico">○</span><span class="answer-copy"><strong>Nein</strong></span></button><button type="button" class="answer" data-risk="mild"><span class="ico">◔</span><span class="answer-copy"><strong>Gelegentlich solche Gedanken</strong></span></button><button type="button" class="answer" data-risk="moderate"><span class="ico">◐</span><span class="answer-copy"><strong>Häufig solche Gedanken</strong></span></button><button type="button" class="answer" data-risk="acute"><span class="ico">●</span><span class="answer-copy"><strong>Ich würde mir etwas antun, wenn ich die Möglichkeit hätte</strong></span></button></div><div class="notice warn" id="moderateSafetyNotice" style="display:none">Falls diese Gedanken aktuell stark belastend sind, empfehlen wir zusätzlich eine persönliche ärztliche oder psychotherapeutische Unterstützung.</div></div>`);p.querySelectorAll("[data-risk]").forEach(b=>b.onclick=()=>{const r=b.dataset.risk,s=getState();s.context.safety={suicide_risk:r,stop:r==="acute",completed_iso:new Date().toISOString()};delete s.basis;delete s.consents;persistState();if(r==="acute")return routeToSafetyStop();if(r==="moderate")return routeToSafetyModerate();routeToBasisFallback()});meta("Sicherheit","Phase 2","82%");show(p)}
+function routeToSafetyModerate(){const p=panel("v50SafetyModeratePanel","panel question-panel context-screen",`<div class="q-card"><div class="q-top"><div class="q-kicker">Versorgungsgrenze</div><div class="q-count">Hinweis</div></div><h1 class="question">Bitte behalten Sie Ihre Sicherheit im Blick.</h1><p class="hint">Sie haben angegeben, in den letzten zwei Wochen häufig Gedanken daran gehabt zu haben, nicht mehr leben zu wollen oder sich etwas anzutun.</p><div class="notice warn">Eine digitale ADHS-Diagnostik kann hilfreich sein, ersetzt in dieser Situation aber keine persönliche Unterstützung. Wenn diese Gedanken aktuell stark belastend sind, wenden Sie sich bitte zusätzlich an eine ärztliche, psychotherapeutische oder psychiatrische Versorgungsstelle.<br><br><strong>Bei akuter Gefahr:</strong><br>Notruf: <strong>112</strong><br>Ärztlicher Bereitschaftsdienst: <strong>116117</strong><br>Telefonseelsorge: <strong>0800 1110111</strong></div><p class="hint">Wenn aktuell keine unmittelbare Gefahr besteht, können Sie mit der Praxisaufnahme fortfahren.</p><button type="button" class="nextbtn" id="v50SafetyModerateNext">Weiter</button></div>`);$("v50SafetyModerateNext").onclick=()=>routeToBasisFallback();meta("Versorgungsgrenze","Phase 2","84%");show(p)}
+function routeToSafetyStop(){const p=$("safetyStopPanel");if(p){meta("Versorgungsgrenze","Intake beendet","82%");show(p)}else alert("Bitte wenden Sie sich zeitnah an eine psychiatrische, psychotherapeutische oder notfallmäßige Versorgung.")}
+
+function routeToBasisFallback(){const p=panel("v50BasisPanel","panel question-panel",`<div class="q-card"><div class="q-top"><div class="q-kicker">Aufnahme</div><div class="q-count">Basisdaten</div></div><h1 class="question">Persönliche Daten</h1><p class="hint">Diese Angaben werden für Zuordnung, Kontakt und Rechnung benötigt.</p><div class="form-grid"><label><div class="label">Vor- und Nachname</div><input id="v50BasisName" autocomplete="name"></label><label><div class="label">Geburtsdatum</div><input id="v50BasisBirth" type="date"><div id="v50BirthWarning" style="display:none">Psynovia richtet sich aktuell ausschließlich an Erwachsene ab 18 Jahren. Bitte überprüfen Sie Ihr Geburtsdatum.</div></label><label><div class="label">E-Mail-Adresse</div><input id="v50BasisEmail" type="email" autocomplete="email"></label><label><div class="label">Telefonnummer</div><input id="v50BasisPhone" type="tel" autocomplete="tel"></label></div><h2>Rechnungsadresse</h2><div class="form-grid"><label><div class="label">Straße und Hausnummer</div><input id="v50BasisStreet" autocomplete="street-address"></label><label><div class="label">PLZ</div><input id="v50BasisZip" inputmode="numeric" autocomplete="postal-code"></label><label><div class="label">Ort</div><input id="v50BasisCity" autocomplete="address-level2"></label><label><div class="label">Land</div><input id="v50BasisCountry" autocomplete="country-name" value="Deutschland"></label></div><h2>Abrechnung & Kostenerstattung</h2><div class="billing-hint">Die diagnostischen Leistungen von Psynovia werden nach der Gebührenordnung für Ärzte (GOÄ) abgerechnet und können bei privaten Krankenversicherungen sowie Beihilfestellen zur Kostenerstattung eingereicht werden.<br><br>Für gesetzlich Versicherte erfolgt die Nutzung zunächst als Selbstzahlerleistung. Wir empfehlen, vorab ein Kostenerstattungsverfahren bei Ihrer Krankenkasse einzuleiten.</div><p class="hint">Bitte geben Sie Ihren aktuellen Versicherungsstatus an:</p><div class="chips" id="v50InsuranceChips"><button type="button" class="chip" data-value="privat_versichert">Privat versichert</button><button type="button" class="chip" data-value="beihilfeberechtigt">Beihilfeberechtigt</button><button type="button" class="chip" data-value="gesetzlich_versichert">Gesetzlich versichert</button><button type="button" class="chip" data-value="selbstzahler">Selbstzahler</button></div><h2>Aktuelle Behandlung</h2><p class="hint">Befinden Sie sich aktuell in psychotherapeutischer oder psychiatrischer Behandlung?</p><div class="chips" id="v50TreatmentChips"><button type="button" class="chip" data-value="nein">Nein</button><button type="button" class="chip" data-value="psychotherapie">Psychotherapie</button><button type="button" class="chip" data-value="psychiatrische_behandlung">Psychiatrische Behandlung</button><button type="button" class="chip" data-value="beides">Beides</button></div><h2>Für unsere Planung</h2><p class="hint">Können Sie aktuell schon einschätzen, ob Sie nach der Datenerhebung zusätzlich ein diagnostisches Abschlussgespräch in Anspruch nehmen möchten?</p><div class="chips" id="v50InterviewChips"><button type="button" class="chip" data-value="ja_wahrscheinlich">Ja, wahrscheinlich</button><button type="button" class="chip" data-value="vielleicht">Vielleicht</button><button type="button" class="chip" data-value="eher_nicht">Eher nicht</button><button type="button" class="chip" data-value="unsicher">Ich bin mir noch unsicher</button></div><div class="planning-note">Diese Angabe dient ausschließlich unserer Planung. Sie ist unverbindlich und kann jederzeit geändert werden.</div><p class="hint" style="margin-top:18px"><strong>Wurden Sie von einer Praxis oder einem Behandler auf Psynovia hingewiesen?</strong></p><div class="chips" id="v50ReferralChips"><button type="button" class="chip" data-value="nein">Nein</button><button type="button" class="chip" data-value="ja">Ja</button></div><div class="form-grid" id="v50ReferralWrap" style="display:none"><label><div class="label">Von wem wurden Sie auf Psynovia hingewiesen?</div><input id="v50ReferralSource" placeholder="Name der Praxis oder des Behandlers"></label></div><h2>Optional</h2><label><div class="label">Was hat Sie dazu bewegt, diese Diagnostik zu beginnen?</div><textarea id="v50BasisReason" placeholder="Zum Beispiel: Ich habe schon lange das Gefühl, anders zu funktionieren und möchte besser verstehen, warum bestimmte Dinge im Alltag so schwerfallen."></textarea></label><button type="button" class="nextbtn" id="v50BasisNext">Weiter</button></div>`);["v50InsuranceChips","v50TreatmentChips","v50InterviewChips","v50ReferralChips"].forEach(id=>{const chips=Array.from(p.querySelectorAll("#"+id+" .chip"));chips.forEach(chip=>chip.onclick=()=>{chips.forEach(x=>x.classList.remove("selected"));chip.classList.add("selected");const group=$(id);if(group){group.classList.remove("is-invalid");const next=group.nextElementSibling;if(next&&next.classList.contains("field-warning"))next.remove()}if(id==="v50ReferralChips"){const wrap=$("v50ReferralWrap");if(wrap)wrap.style.display=chip.dataset.value==="ja"?"grid":"none"}})});
+function basisIsUnder18(value){
+  if(!value)return false;
+  const match=String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!match)return false;
+  const year=Number(match[1]);
+  const month=Number(match[2]);
+  const day=Number(match[3]);
+  if(!year||!month||!day)return false;
+  const today=new Date();
+  let age=today.getFullYear()-year;
+  const currentMonth=today.getMonth()+1;
+  const currentDay=today.getDate();
+  if(currentMonth<month||(currentMonth===month&&currentDay<day))age--;
+  return age<18;
+}
+function clearBasisValidation(){
+  p.querySelectorAll(".is-invalid").forEach(el=>el.classList.remove("is-invalid"));
+  p.querySelectorAll(".field-warning").forEach(el=>el.remove());
+  const bw=$("v50BirthWarning");
+  if(bw){bw.style.display="none";bw.textContent="";}
+}
+function scrollToBasisTarget(el){
+  if(!el)return;
+  const card=p.querySelector(".q-card");
+  const target=(typeof el.closest==="function" && el.closest("label")) ? el.closest("label") : el;
+  try{
+    if(card&&card.scrollHeight>card.clientHeight){
+      const cardRect=card.getBoundingClientRect();
+      const targetRect=target.getBoundingClientRect();
+      const offset=Math.max(0,targetRect.top-cardRect.top+card.scrollTop-18);
+      if(typeof card.scrollTo==="function"){
+        card.scrollTo({top:offset,behavior:"smooth"});
+      }else{
+        card.scrollTop=offset;
+      }
+      return;
+    }
+  }catch(e){
+    try{ if(card)card.scrollTop=target.offsetTop||0; }catch(_){}
+  }
+  try{
+    if(typeof target.scrollIntoView==="function")target.scrollIntoView({behavior:"smooth",block:"center"});
+  }catch(e){}
+}
+function showFieldError(el,message,focus=true){
+  if(!el)return false;
+  try{clearBasisValidation();}catch(e){}
+  try{el.classList.add("is-invalid");}catch(e){}
+  try{
+    let warning;
+    if(el.id==="v50BasisBirth"){
+      warning=$("v50BirthWarning");
+      if(warning){
+        warning.textContent=message;
+        warning.style.display="block";
+      }
+    }else{
+      warning=document.createElement("div");
+      warning.className="field-warning";
+      warning.textContent=message;
+      const host=el.classList&&el.classList.contains("chips")?el:((typeof el.closest==="function"&&el.closest("label"))?el.closest("label"):el);
+      if(host&&typeof host.insertAdjacentElement==="function")host.insertAdjacentElement("afterend",warning);
+    }
+  }catch(e){console.warn("Validierungshinweis konnte nicht gerendert werden",e);}
+  scrollToBasisTarget(el);
+  if(focus&&typeof el.focus==="function")setTimeout(()=>{try{el.focus()}catch(e){}},260);
+  return false;
+}
+function showChipError(groupId,message){
+  const group=$(groupId);
+  if(!group)return false;
+  return showFieldError(group,message,false);
+}
+["v50BasisName","v50BasisBirth","v50BasisEmail","v50BasisPhone","v50BasisStreet","v50BasisZip","v50BasisCity","v50BasisCountry","v50ReferralSource","v50BasisReason"].forEach(id=>{
+  const el=$(id);
+  if(el){
+    el.oninput=()=>{
+      el.classList.remove("is-invalid");
+      if(id==="v50BasisBirth"){
+        const bw=$("v50BirthWarning");
+        if(bw){bw.style.display="none";bw.textContent="";}
+      }else{
+        const host=el.closest("label")||el;
+        const next=host.nextElementSibling;
+        if(next&&next.classList.contains("field-warning"))next.remove();
+      }
+    };
+    el.onchange=el.oninput;
+  }
+});
+$("v50BasisNext").onclick=()=>{
+  try{
+    const s=getState();
+    const required=(id)=>($(id)?.value||"").trim();
+    const selected=(selector)=>p.querySelector(selector)?.dataset.value||"";
+    s.basis={
+      name:required("v50BasisName"),
+      birth:required("v50BasisBirth"),
+      email:required("v50BasisEmail"),
+      phone:required("v50BasisPhone"),
+      street:required("v50BasisStreet"),
+      zip:required("v50BasisZip"),
+      city:required("v50BasisCity"),
+      country:required("v50BasisCountry"),
+      insurance:selected("#v50InsuranceChips .chip.selected"),
+      current_treatment:selected("#v50TreatmentChips .chip.selected"),
+      interview_planning:selected("#v50InterviewChips .chip.selected"),
+      referred_by_provider:selected("#v50ReferralChips .chip.selected"),
+      referral_source:required("v50ReferralSource"),
+      reason:required("v50BasisReason")
+    };
+
+    clearBasisValidation();
+
+    if(!s.basis.name)return showFieldError($("v50BasisName"),"Bitte geben Sie Ihren Vor- und Nachnamen ein.");
+    if(!s.basis.birth)return showFieldError($("v50BasisBirth"),"Bitte geben Sie Ihr Geburtsdatum ein.");
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(s.basis.birth))return showFieldError($("v50BasisBirth"),"Bitte überprüfen Sie das Geburtsdatum.");
+    if(basisIsUnder18(s.basis.birth))return showFieldError($("v50BasisBirth"),"Psynovia richtet sich aktuell ausschließlich an Erwachsene ab 18 Jahren. Bitte überprüfen Sie Ihr Geburtsdatum.");
+    if(!s.basis.email)return showFieldError($("v50BasisEmail"),"Bitte geben Sie Ihre E-Mail-Adresse ein.");
+    if(!s.basis.phone)return showFieldError($("v50BasisPhone"),"Bitte geben Sie Ihre Telefonnummer ein.");
+    if(!s.basis.street)return showFieldError($("v50BasisStreet"),"Bitte geben Sie Straße und Hausnummer ein.");
+    if(!s.basis.zip)return showFieldError($("v50BasisZip"),"Bitte geben Sie Ihre PLZ ein.");
+    if(!s.basis.city)return showFieldError($("v50BasisCity"),"Bitte geben Sie Ihren Ort ein.");
+    if(!s.basis.country)return showFieldError($("v50BasisCountry"),"Bitte geben Sie Ihr Land ein.");
+    if(!s.basis.insurance)return showChipError("v50InsuranceChips","Bitte wählen Sie Ihren Versicherungsstatus aus.");
+    if(!s.basis.current_treatment)return showChipError("v50TreatmentChips","Bitte wählen Sie aus, ob Sie aktuell in Behandlung sind.");
+    if(!s.basis.interview_planning)return showChipError("v50InterviewChips","Bitte wählen Sie eine Antwort für die Planung des Abschlussgesprächs aus.");
+    if(!s.basis.referred_by_provider)return showChipError("v50ReferralChips","Bitte wählen Sie aus, ob Sie von einer Praxis oder einem Behandler auf Psynovia hingewiesen wurden.");
+
+    persistState();
+    routeToPrivacyFallback();
+  }catch(err){
+    console.error("Basisdaten-Weiter-Fehler",err);
+    const card=p.querySelector(".q-card");
+    let fallback=$("v50BasisRuntimeWarning");
+    if(!fallback&&card){
+      fallback=document.createElement("div");
+      fallback.id="v50BasisRuntimeWarning";
+      fallback.className="field-warning";
+      fallback.textContent="Bitte prüfen Sie die markierten Angaben. Falls etwas fehlt, erscheint der Hinweis direkt beim jeweiligen Feld.";
+      card.insertBefore(fallback,card.children[1]||card.firstChild);
+    }
+    if(fallback)fallback.style.display="block";
+  }
+};
+meta("Aufnahme","Phase 3","86%");show(p)}
+function routeToPrivacyFallback(){const p=panel("v50PrivacyPanel","panel question-panel",`<div class="q-card"><div class="q-top"><div class="q-kicker">Datenschutz</div><div class="q-count">Einwilligung</div></div><h1 class="question">Datenschutzhinweise</h1><p class="hint">Bitte öffnen und lesen Sie die Datenschutzhinweise vollständig. Die Datenschutz-Einwilligung wird erst nach dem Scrollen bis zum Ende freigegeben.</p><div class="privacy-summary-card"><p class="hint"><strong>Enthalten sind:</strong><br>Verarbeitung Ihrer Intake- und Gesundheitsdaten, Speicherung, Versand, Rechte und Kontakt.</p><button type="button" class="nextbtn" id="v50OpenPrivacyReader">Datenschutzhinweise lesen</button></div><div class="privacy-read-note" id="v50PrivacyReadNote">Bitte öffnen Sie die Datenschutzhinweise und scrollen Sie vollständig bis zum Ende.</div><label class="consent is-disabled" id="v50PrivacyConsentLabel"><input id="v50PrivacyConsent1" type="checkbox" disabled>Ich habe die Datenschutzhinweise vollständig gelesen und willige in die Verarbeitung meiner Daten im Rahmen der Intake- und Diagnostikleistung ein.</label><label class="consent optional-consent"><input id="v50EmailReportConsent" type="checkbox">Ich stimme ausdrücklich dem Erhalt des Ergebnisberichts per E-Mail zu.</label><label class="consent optional-consent"><input id="v50ResearchConsent" type="checkbox">Ich stimme der Verwendung vollständig anonymisierter Daten zu Forschungs- und Qualitätssicherungszwecken zu.</label><button type="button" class="nextbtn" id="v50PrivacyNext">Weiter</button></div><div id="v50PrivacyReaderOverlay" aria-hidden="true"><div class="reader-card" role="dialog" aria-modal="true" aria-label="Datenschutzhinweise"><div class="reader-head"><div class="reader-title">Datenschutzhinweise lesen</div><button type="button" class="reader-close" id="v50ClosePrivacyReader" aria-label="Schließen">×</button></div><div class="reader-body" id="v50PrivacyReaderBody">
+<h2>Psynovia Datenschutzhinweise Intake – Final</h2>
+
+<h3><strong>1. Verantwortlicher</strong></h3>
+<p>Verantwortlicher im Sinne der DSGVO ist:</p>
+<p>
+Tobias Winner<br>
+Psychologischer Psychotherapeut<br>
+Praxis Psynovia<br>
+Grillparzerstraße 16<br>
+83024 Rosenheim<br>
+E-Mail: info@psynovia.de
+</p>
+
+<h3><strong>2. Zweck der Datenverarbeitung</strong></h3>
+<p>Psynovia bietet eine strukturierte digitale Datenerhebung zur diagnostischen Einschätzung von ADHS im Erwachsenenalter an.</p>
+<p>Die Verarbeitung personenbezogener Daten erfolgt ausschließlich zum Zweck der Aufnahme und Buchung, Kommunikation mit Teilnehmenden, Durchführung der digitalen Datenerhebung, diagnostischen Auswertung, Erstellung eines Ergebnisberichts, Durchführung eines optionalen diagnostischen Abschlussinterviews sowie zur Erfüllung gesetzlicher und berufsrechtlicher Dokumentations- und Aufbewahrungspflichten.</p>
+
+<h3><strong>3. Kategorien verarbeiteter Daten</strong></h3>
+<p>Verarbeitet werden insbesondere:</p>
+<ul>
+<li>Name</li>
+<li>Geburtsdatum</li>
+<li>E-Mail-Adresse</li>
+<li>Gesundheitsdaten</li>
+<li>Angaben zur Symptomatik</li>
+<li>Diagnostische Testdaten</li>
+<li>Freitextangaben</li>
+</ul>
+<p>Gesundheitsdaten gehören zu den besonders schützenswerten personenbezogenen Daten gemäß Art. 9 DSGVO.</p>
+
+<h3><strong>4. Rechtsgrundlagen</strong></h3>
+<p>
+Art. 6 Abs. 1 lit. b DSGVO<br>
+Art. 9 Abs. 2 lit. h DSGVO<br>
+§ 22 Abs. 1 Nr. 1 lit. b BDSG
+</p>
+
+<h3><strong>5. Aufnahme, Buchung und Kommunikation</strong></h3>
+<p>Die Kommunikation erfolgt überwiegend per E-Mail. Hierzu gehören insbesondere organisatorische Informationen, Versand des Diagnostiktools, Rückfragen, Ergebnisberichte und Terminvereinbarungen.</p>
+<p>Es wird darauf hingewiesen, dass die Kommunikation per E-Mail trotz üblicher technischer Sicherheitsmaßnahmen Risiken nicht vollständig ausschließen kann.</p>
+
+<h3><strong>6. Zahlungsabwicklung</strong></h3>
+<p>Die Bezahlung erfolgt über Stripe Checkout. Zur Durchführung der Zahlung werden die hierfür erforderlichen Zahlungs- und Transaktionsdaten an Stripe übermittelt.</p>
+
+<h3><strong>7. Digitale Datenerhebung</strong></h3>
+<p>Die Dateneingabe erfolgt grundsätzlich lokal auf dem Endgerät der teilnehmenden Person. Nach Abschluss der Datenerhebung erstellt das Diagnostiktool eine Ergebnisdatei, die eigenständig an die Praxis übermittelt wird.</p>
+
+<h3><strong>8. Pseudonymisierte Ergebnisdatei</strong></h3>
+<p>Die Ergebnisdatei enthält grundsätzlich keine unmittelbar identifizierenden Personendaten. Die Zuordnung erfolgt über eine interne Fall-ID.</p>
+
+<h3><strong>9. Diagnostische Auswertung</strong></h3>
+<p>Die Auswertung erfolgt durch einen approbierten Psychologischen Psychotherapeuten und dient ausschließlich diagnostischen Zwecken.</p>
+
+<h3><strong>10. Ergebnisbericht</strong></h3>
+<p>Nach Abschluss der Auswertung erhalten Teilnehmende einen schriftlichen Ergebnisbericht.</p>
+
+<h3><strong>11. Optionales diagnostisches Abschlussinterview</strong></h3>
+<p>Das Abschlussinterview erfolgt über RED Medical.</p>
+
+<h3><strong>12. Empfänger personenbezogener Daten</strong></h3>
+<p>Zugriff erhalten ausschließlich Personen, die für die Durchführung der diagnostischen Leistungen erforderlich sind.</p>
+
+<h3><strong>13. Speicherung und Aufbewahrung</strong></h3>
+<p>Die Daten werden grundsätzlich für zehn Jahre nach Abschluss der diagnostischen Leistung aufbewahrt, soweit keine längeren gesetzlichen Aufbewahrungsfristen bestehen.</p>
+<p>Die Speicherung erfolgt auf geschützten Systemen der Praxis sowie auf externen Datenträgern zur Datensicherung.</p>
+
+<h3><strong>14. Datensicherheit</strong></h3>
+<p>Es werden angemessene technische und organisatorische Maßnahmen zum Schutz personenbezogener Daten eingesetzt.</p>
+
+<h3><strong>15. Rechte betroffener Personen</strong></h3>
+<p>Betroffene Personen haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch.</p>
+
+<h3><strong>16. Beschwerderecht</strong></h3>
+<p>
+Zuständige Aufsichtsbehörde:<br><br>
+Bayerisches Landesamt für Datenschutzaufsicht (BayLDA)<br>
+Promenade 18<br>
+91522 Ansbach
+</p>
+
+<h3><strong>17. Freiwilligkeit der Angaben</strong></h3>
+<p>Die Teilnahme an Psynovia ist freiwillig. Bestimmte Angaben sind jedoch erforderlich, um die diagnostische Leistung durchführen zu können.</p>
+</div><div class="reader-foot"><div class="reader-progress-note" id="v50PrivacyReaderProgress">Bitte scrollen Sie bis zum Ende der Datenschutzhinweise.</div></div></div></div>`);
+const overlay=$("v50PrivacyReaderOverlay");
+const readerBody=$("v50PrivacyReaderBody");
+const openBtn=$("v50OpenPrivacyReader");
+const closeBtn=$("v50ClosePrivacyReader");
+const privacyConsent=$("v50PrivacyConsent1");
+const privacyLabel=$("v50PrivacyConsentLabel");
+const note=$("v50PrivacyReadNote");
+const progress=$("v50PrivacyReaderProgress");
+let privacyReadComplete=false;
+function enablePrivacyConsent(){
+  privacyReadComplete=true;
+  if(privacyConsent&&!privacyConsent.dataset.unlocked){
+    privacyConsent.disabled=false;
+    privacyConsent.dataset.unlocked="true";
+    if(privacyLabel)privacyLabel.classList.remove("is-disabled");
+  }
+  if(note){
+    note.textContent="Danke. Sie können die Datenschutz-Einwilligung nun aktivieren.";
+    note.classList.add("is-ok");
+  }
+  if(progress){
+    progress.textContent="Danke. Die Datenschutzhinweise wurden vollständig bis zum Ende gescrollt.";
+    progress.classList.add("is-ok");
+  }
+}
+function checkPrivacyReaderScroll(){
+  if(!readerBody)return;
+  const distance=readerBody.scrollHeight-readerBody.scrollTop-readerBody.clientHeight;
+  if(distance<=10)enablePrivacyConsent();
+}
+function openPrivacyReader(){
+  if(!overlay)return;
+  overlay.classList.add("is-open");
+  overlay.setAttribute("aria-hidden","false");
+  document.body.classList.add("v50-privacy-reader-open");
+  setTimeout(()=>{try{readerBody.focus&&readerBody.focus();checkPrivacyReaderScroll();}catch(e){}},80);
+}
+function closePrivacyReader(){
+  if(!overlay)return;
+  overlay.classList.remove("is-open");
+  overlay.setAttribute("aria-hidden","true");
+  document.body.classList.remove("v50-privacy-reader-open");
+}
+if(openBtn)openBtn.onclick=openPrivacyReader;
+if(closeBtn)closeBtn.onclick=closePrivacyReader;
+if(overlay)overlay.addEventListener("click",(e)=>{if(e.target===overlay)closePrivacyReader();});
+if(readerBody){
+  readerBody.setAttribute("tabindex","0");
+  readerBody.addEventListener("scroll",checkPrivacyReaderScroll,{passive:true});
+}
+document.addEventListener("keydown",(e)=>{if(e.key==="Escape"&&overlay&&overlay.classList.contains("is-open"))closePrivacyReader();});
+$("v50PrivacyNext").onclick=()=>{
+  if(!privacyReadComplete||privacyConsent.disabled){if(note)note.textContent="Bitte öffnen Sie die Datenschutzhinweise und scrollen Sie sie zunächst vollständig bis zum Ende.";return;}
+  if(!privacyConsent.checked){alert("Bitte bestätigen Sie die Datenschutz-Einwilligung.");return}
+  const s=getState();
+  s.consents.privacy={accepted:true,privacy_read:true,accepted_iso:new Date().toISOString()};
+  s.consents.email_report={accepted:!!$("v50EmailReportConsent")?.checked,accepted_iso:$("v50EmailReportConsent")?.checked?new Date().toISOString():null};
+  s.consents.anonymized_research={accepted:!!$("v50ResearchConsent")?.checked,accepted_iso:$("v50ResearchConsent")?.checked?new Date().toISOString():null};
+  persistState();
+  routeToContractFallback();
+};
+meta("Datenschutz","Phase 3","90%");show(p)}
+function routeToContractFallback(){const p=panel("v50ContractPanel","panel question-panel",`<div class="q-card"><div class="q-top"><div class="q-kicker">Behandlungsvertrag</div><div class="q-count">Einwilligung</div></div><h1 class="question">Behandlungsvertrag</h1><p class="hint">Bitte öffnen und lesen Sie den Behandlungsvertrag einschließlich Widerrufsbelehrung vollständig. Die Zustimmungen werden erst nach dem Scrollen bis zum Ende des Vertrags freigegeben.</p><div class="contract-summary-card"><p class="hint"><strong>Enthalten sind:</strong><br>Behandlungsvertrag, Widerrufsbelehrung und der Hinweis zum vorzeitigen Beginn der Leistungserbringung.</p><button type="button" class="nextbtn" id="v50OpenContractReader">Behandlungsvertrag lesen</button></div><div class="contract-read-note" id="v50ContractReadNote">Bitte öffnen Sie den Vertrag und scrollen Sie ihn vollständig bis zum Ende.</div><label class="consent is-disabled" id="v50ContractConsentLabel"><input id="v50ContractConsent1" type="checkbox" disabled>Ich habe den Behandlungsvertrag einschließlich Widerrufsbelehrung vollständig gelesen und akzeptiere ihn.</label><label class="consent is-disabled withdrawal-consent" id="v50WithdrawalConsentLabel"><input id="v50WithdrawalConsent1" type="checkbox" disabled>Ich verlange ausdrücklich, dass Psynovia bereits vor Ablauf der gesetzlichen Widerrufsfrist mit der Leistungserbringung beginnt. Mir ist bekannt, dass ich bei vollständiger Vertragserfüllung mein Widerrufsrecht verlieren kann.</label><button type="button" class="final-button" id="v50PayBtn">Datenerhebung buchen</button></div><div id="v50ContractReaderOverlay" aria-hidden="true"><div class="reader-card" role="dialog" aria-modal="true" aria-label="Behandlungsvertrag"><div class="reader-head"><div class="reader-title">Behandlungsvertrag lesen</div><button type="button" class="reader-close" id="v50CloseContractReader" aria-label="Schließen">×</button></div><div class="reader-body" id="v50ContractReaderBody"><h2>Behandlungsvertrag / Vereinbarung über digitale diagnostische Leistungen</h2><p>zwischen
+
+Psynovia – Privatpraxis für Psychotherapie
+Inhaber: Tobias Winner
+Grillparzerstraße 16
+83024 Rosenheim
+
+– nachfolgend „Praxis“ genannt –
+
+und
+
+der jeweils die digitale Diagnostik nutzenden Person
+
+– nachfolgend „Patient“ genannt –
+
+wird folgende Vereinbarung geschlossen:</p><h3>1. Gegenstand der Vereinbarung</h3><p>Die Praxis bietet strukturierte digitale diagnostische Leistungen im Bereich psychischer Gesundheit, insbesondere im Bereich der Aufmerksamkeitsdefizit-/Hyperaktivitätsstörung (ADHS) im Erwachsenenalter, an.
+
+Die Leistung umfasst insbesondere:
+
+• die Bereitstellung einer digitalen diagnostischen Plattform,
+• strukturierte Selbstauskünfte,
+• standardisierte diagnostische Verfahren,
+• neuropsychologische Aufgaben,
+• die strukturierte Datenerhebung,
+• die fachliche Auswertung der eingereichten Daten durch approbierte psychologische Fachpersonen.
+
+Die Leistungen orientieren sich an aktuellen fachlichen Standards und diagnostischen Leitlinien.
+
+Die Durchführung der digitalen Datenerhebung stellt keine Garantie für das Vorliegen oder Nichtvorliegen einer bestimmten Diagnose dar.</p><h3>2. Abgrenzung der Leistungen</h3><p>Die digitale Datenerhebung und fachliche Auswertung stellen keine akute medizinische oder psychotherapeutische Behandlung dar.
+
+Eine formale diagnostische Einordnung oder Diagnosestellung kann – sofern angeboten und ausdrücklich vereinbart – im Rahmen eines gesonderten klinischen Gesprächs erfolgen.
+
+Ein Anspruch auf die Feststellung einer bestimmten Diagnose besteht nicht.
+
+Geschuldet wird die fachgerechte Durchführung der vereinbarten diagnostischen Leistungen, nicht das Erreichen eines bestimmten diagnostischen Ergebnisses.</p><h3>3. Zielgruppe und Voraussetzungen</h3><p>Die angebotenen Leistungen richten sich ausschließlich an volljährige Personen.
+
+Die Nutzung erfolgt eigenverantwortlich. Der Patient bestätigt, die Inhalte selbstständig sowie in einem ausreichend geordneten körperlichen und psychischen Zustand zu bearbeiten.
+
+Der Patient verpflichtet sich, die Angaben nach bestem Wissen wahrheitsgemäß und vollständig zu machen.
+
+Bewusst falsche Angaben oder absichtliche Manipulationen können die fachliche Interpretierbarkeit der Ergebnisse erheblich einschränken.</p><h3>4. Vertragsschluss und Leistungsbeginn</h3><p>Der Vertrag kommt mit Abschluss des Buchungsvorgangs, Zustimmung zu diesem Vertrag sowie erfolgreicher Zahlung zustande.
+
+Nach Zahlungseingang erhält der Patient Zugriff auf die digitale diagnostische Plattform.
+
+Die Leistung gilt als bereitgestellt, sobald der Zugang zur Plattform freigeschaltet wurde.
+
+Die Bearbeitung der Inhalte innerhalb des vorgesehenen Zeitraums liegt ab diesem Zeitpunkt im Verantwortungsbereich des Patienten.</p><h3>5. Nutzungszeitraum</h3><p>Der Zugang zur diagnostischen Plattform wird für einen Zeitraum von 365 Tagen ab Freischaltung bereitgestellt.
+
+Nach Ablauf dieses Zeitraums kann der Zugriff deaktiviert werden.
+
+Eine Verlängerung liegt im Ermessen der Praxis und begründet keinen Anspruch.</p><h3>6. Vergütung und Abrechnung</h3><p>Die Vergütung erfolgt als Selbstzahlerleistung.
+
+Die Zahlung erfolgt im Voraus über den jeweils angebotenen Zahlungsdienstleister.
+
+Nach Zahlungseingang erhält der Patient eine Rechnung gemäß der Gebührenordnung für Psychotherapeuten (GOP), soweit dies rechtlich und organisatorisch möglich ist.
+
+Eine mögliche Erstattung durch private Krankenversicherungen oder im Rahmen eines Kostenerstattungsverfahrens liegt im Verantwortungsbereich des Patienten und kann nicht garantiert werden.
+
+Für Patienten außerhalb Deutschlands erfolgt die Nutzung ausschließlich als Selbstzahlerleistung.</p><h3>7. Technische Voraussetzungen</h3><p>Für die Nutzung der diagnostischen Plattform sind ein geeignetes Endgerät, ein aktueller Browser sowie eine stabile Internetverbindung erforderlich.
+
+Die Praxis übernimmt keine Haftung für Einschränkungen, die außerhalb ihres Verantwortungsbereichs liegen, insbesondere aufgrund ungeeigneter Hard- oder Software, Verbindungsprobleme oder technischer Störungen auf Seiten des Patienten.</p><h3>8. Ergebnisübermittlung</h3><p>Die Ergebnisse der fachlichen Auswertung werden dem Patienten in der Regel digital in verschlüsselter Form übermittelt.
+
+Zusätzlich kann eine postalische Übersendung erfolgen.
+
+Sofern eine gesonderte diagnostische Einordnung oder Diagnosestellung durchgeführt wird, erfolgt die Übermittlung der abschließenden diagnostischen Unterlagen nach Abschluss dieses Schrittes.
+
+Die Herausgabe von Rohdaten oder internen Auswertungsgrundlagen erfolgt nicht automatisch.</p><h3>9. Erinnerungen / Reminder</h3><p>Die Praxis ist berechtigt, während des 365-Tage-Zeitraums organisatorische Erinnerungen an die Durchführung oder Fertigstellung der Diagnostik zu versenden.
+
+Eine Verpflichtung der Praxis zum Versand solcher Erinnerungen besteht nicht.
+
+Aus dem Ausbleiben einzelner oder aller Erinnerungen entstehen keine Ansprüche.</p><h3>10. Schutz der bereitgestellten Materialien</h3><p>Die bereitgestellten diagnostischen Materialien sind ausschließlich zur persönlichen Nutzung im Rahmen der vereinbarten diagnostischen Abklärung bestimmt.
+
+Sie dürfen nicht an Dritte weitergegeben, vervielfältigt oder öffentlich zugänglich gemacht werden.
+
+Dies gilt insbesondere für urheberrechtlich oder lizenzrechtlich geschützte Bestandteile des Diagnostiksystems.</p><h3>11. Grenzen der Leistung / Krisensituationen</h3><p>Die digitale Diagnostik ersetzt keine akute medizinische, psychiatrische oder psychotherapeutische Versorgung.
+
+Bei akuter Suizidalität, psychotischen Symptomen, Fremdgefährdung oder anderen schweren psychischen Krisen ist unverzüglich eine persönliche ärztliche oder psychotherapeutische Abklärung erforderlich.
+
+Die Praxis bietet keine Notfallversorgung, Krisenintervention oder dauerhafte therapeutische Betreuung im Rahmen der digitalen Datenerhebung an.
+
+Die diagnostische Einordnung erfolgt stets im Kontext der Gesamtsituation und kann durch verschiedene Faktoren beeinflusst sein, insbesondere durch Belastung, Komorbiditäten, Medikamenteneinnahme oder Substanzkonsum.</p><h3>12. Kommunikation</h3><p>Die Kommunikation im Rahmen der diagnostischen Durchführung kann digital erfolgen.
+
+Der Patient erklärt sich damit einverstanden, über die angegebenen Kontaktdaten kontaktiert zu werden.</p><h3>13. Zahlungsverzug</h3><p>Bei Zahlung auf Rechnung gelten die in der Rechnung genannten Fristen.
+
+Nach Fälligkeit können Mahnmaßnahmen nach den gesetzlichen Vorschriften eingeleitet werden.</p><h3>14. Datenschutz</h3><p>Die Verarbeitung personenbezogener Daten erfolgt nach den geltenden Datenschutzbestimmungen.
+
+Nähere Informationen ergeben sich aus den gesonderten Datenschutzhinweisen.</p><h3>15. Widerrufsrecht bei digitalen Leistungen</h3><p>Der Patient stimmt ausdrücklich zu, dass die Praxis vor Ablauf der gesetzlichen Widerrufsfrist mit der Bereitstellung der digitalen Leistungen beginnt.
+
+Dem Patienten ist bekannt, dass das Widerrufsrecht bei vollständiger Vertragserfüllung beziehungsweise Beginn der digitalen Leistungserbringung nach den gesetzlichen Vorschriften ganz oder teilweise erlöschen kann.</p><h3>16. Haftung</h3><p>Die Praxis haftet für Vorsatz und grobe Fahrlässigkeit nach den gesetzlichen Vorschriften.
+
+Bei leichter Fahrlässigkeit haftet die Praxis nur bei Verletzung wesentlicher Vertragspflichten und beschränkt auf den vorhersehbaren, vertragstypischen Schaden.
+
+Die gesetzlichen Haftungsvorschriften bei Verletzung von Leben, Körper oder Gesundheit bleiben unberührt.</p><h3>17. Zustimmung</h3><p>Mit dem Anklicken der entsprechenden Zustimmungserklärung im Rahmen des digitalen Intake-Prozesses bestätigt der Patient, diesen Vertrag gelesen und akzeptiert zu haben.</p><h3>18. Schlussbestimmungen</h3><p>Sollten einzelne Bestimmungen dieses Vertrages ganz oder teilweise unwirksam sein oder werden, bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.
+
+Es gilt das Recht der Bundesrepublik Deutschland.</p>
+<h3>Widerrufsbelehrung</h3>
+<p>Verbraucherinnen und Verbraucher haben grundsätzlich das Recht, diesen Vertrag binnen vierzehn Tagen ohne Angabe von Gründen zu widerrufen.</p>
+<p>Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag des Vertragsschlusses.</p>
+<p>Um das Widerrufsrecht auszuüben, muss Psynovia mittels einer eindeutigen Erklärung, zum Beispiel per E-Mail an info@psynovia.de, über den Entschluss informiert werden, diesen Vertrag zu widerrufen.</p>
+<p>Zur Wahrung der Widerrufsfrist reicht es aus, dass die Mitteilung über die Ausübung des Widerrufsrechts vor Ablauf der Widerrufsfrist abgesendet wird.</p>
+<h3>Folgen des Widerrufs</h3>
+<p>Wenn dieser Vertrag widerrufen wird, werden alle Zahlungen, die Psynovia von der betroffenen Person erhalten hat, unverzüglich und spätestens binnen vierzehn Tagen ab dem Tag zurückgezahlt, an dem die Mitteilung über den Widerruf dieses Vertrags bei Psynovia eingegangen ist.</p>
+<p>Für diese Rückzahlung wird dasselbe Zahlungsmittel verwendet, das bei der ursprünglichen Transaktion eingesetzt wurde, sofern nichts anderes vereinbart wurde.</p>
+<h3>Vorzeitiger Beginn der Leistungserbringung</h3>
+<p>Die digitale Datenerhebung kann auf ausdrücklichen Wunsch bereits vor Ablauf der gesetzlichen Widerrufsfrist freigeschaltet und begonnen werden.</p>
+<p>Der Nutzer verlangt durch gesonderte Zustimmung ausdrücklich, dass Psynovia vor Ablauf der Widerrufsfrist mit der Leistungserbringung beginnt.</p>
+<p>Dem Nutzer ist bekannt, dass das Widerrufsrecht bei vollständiger Vertragserfüllung erlöschen kann, wenn Psynovia mit der Ausführung der Leistung erst begonnen hat, nachdem der Nutzer ausdrücklich zugestimmt und seine Kenntnis vom möglichen Verlust des Widerrufsrechts bestätigt hat.</p>
+</div><div class="reader-foot"><div class="reader-progress-note" id="v50ContractReaderProgress">Bitte scrollen Sie bis zum Ende des Vertrags.</div></div></div></div>`);
+const overlay=$("v50ContractReaderOverlay");
+const readerBody=$("v50ContractReaderBody");
+const openBtn=$("v50OpenContractReader");
+const closeBtn=$("v50CloseContractReader");
+const contractConsent=$("v50ContractConsent1");
+const withdrawalConsent=$("v50WithdrawalConsent1");
+const contractLabel=$("v50ContractConsentLabel");
+const withdrawalLabel=$("v50WithdrawalConsentLabel");
+const note=$("v50ContractReadNote");
+const progress=$("v50ContractReaderProgress");
+let contractReadComplete=false;
+function enableContractConsents(){
+  contractReadComplete=true;
+  if(contractConsent&&!contractConsent.dataset.unlocked){
+    contractConsent.disabled=false;
+    contractConsent.dataset.unlocked="true";
+    if(contractLabel)contractLabel.classList.remove("is-disabled");
+  }
+  if(withdrawalConsent&&!withdrawalConsent.dataset.unlocked){
+    withdrawalConsent.disabled=false;
+    withdrawalConsent.dataset.unlocked="true";
+    if(withdrawalLabel)withdrawalLabel.classList.remove("is-disabled");
+  }
+  if(note){
+    note.textContent="Danke. Sie können die Zustimmungen nun aktivieren.";
+    note.classList.add("is-ok");
+  }
+  if(progress){
+    progress.textContent="Danke. Der Vertrag wurde vollständig bis zum Ende gescrollt.";
+    progress.classList.add("is-ok");
+  }
+}
+function checkContractReaderScroll(){
+  if(!readerBody)return;
+  const distance=readerBody.scrollHeight-readerBody.scrollTop-readerBody.clientHeight;
+  if(distance<=10)enableContractConsents();
+}
+function openContractReader(){
+  if(!overlay)return;
+  overlay.classList.add("is-open");
+  overlay.setAttribute("aria-hidden","false");
+  document.body.classList.add("v50-contract-reader-open");
+  setTimeout(()=>{try{readerBody.focus&&readerBody.focus();checkContractReaderScroll();}catch(e){}},80);
+}
+function closeContractReader(){
+  if(!overlay)return;
+  overlay.classList.remove("is-open");
+  overlay.setAttribute("aria-hidden","true");
+  document.body.classList.remove("v50-contract-reader-open");
+}
+if(openBtn)openBtn.onclick=openContractReader;
+if(closeBtn)closeBtn.onclick=closeContractReader;
+if(overlay)overlay.addEventListener("click",(e)=>{if(e.target===overlay)closeContractReader();});
+if(readerBody){
+  readerBody.setAttribute("tabindex","0");
+  readerBody.addEventListener("scroll",checkContractReaderScroll,{passive:true});
+}
+document.addEventListener("keydown",(e)=>{if(e.key==="Escape"&&overlay&&overlay.classList.contains("is-open"))closeContractReader();});
+$("v50PayBtn").onclick=()=>{
+  if(!contractReadComplete||contractConsent.disabled){if(note)note.textContent="Bitte öffnen Sie den Vertrag und scrollen Sie ihn zunächst vollständig bis zum Ende.";return;}
+  if(!contractConsent.checked){alert("Bitte bestätigen Sie den Behandlungsvertrag einschließlich Widerrufsbelehrung.");return}
+  if(!withdrawalConsent.checked){alert("Bitte bestätigen Sie den vorzeitigen Beginn der Leistungserbringung.");return}
+  const s=getState();
+  s.consents.contract={accepted:true,contract_read:true,withdrawal_information_read:true,accepted_iso:new Date().toISOString()};
+  s.consents.withdrawal={immediate_service_requested:true,loss_of_withdrawal_right_acknowledged:true,accepted_iso:new Date().toISOString()};
+  persistState();
+  if(window.psynoviaStorage&&typeof window.psynoviaStorage.markCompleted==="function"){window.psynoviaStorage.markCompleted();}
+  window.location.href="#zahlung-spaeter";
+};
+meta("Behandlungsvertrag","Phase 3","94%");show(p)}
+/* Legacy V50 click interception removed in V21; routing is explicit. */
+window.psynoviaV50Flow={routeToMedical,routeToPsych,routeToMedication,routeToSafety,routeToSafetyStop,routeToSafetyModerate,routeToBasisFallback,routeToPrivacyFallback,routeToContractFallback};
+try{
+  const ctx=document.getElementById("contextBtn");
+  if(ctx){
+    ctx.onclick=()=>{
+      if(window.psynoviaV50Flow && typeof window.psynoviaV50Flow.routeToMedical==="function"){
+        window.psynoviaV50Flow.routeToMedical();
+      }
+    };
+  }
+}catch(e){console.warn("Psynovia button repair skipped",e);}
+
+})();
+
+</script>
+
+<script id="psynovia-local-resume-js-v1">
+(function(){
+const STORAGE_KEY="psynovia_intake_v5_funnel";
+let psynoviaRestartInProgress=false;
+if(sessionStorage.getItem("psynovia_restart")){
+  sessionStorage.removeItem("psynovia_restart");
+  psynoviaRestartInProgress=true;
+}
+const $=id=>document.getElementById(id);
+function safeParse(raw){try{return raw?JSON.parse(raw):null}catch(e){return null}}
+function hasMeaningfulDraft(s){
+  if(!s||typeof s!=="object")return false;
+  const answers=s.answers&&Object.keys(s.answers).length>0;
+  const screening=!!(s.screening&&s.screening.completed_iso);
+  const context=!!(s.context&&(s.context.medical||s.context.psych||s.context.medication||s.context.safety));
+  const basis=!!(s.basis&&(s.basis.name||s.basis.email||s.basis.birth||s.basis.phone));
+  const consents=!!(s.consents&&(s.consents.privacy||s.consents.contract));
+  return answers||screening||context||basis||consents;
+}
+function mergeDeep(target,source){
+  if(!source||typeof source!=="object")return target;
+  Object.keys(source).forEach(k=>{
+    if(source[k]&&typeof source[k]==="object"&&!Array.isArray(source[k])){
+      if(!target[k]||typeof target[k]!=="object"||Array.isArray(target[k]))target[k]={};
+      mergeDeep(target[k],source[k]);
+    }else{
+      target[k]=source[k];
+    }
+  });
+  return target;
+}
+function saveNow(){
+  try{if(window.psynoviaStorage&&typeof window.psynoviaStorage.save==="function")window.psynoviaStorage.save();else if(window.save)window.save();else localStorage.setItem(STORAGE_KEY,JSON.stringify(window.state||{}));}catch(e){}
+}
+let saveTimer=null;
+function scheduleSave(){
+  if(psynoviaRestartInProgress)return;
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{captureVisibleInputs();saveNow();},180);
+}
+function selectedValue(selector){return document.querySelector(selector+" .chip.selected")?.dataset.value||""}
+function collectSelected(selector){return Array.from(document.querySelectorAll(selector+" .chip.selected")).map(x=>x.dataset.value||x.textContent||"").filter(Boolean)}
+function captureVisibleInputs(){
+  const s=window.state||{};
+  s.basis=s.basis||{};
+  const map={
+    v50BasisName:"name",v50BasisBirth:"birth",v50BasisEmail:"email",v50BasisPhone:"phone",
+    v50BasisStreet:"street",v50BasisZip:"zip",v50BasisCity:"city",v50BasisCountry:"country",
+    v50ReferralSource:"referral_source",v50BasisReason:"reason"
+  };
+  Object.keys(map).forEach(id=>{const el=$(id);if(el)s.basis[map[id]]=(el.value||"").trim();});
+  if($("v50InsuranceChips"))s.basis.insurance=selectedValue("#v50InsuranceChips");
+  if($("v50TreatmentChips"))s.basis.current_treatment=selectedValue("#v50TreatmentChips");
+  if($("v50InterviewChips"))s.basis.interview_planning=selectedValue("#v50InterviewChips");
+  if($("v50ReferralChips"))s.basis.referred_by_provider=selectedValue("#v50ReferralChips");
+
+  s.context=s.context||{};
+  if($("medicationStatusChips"))s.context.medication={status:selectedValue("#medicationStatusChips"),details:($("medicationDetails")?.value||"").trim()};
+  if($("v50MedicalPanel"))s.context.medical={selected:collectSelected("#v50MedicalPanel"),notes:($("medicalNotes")?.value||"").trim()};
+  if($("v50PsychPanel"))s.context.psych={selected:collectSelected("#v50PsychPanel"),notes:($("psychNotes")?.value||"").trim()};
+
+  s.consents=s.consents||{};
+  if($("v50EmailReportConsent"))s.consents.email_report={accepted:!!$("v50EmailReportConsent").checked,accepted_iso:$("v50EmailReportConsent").checked?new Date().toISOString():null};
+  if($("v50ResearchConsent"))s.consents.anonymized_research={accepted:!!$("v50ResearchConsent").checked,accepted_iso:$("v50ResearchConsent").checked?new Date().toISOString():null};
+  window.state=s;
+}
+document.addEventListener("input",scheduleSave,true);
+document.addEventListener("change",scheduleSave,true);
+document.addEventListener("click",()=>setTimeout(scheduleSave,60),true);
+window.addEventListener("pagehide",()=>{
+  if(psynoviaRestartInProgress)return;
+  captureVisibleInputs();
+  saveNow();
+});
+
+function prefillBasis(){
+  const b=(window.state&&window.state.basis)||{};
+  const vals={
+    v50BasisName:b.name,v50BasisBirth:b.birth,v50BasisEmail:b.email,v50BasisPhone:b.phone,
+    v50BasisStreet:b.street,v50BasisZip:b.zip,v50BasisCity:b.city,v50BasisCountry:b.country||"Deutschland",
+    v50ReferralSource:b.referral_source,v50BasisReason:b.reason
+  };
+  Object.keys(vals).forEach(id=>{const el=$(id);if(el&&typeof vals[id]!=="undefined")el.value=vals[id]||"";});
+  function mark(groupId,val){
+    if(!val)return;
+    document.querySelectorAll("#"+groupId+" .chip").forEach(ch=>{if(ch.dataset.value===val)ch.classList.add("selected")});
+  }
+  mark("v50InsuranceChips",b.insurance);
+  mark("v50TreatmentChips",b.current_treatment);
+  mark("v50InterviewChips",b.interview_planning);
+  mark("v50ReferralChips",b.referred_by_provider);
+  const wrap=$("v50ReferralWrap");
+  if(wrap&&b.referred_by_provider==="ja")wrap.style.display="grid";
+}
+function routeResume(){
+  const s=window.state||{};
+  const flow=window.psynoviaV50Flow||{};
+  const legacy=window.psynoviaLegacyFlow||{};
+  const safety=s.context&&s.context.safety;
+
+  /* Safety must always win over stale downstream data.
+     Otherwise old basis/privacy/contract data from previous test runs can
+     incorrectly resume after an acute stop. */
+  if(safety&&safety.stop===true){
+    if(flow.routeToSafetyStop)return flow.routeToSafetyStop();
+    if(flow.routeToSafety)return flow.routeToSafety();
+  }
+  if(safety&&safety.suicide_risk==="acute"){
+    if(flow.routeToSafetyStop)return flow.routeToSafetyStop();
+    if(flow.routeToSafety)return flow.routeToSafety();
+  }
+  if(safety&&safety.suicide_risk==="moderate"){
+    if(flow.routeToSafetyModerate)return flow.routeToSafetyModerate();
+    if(flow.routeToSafety)return flow.routeToSafety();
+  }
+
+  if(s.consents&&s.consents.privacy&&s.consents.privacy.accepted&&flow.routeToContractFallback)return flow.routeToContractFallback();
+  if(s.basis&&(s.basis.name||s.basis.email||s.basis.birth)){
+    if(flow.routeToPrivacyFallback)return flow.routeToPrivacyFallback();
+  }
+  if(safety&&safety.completed_iso){
+    if(flow.routeToBasisFallback){flow.routeToBasisFallback();setTimeout(prefillBasis,80);return;}
+  }
+  if(s.context&&s.context.medication&&flow.routeToSafety)return flow.routeToSafety();
+  if(s.context&&s.context.psych&&flow.routeToMedication)return flow.routeToMedication();
+  if(s.context&&s.context.medical&&flow.routeToPsych)return flow.routeToPsych();
+  if(s.screening&&s.screening.completed_iso&&flow.routeToMedical)return flow.routeToMedical();
+  if(legacy.resumeScreening)return legacy.resumeScreening();
+}
+function resetDraft(){
+  try{
+    psynoviaRestartInProgress=true;
+    sessionStorage.setItem("psynovia_restart","1");
+    localStorage.removeItem(STORAGE_KEY);
+  }catch(e){}
+  location.replace(location.pathname + location.search + location.hash);
+}
+function openResumeOverlay(saved){
+  const overlay=document.createElement("div");
+  overlay.id="psynoviaResumeOverlay";
+  overlay.innerHTML='<div class="resume-card" role="dialog" aria-modal="true" aria-label="Angefangene Aufnahme"><div class="resume-kicker">Zwischenspeicher</div><h2>Angefangene Aufnahme fortsetzen?</h2><p>Auf diesem Gerät wurde ein begonnener Psynovia-Intake gefunden. Sie können direkt dort weitermachen oder neu starten.</p><div class="resume-actions"><button type="button" class="resume-primary" id="psynoviaResumeContinue">Fortfahren</button><button type="button" class="resume-secondary" id="psynoviaResumeRestart">Neu starten</button></div></div>';
+  document.body.appendChild(overlay);
+  overlay.classList.add("is-open");
+  document.body.classList.add("psynovia-resume-open");
+  $("psynoviaResumeContinue").onclick=()=>{
+    mergeDeep(window.state||(window.state={}),saved);
+    overlay.classList.remove("is-open");
+    document.body.classList.remove("psynovia-resume-open");
+    setTimeout(routeResume,60);
+  };
+  $("psynoviaResumeRestart").onclick=resetDraft;
+}
+document.addEventListener("DOMContentLoaded",()=>{
+  if(psynoviaRestartInProgress)return;
+  setTimeout(()=>{
+    const saved=safeParse(localStorage.getItem(STORAGE_KEY));
+    if(hasMeaningfulDraft(saved))openResumeOverlay(saved);
+  },180);
+});
+})();
+</script>
+
+</body>
+</html>
