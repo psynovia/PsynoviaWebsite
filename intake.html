@@ -1563,6 +1563,7 @@ $("v50BasisNext").onclick=()=>{
     if(!s.basis.zip)return showFieldError($("v50BasisZip"),"Bitte geben Sie Ihre PLZ ein.");
     if(!s.basis.city)return showFieldError($("v50BasisCity"),"Bitte geben Sie Ihren Ort ein.");
     if(!s.basis.country)return showFieldError($("v50BasisCountry"),"Bitte geben Sie Ihr Land ein.");
+    if(!s.basis.sex_at_birth)return showChipError("v50SexAtBirthChips","Bitte wählen Sie Ihr biologisches Geschlecht bei Geburt aus.");
     if(!s.basis.insurance)return showChipError("v50InsuranceChips","Bitte wählen Sie Ihren Versicherungsstatus aus.");
     if(!s.basis.current_treatment)return showChipError("v50TreatmentChips","Bitte wählen Sie aus, ob Sie aktuell in Behandlung sind.");
     if(!s.basis.interview_planning)return showChipError("v50InterviewChips","Bitte wählen Sie eine Antwort für die Planung des Abschlussgesprächs aus.");
