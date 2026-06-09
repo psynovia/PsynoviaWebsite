@@ -1151,7 +1151,7 @@ window.psynoviaStorage = {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "null"); } catch(e) { return null; }
   },
   clearDraft: () => {
-    try { if(window.psynoviaStorage&&typeof window.psynoviaStorage.clearDraft==="function")window.psynoviaStorage.clearDraft();else localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+    try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
   },
   markCompleted: () => {
     try {
@@ -2056,6 +2056,7 @@ function routeResume(){
   if(s.screening&&s.screening.completed_iso&&flow.routeToMedical)return flow.routeToMedical();
   if(legacy.resumeScreening)return legacy.resumeScreening();
 }
+window.routeResume=routeResume;
 function resetDraft(){
   try{
     psynoviaRestartInProgress=true;
@@ -2075,7 +2076,13 @@ function openResumeOverlay(saved){
     mergeDeep(window.state||(window.state={}),saved);
     overlay.classList.remove("is-open");
     document.body.classList.remove("psynovia-resume-open");
-    setTimeout(routeResume,60);
+    setTimeout(()=>{
+      if(typeof window.psynoviaResumeByExplicitStep==="function"){
+        window.psynoviaResumeByExplicitStep();
+      }else{
+        routeResume();
+      }
+    },60);
   };
   $("psynoviaResumeRestart").onclick=resetDraft;
 }
@@ -2200,19 +2207,6 @@ document.addEventListener("DOMContentLoaded",()=>{
   }
 
   window.psynoviaResumeByExplicitStep = resumeByExplicitStep;
-
-  /* Override only the resume dialog continue action after DOM is ready.
-     This keeps the existing UI and storage logic, but routes through exact progress. */
-  document.addEventListener("click", function(e){
-    const btn = e.target && e.target.closest ? e.target.closest("#psynoviaResumeContinue") : null;
-    if(!btn) return;
-    e.preventDefault();
-    e.stopPropagation();
-    const overlay = document.getElementById("psynoviaResumeOverlay");
-    if(overlay) overlay.classList.remove("is-open");
-    document.body.classList.remove("psynovia-resume-open");
-    setTimeout(resumeByExplicitStep, 30);
-  }, true);
 })();
 </script>
 
