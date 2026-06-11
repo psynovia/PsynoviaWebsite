@@ -1036,6 +1036,15 @@ button:disabled *,
 }
 </style>
 
+
+<style id="psynovia-v26-1-contract-consent-validation-css">
+#v50ContractPanel .consent.is-invalid{
+  border-color:rgba(239,159,67,.88)!important;
+  box-shadow:0 0 0 4px rgba(239,159,67,.14)!important;
+  background:#fffaf2!important;
+}
+</style>
+
 </head>
 <body>
 <div class="app"><div class="phone">
@@ -1900,11 +1909,18 @@ if(readerBody){
 document.addEventListener("keydown",(e)=>{if(e.key==="Escape"&&overlay&&overlay.classList.contains("is-open"))closeContractReader();});
 $("v50PayBtn").onclick=async()=>{
     const s=getState();s.contract=s.contract||{};
-    if(!$("v50ContractAccept").checked){
-      showChipError("v50ContractAccept","Bitte bestätigen Sie den Behandlungsvertrag.");
+    const contractConsent=$("v50ContractConsent1");
+    const withdrawalConsent=$("v50WithdrawalConsent1");
+    if(!contractConsent || !contractConsent.checked){
+      showChipError("v50ContractConsentLabel","Bitte bestätigen Sie den Behandlungsvertrag.");
+      return;
+    }
+    if(!withdrawalConsent || !withdrawalConsent.checked){
+      showChipError("v50WithdrawalConsentLabel","Bitte bestätigen Sie den vorzeitigen Beginn der Leistungserbringung.");
       return;
     }
     s.contract.accepted=true;
+    s.contract.withdrawal_early_start=true;
     s.contract.accepted_iso=new Date().toISOString();
     persistState();
 
