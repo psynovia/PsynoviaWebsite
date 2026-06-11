@@ -1898,17 +1898,47 @@ if(readerBody){
   readerBody.addEventListener("scroll",checkContractReaderScroll,{passive:true});
 }
 document.addEventListener("keydown",(e)=>{if(e.key==="Escape"&&overlay&&overlay.classList.contains("is-open"))closeContractReader();});
-$("v50PayBtn").onclick=()=>{
-  if(!contractReadComplete||contractConsent.disabled){if(note)note.textContent="Bitte öffnen Sie den Vertrag und scrollen Sie ihn zunächst vollständig bis zum Ende.";return;}
-  if(!contractConsent.checked){alert("Bitte bestätigen Sie den Behandlungsvertrag einschließlich Widerrufsbelehrung.");return}
-  if(!withdrawalConsent.checked){alert("Bitte bestätigen Sie den vorzeitigen Beginn der Leistungserbringung.");return}
-  const s=getState();
-  s.consents.contract={accepted:true,contract_read:true,withdrawal_information_read:true,accepted_iso:new Date().toISOString()};
-  s.consents.withdrawal={immediate_service_requested:true,loss_of_withdrawal_right_acknowledged:true,accepted_iso:new Date().toISOString()};
-  persistState();
-  if(window.psynoviaStorage&&typeof window.psynoviaStorage.markCompleted==="function"){window.psynoviaStorage.markCompleted();}
-  window.location.href="#zahlung-spaeter";
-};
+$("v50PayBtn").onclick=async()=>{
+    const s=getState();s.contract=s.contract||{};
+    if(!$("v50ContractAccept").checked){
+      showChipError("v50ContractAccept","Bitte bestätigen Sie den Behandlungsvertrag.");
+      return;
+    }
+    s.contract.accepted=true;
+    s.contract.accepted_iso=new Date().toISOString();
+    persistState();
+
+    const btn=$("v50PayBtn");
+    const oldText=btn ? btn.textContent : "";
+    if(btn){
+      btn.disabled=true;
+      btn.textContent="Daten werden vorbereitet ...";
+    }
+
+    try{
+      if(typeof window.psynoviaSubmitIntakeToBackend!=="function"){
+        throw new Error("Backend-Funktion im Intake nicht geladen.");
+      }
+      const result=await window.psynoviaSubmitIntakeToBackend(s);
+      if(window.psynoviaStorage&&typeof window.psynoviaStorage.markCompleted==="function"){
+        window.psynoviaStorage.markCompleted();
+      }
+
+      /*
+        Nächster Schritt:
+        Sobald der echte Stripe-Link steht, diese Platzhalter-Zeile ersetzen durch:
+        window.location.href="DEIN_STRIPE_PAYMENT_LINK?client_reference_id="+encodeURIComponent(s.case_id||result.case_id||"");
+      */
+      window.location.href="#zahlung-spaeter";
+    }catch(err){
+      console.error("Psynovia backend submit failed",err);
+      alert("Die Daten konnten gerade nicht sicher vorbereitet werden. Bitte versuchen Sie es erneut oder schreiben Sie an info@psynovia.de.");
+      if(btn){
+        btn.disabled=false;
+        btn.textContent=oldText||"Datenerhebung buchen";
+      }
+    }
+  };
 meta("Behandlungsvertrag","Phase 3","94%");show(p)}
 /* Legacy V50 click interception removed in V21; routing is explicit. */
 window.psynoviaV50Flow={routeToMedical,routeToPsych,routeToMedication,routeToSafety,routeToSafetyStop,routeToSafetyModerate,routeToBasisFallback,routeToPrivacyFallback,routeToContractFallback};
@@ -2211,6 +2241,67 @@ document.addEventListener("DOMContentLoaded",()=>{
 </script>
 
 
+
+
+<script id="psynovia-v26-backend-intake-submit">
+(function(){
+  async function submitIntakeToBackend(state){
+    const s = state || window.state || {};
+    const basis = s.basis || {};
+    const nameParts = String(basis.name || "").trim().split(/\s+/).filter(Boolean);
+    const firstName = basis.first_name || nameParts[0] || null;
+    const lastName = basis.last_name || (nameParts.length > 1 ? nameParts.slice(1).join(" ") : null);
+
+    const payload = {
+      first_name: firstName,
+      last_name: lastName,
+      email: basis.email || null,
+      intake_json: s,
+      source: "psynovia_intake",
+      intake_version: "v26_backend_submit"
+    };
+
+    const response = await fetch("/.netlify/functions/create-case", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(payload)
+    });
+
+    let data = null;
+    try{
+      data = await response.json();
+    }catch(e){
+      data = {error:"Invalid backend response"};
+    }
+
+    if(!response.ok || !data || data.ok !== true){
+      throw new Error((data && (data.error || data.details)) ? JSON.stringify(data) : "Backend submission failed");
+    }
+
+    const caseId = data.case_id || (data.data && data.data[0] && data.data[0].case_id) || null;
+    if(caseId){
+      s.case_id = caseId;
+      s.backend = s.backend || {};
+      s.backend.case_id = caseId;
+      s.backend.submitted_at = new Date().toISOString();
+      s.backend.status = "created";
+      try{
+        if(window.psynoviaStorage && typeof window.psynoviaStorage.save === "function"){
+          window.psynoviaStorage.save();
+        }else if(typeof window.save === "function"){
+          window.save();
+        }else{
+          localStorage.setItem("psynovia_intake_v5_funnel", JSON.stringify(s));
+        }
+      }catch(e){}
+    }
+
+    return data;
+  }
+
+  window.psynoviaSubmitIntakeToBackend = submitIntakeToBackend;
+})();
+</script>
 
 </body>
 </html>
