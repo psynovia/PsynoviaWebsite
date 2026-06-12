@@ -1941,11 +1941,10 @@ $("v50PayBtn").onclick=async()=>{
       }
 
       /*
-        Nächster Schritt:
-        Sobald der echte Stripe-Link steht, diese Platzhalter-Zeile ersetzen durch:
-        window.location.href="DEIN_STRIPE_PAYMENT_LINK?client_reference_id="+encodeURIComponent(s.case_id||result.case_id||"");
+        Nach erfolgreicher Fallanlage wird direkt zu Stripe weitergeleitet.
+        Die case_id wird als client_reference_id mitgegeben.
       */
-      window.location.href="#zahlung-spaeter";
+      window.location.href="https://book.stripe.com/5kQ3cufU6a532x0flS8N201?client_reference_id="+encodeURIComponent(s.case_id||result.case_id||"");
     }catch(err){
       console.error("Psynovia backend submit failed",err);
       alert("Die Daten konnten gerade nicht sicher vorbereitet werden. Bitte versuchen Sie es erneut oder schreiben Sie an info@psynovia.de.");
