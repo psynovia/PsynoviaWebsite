@@ -93,11 +93,22 @@ exports.handler = async function(event) {
       };
     }
 
-    const updatePayload = {
-      payment_status: "paid",
-      status: "paid",
-      report_available: false
-    };
+    const downloadToken = crypto.randomBytes(32).toString("hex");
+const downloadExpiresAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
+
+const updatePayload = {
+  payment_status: "paid",
+  status: "paid",
+  stripe_session_id: session.id || null,
+  report_available: false,
+  download_token: downloadToken,
+  download_count: 0,
+  first_downloaded_at: null,
+  last_downloaded_at: null,
+  download_expires_at: downloadExpiresAt,
+  download_locked: false,
+  max_downloads: 3
+};
 
     const updateUrl = `${SUPABASE_URL}/rest/v1/cases?case_id=eq.${encodeURIComponent(caseId)}`;
 
