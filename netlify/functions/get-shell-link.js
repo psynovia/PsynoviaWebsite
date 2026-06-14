@@ -3,8 +3,8 @@ const { createClient } = require("@supabase/supabase-js");
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-const BUCKET_NAME = "secret";
-const SHELL_FILE_PATH = "shell/PsynoviaADHSDiagnostiktool.html";
+const BUCKET_NAME = "shell";
+const SHELL_FILE_PATH = "PsynoviaADHSDiagnostiktool.html";
 const SIGNED_URL_SECONDS = 15 * 60;
 
 exports.handler = async (event) => {
