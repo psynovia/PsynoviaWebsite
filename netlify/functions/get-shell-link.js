@@ -102,7 +102,8 @@ exports.handler = async function(event) {
     const safeCaseId = String(caseRow.case_id || "Psynovia").replace(/[^a-zA-Z0-9_-]/g, "_");
     const safeTimestamp = nowIso.replace(/[:.]/g, "-");
 
-    const personalizedPath = `personalized/${safeCaseId}/Psynovia_Diagnostiktool_${safeCaseId}_${safeTimestamp}.html`;
+    const personalizedPath =
+      `personalized/${safeCaseId}/Psynovia_Diagnostiktool_${safeCaseId}_${safeTimestamp}.html`;
 
     const uploadResponse = await fetch(
       `${SUPABASE_URL}/storage/v1/object/${BUCKET_NAME}/${encodeURIComponent(personalizedPath).replace(/%2F/g, "/")}`,
@@ -146,13 +147,19 @@ exports.handler = async function(event) {
 
     const signedData = await signedResponse.json();
 
-    if (!signedResponse.ok || !signedData?.signedURL) {
+    const signedUrl = signedData?.signedURL || signedData?.signedUrl;
+
+    if (!signedResponse.ok || !signedUrl) {
       return json(signedResponse.status || 500, {
         ok: false,
         error: "Could not create signed URL for personalized shell",
         details: signedData
       });
     }
+
+    const fullSignedUrl = signedUrl.startsWith("http")
+      ? signedUrl
+      : `${SUPABASE_URL}${signedUrl}`;
 
     const updatePayload = {
       download_count: currentCount + 1,
@@ -179,7 +186,7 @@ exports.handler = async function(event) {
     return {
       statusCode: 302,
       headers: {
-        Location: signedData.signedURL,
+        Location: fullSignedUrl,
         "Cache-Control": "no-store"
       },
       body: ""
