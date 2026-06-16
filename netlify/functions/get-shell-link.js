@@ -1,4 +1,4 @@
-       exports.handler = async function(event) {
+exports.handler = async function(event) {
   const SUPABASE_URL = process.env.SUPABASE_URL;
   const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -21,11 +21,7 @@
       return json(405, { ok: false, error: "Method not allowed" });
     }
 
-    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-      return json(500, { ok: false, error: "Missing Supabase environment variables" });
-    }
-
-    const token = event.queryStringParameters && event.queryStringParameters.token;
+    const token = event.queryStringParameters?.token;
 
     if (!token) {
       return json(400, { ok: false, error: "Missing token" });
@@ -36,24 +32,15 @@
       {
         method: "GET",
         headers: {
-          "apikey": SUPABASE_SERVICE_ROLE_KEY,
-          "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-          "Content-Type": "application/json"
+          apikey: SUPABASE_SERVICE_ROLE_KEY,
+          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`
         }
       }
     );
 
     const cases = await caseResponse.json();
 
-    if (!caseResponse.ok) {
-      return json(caseResponse.status, {
-        ok: false,
-        error: "Case lookup failed",
-        details: cases
-      });
-    }
-
-    if (!Array.isArray(cases) || cases.length === 0) {
+    if (!caseResponse.ok || !Array.isArray(cases) || cases.length === 0) {
       return json(404, { ok: false, error: "Invalid token" });
     }
 
@@ -83,26 +70,27 @@
       {
         method: "GET",
         headers: {
-          "apikey": SUPABASE_SERVICE_ROLE_KEY,
-          "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`
+          apikey: SUPABASE_SERVICE_ROLE_KEY,
+          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`
         }
       }
     );
 
     if (!shellResponse.ok) {
-      const details = await shellResponse.text();
       return json(shellResponse.status, {
         ok: false,
         error: "Could not load shell file",
-        details
+        details: await shellResponse.text()
       });
     }
 
     let shellHtml = await shellResponse.text();
 
     shellHtml = shellHtml
-      .replaceAll("__PSYNOVIA_CASE_ID__", caseRow.case_id)
-      .replaceAll("__PSYNOVIA_DOWNLOAD_TOKEN__", token);
+      .split("__PSYNOVIA_CASE_ID__").join(caseRow.case_id)
+      .split("__PSYNOVIA_DOWNLOAD_TOKEN__").join(token);
+
+    shellHtml = `<!-- Psynovia personalized shell: ${caseRow.case_id} -->\n` + shellHtml;
 
     const nowIso = new Date().toISOString();
 
@@ -120,23 +108,23 @@
       {
         method: "PATCH",
         headers: {
-          "apikey": SUPABASE_SERVICE_ROLE_KEY,
-          "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+          apikey: SUPABASE_SERVICE_ROLE_KEY,
+          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify(updatePayload)
       }
     );
 
-    const safeCaseId = String(caseRow.case_id || "Psynovia")
-      .replace(/[^a-zA-Z0-9_-]/g, "_");
+    const safeCaseId = String(caseRow.case_id || "Psynovia").replace(/[^a-zA-Z0-9_-]/g, "_");
 
     return {
       statusCode: 200,
       headers: {
-        "Content-Type": "text/html; charset=utf-8",
+        "Content-Type": "application/octet-stream",
         "Content-Disposition": `attachment; filename="Psynovia_Diagnostiktool_${safeCaseId}.html"`,
-        "Cache-Control": "no-store"
+        "Cache-Control": "no-store",
+        "X-Content-Type-Options": "nosniff"
       },
       body: shellHtml
     };
@@ -147,4 +135,4 @@
       details: error.message
     });
   }
-}; 
+};
