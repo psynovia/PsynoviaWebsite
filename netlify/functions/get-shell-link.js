@@ -1,11 +1,13 @@
+const { createClient } = require("@supabase/supabase-js");
+
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+const BUCKET_NAME = "shell";
+const SHELL_FILE_PATH = "PsynoviaADHSDiagnostiktool.html";
+const SIGNED_URL_SECONDS = 15 * 60;
+
 exports.handler = async function(event) {
-  const SUPABASE_URL = process.env.SUPABASE_URL;
-  const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  const BUCKET_NAME = "shell";
-  const SHELL_FILE_PATH = "PsynoviaADHSDiagnostiktool.html";
-  const SIGNED_URL_SECONDS = 15 * 60;
-
   function json(statusCode, body) {
     return {
       statusCode,
@@ -32,24 +34,17 @@ exports.handler = async function(event) {
       return json(400, { ok: false, error: "Missing token" });
     }
 
-    const caseResponse = await fetch(
-      `${SUPABASE_URL}/rest/v1/cases?download_token=eq.${encodeURIComponent(token)}&select=*&limit=1`,
-      {
-        method: "GET",
-        headers: {
-          apikey: SUPABASE_SERVICE_ROLE_KEY,
-          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`
-        }
-      }
-    );
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    const cases = await caseResponse.json();
+    const { data: caseRow, error: caseError } = await supabase
+      .from("cases")
+      .select("*")
+      .eq("download_token", token)
+      .single();
 
-    if (!caseResponse.ok || !Array.isArray(cases) || cases.length === 0) {
-      return json(404, { ok: false, error: "Invalid token" });
+    if (caseError || !caseRow) {
+      return json(404, { ok: false, error: "Invalid token", details: caseError?.message });
     }
-
-    const caseRow = cases[0];
 
     if (caseRow.payment_status !== "paid") {
       return json(403, { ok: false, error: "Payment required" });
@@ -70,26 +65,16 @@ exports.handler = async function(event) {
       return json(403, { ok: false, error: "Download limit reached" });
     }
 
-    const shellResponse = await fetch(
-      `${SUPABASE_URL}/storage/v1/object/${BUCKET_NAME}/${SHELL_FILE_PATH}`,
-      {
-        method: "GET",
-        headers: {
-          apikey: SUPABASE_SERVICE_ROLE_KEY,
-          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`
-        }
-      }
-    );
+    const { data: shellData, error: shellError } = await supabase
+      .storage
+      .from(BUCKET_NAME)
+      .download(SHELL_FILE_PATH);
 
-    if (!shellResponse.ok) {
-      return json(shellResponse.status, {
-        ok: false,
-        error: "Could not load shell file",
-        details: await shellResponse.text()
-      });
+    if (shellError || !shellData) {
+      return json(500, { ok: false, error: "Could not load shell file", details: shellError?.message });
     }
 
-    let shellHtml = await shellResponse.text();
+    let shellHtml = await shellData.text();
 
     shellHtml = shellHtml
       .split("__PSYNOVIA_CASE_ID__").join(caseRow.case_id)
@@ -105,61 +90,30 @@ exports.handler = async function(event) {
     const personalizedPath =
       `personalized/${safeCaseId}/Psynovia_Diagnostiktool_${safeCaseId}_${safeTimestamp}.html`;
 
-    const uploadResponse = await fetch(
-      `${SUPABASE_URL}/storage/v1/object/${BUCKET_NAME}/${encodeURIComponent(personalizedPath).replace(/%2F/g, "/")}`,
-      {
-        method: "POST",
-        headers: {
-          apikey: SUPABASE_SERVICE_ROLE_KEY,
-          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-          "Content-Type": "text/html; charset=utf-8",
-          "x-upsert": "true"
-        },
-        body: shellHtml
-      }
-    );
+    const blob = new Blob([shellHtml], { type: "text/html;charset=utf-8" });
 
-    const uploadText = await uploadResponse.text();
-
-    if (!uploadResponse.ok) {
-      return json(uploadResponse.status, {
-        ok: false,
-        error: "Could not store personalized shell",
-        details: uploadText
+    const { error: uploadError } = await supabase
+      .storage
+      .from(BUCKET_NAME)
+      .upload(personalizedPath, blob, {
+        contentType: "text/html;charset=utf-8",
+        upsert: true
       });
+
+    if (uploadError) {
+      return json(500, { ok: false, error: "Could not store personalized shell", details: uploadError.message });
     }
 
-    const signedResponse = await fetch(
-      `${SUPABASE_URL}/storage/v1/object/sign/${BUCKET_NAME}/${encodeURIComponent(personalizedPath).replace(/%2F/g, "/")}`,
-      {
-        method: "POST",
-        headers: {
-          apikey: SUPABASE_SERVICE_ROLE_KEY,
-          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          expiresIn: SIGNED_URL_SECONDS,
-          download: `Psynovia_Diagnostiktool_${safeCaseId}.html`
-        })
-      }
-    );
-
-    const signedData = await signedResponse.json();
-
-    const signedUrl = signedData?.signedURL || signedData?.signedUrl;
-
-    if (!signedResponse.ok || !signedUrl) {
-      return json(signedResponse.status || 500, {
-        ok: false,
-        error: "Could not create signed URL for personalized shell",
-        details: signedData
+    const { data: signedData, error: signedError } = await supabase
+      .storage
+      .from(BUCKET_NAME)
+      .createSignedUrl(personalizedPath, SIGNED_URL_SECONDS, {
+        download: `Psynovia_Diagnostiktool_${safeCaseId}.html`
       });
-    }
 
-    const fullSignedUrl = signedUrl.startsWith("http")
-      ? signedUrl
-      : `${SUPABASE_URL}${signedUrl}`;
+    if (signedError || !signedData?.signedUrl) {
+      return json(500, { ok: false, error: "Could not create signed URL", details: signedError?.message });
+    }
 
     const updatePayload = {
       download_count: currentCount + 1,
@@ -170,23 +124,15 @@ exports.handler = async function(event) {
       updatePayload.first_downloaded_at = nowIso;
     }
 
-    await fetch(
-      `${SUPABASE_URL}/rest/v1/cases?id=eq.${encodeURIComponent(caseRow.id)}`,
-      {
-        method: "PATCH",
-        headers: {
-          apikey: SUPABASE_SERVICE_ROLE_KEY,
-          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(updatePayload)
-      }
-    );
+    await supabase
+      .from("cases")
+      .update(updatePayload)
+      .eq("id", caseRow.id);
 
     return {
       statusCode: 302,
       headers: {
-        Location: fullSignedUrl,
+        Location: signedData.signedUrl,
         "Cache-Control": "no-store"
       },
       body: ""
