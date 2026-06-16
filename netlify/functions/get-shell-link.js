@@ -4,6 +4,7 @@ exports.handler = async function(event) {
 
   const BUCKET_NAME = "shell";
   const SHELL_FILE_PATH = "PsynoviaADHSDiagnostiktool.html";
+  const SIGNED_URL_SECONDS = 15 * 60;
 
   function json(statusCode, body) {
     return {
@@ -19,6 +20,10 @@ exports.handler = async function(event) {
   try {
     if (event.httpMethod !== "GET") {
       return json(405, { ok: false, error: "Method not allowed" });
+    }
+
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      return json(500, { ok: false, error: "Missing Supabase environment variables" });
     }
 
     const token = event.queryStringParameters?.token;
@@ -92,7 +97,62 @@ exports.handler = async function(event) {
 
     shellHtml = `<!-- Psynovia personalized shell: ${caseRow.case_id} -->\n` + shellHtml;
 
-    const nowIso = new Date().toISOString();
+    const now = new Date();
+    const nowIso = now.toISOString();
+    const safeCaseId = String(caseRow.case_id || "Psynovia").replace(/[^a-zA-Z0-9_-]/g, "_");
+    const safeTimestamp = nowIso.replace(/[:.]/g, "-");
+
+    const personalizedPath = `personalized/${safeCaseId}/Psynovia_Diagnostiktool_${safeCaseId}_${safeTimestamp}.html`;
+
+    const uploadResponse = await fetch(
+      `${SUPABASE_URL}/storage/v1/object/${BUCKET_NAME}/${encodeURIComponent(personalizedPath).replace(/%2F/g, "/")}`,
+      {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_SERVICE_ROLE_KEY,
+          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+          "Content-Type": "text/html; charset=utf-8",
+          "x-upsert": "true"
+        },
+        body: shellHtml
+      }
+    );
+
+    const uploadText = await uploadResponse.text();
+
+    if (!uploadResponse.ok) {
+      return json(uploadResponse.status, {
+        ok: false,
+        error: "Could not store personalized shell",
+        details: uploadText
+      });
+    }
+
+    const signedResponse = await fetch(
+      `${SUPABASE_URL}/storage/v1/object/sign/${BUCKET_NAME}/${encodeURIComponent(personalizedPath).replace(/%2F/g, "/")}`,
+      {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_SERVICE_ROLE_KEY,
+          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          expiresIn: SIGNED_URL_SECONDS,
+          download: `Psynovia_Diagnostiktool_${safeCaseId}.html`
+        })
+      }
+    );
+
+    const signedData = await signedResponse.json();
+
+    if (!signedResponse.ok || !signedData?.signedURL) {
+      return json(signedResponse.status || 500, {
+        ok: false,
+        error: "Could not create signed URL for personalized shell",
+        details: signedData
+      });
+    }
 
     const updatePayload = {
       download_count: currentCount + 1,
@@ -116,17 +176,13 @@ exports.handler = async function(event) {
       }
     );
 
-    const safeCaseId = String(caseRow.case_id || "Psynovia").replace(/[^a-zA-Z0-9_-]/g, "_");
-
     return {
-      statusCode: 200,
+      statusCode: 302,
       headers: {
-        "Content-Type": "application/octet-stream",
-        "Content-Disposition": `attachment; filename="Psynovia_Diagnostiktool_${safeCaseId}.html"`,
-        "Cache-Control": "no-store",
-        "X-Content-Type-Options": "nosniff"
+        Location: signedData.signedURL,
+        "Cache-Control": "no-store"
       },
-      body: shellHtml
+      body: ""
     };
   } catch (error) {
     return json(500, {
