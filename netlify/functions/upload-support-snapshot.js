@@ -1,10 +1,30 @@
 exports.handler = async function(event) {
-  if (event.httpMethod !== "POST") {
+  const corsHeaders = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Content-Type": "application/json",
+    "Cache-Control": "no-store"
+  };
+
+  function json(statusCode, body) {
     return {
-      statusCode: 405,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ok: false, error: "Method not allowed" })
+      statusCode,
+      headers: corsHeaders,
+      body: JSON.stringify(body)
     };
+  }
+
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers: corsHeaders,
+      body: ""
+    };
+  }
+
+  if (event.httpMethod !== "POST") {
+    return json(405, { ok: false, error: "Method not allowed" });
   }
 
   try {
@@ -12,11 +32,7 @@ exports.handler = async function(event) {
     const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-      return {
-        statusCode: 500,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ok: false, error: "Missing Supabase environment variables" })
-      };
+      return json(500, { ok: false, error: "Missing Supabase environment variables" });
     }
 
     const payload = JSON.parse(event.body || "{}");
@@ -24,11 +40,11 @@ exports.handler = async function(event) {
     const downloadToken = String(payload.download_token || "").trim();
 
     if (!caseId || caseId.startsWith("__PSYNOVIA_")) {
-      return { statusCode: 400, headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ok: false, error: "Missing or invalid case_id" }) };
+      return json(400, { ok: false, error: "Missing or invalid case_id" });
     }
 
     if (!downloadToken || downloadToken.startsWith("__PSYNOVIA_")) {
-      return { statusCode: 400, headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ok: false, error: "Missing or invalid download_token" }) };
+      return json(400, { ok: false, error: "Missing or invalid download_token" });
     }
 
     const caseResponse = await fetch(
@@ -36,8 +52,8 @@ exports.handler = async function(event) {
       {
         method: "GET",
         headers: {
-          "apikey": SUPABASE_SERVICE_ROLE_KEY,
-          "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+          apikey: SUPABASE_SERVICE_ROLE_KEY,
+          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
           "Content-Type": "application/json"
         }
       }
@@ -46,36 +62,44 @@ exports.handler = async function(event) {
     const cases = await caseResponse.json();
 
     if (!caseResponse.ok) {
-      return { statusCode: caseResponse.status, headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ok: false, error: "Case lookup failed", details: cases }) };
+      return json(caseResponse.status, {
+        ok: false,
+        error: "Case lookup failed",
+        details: cases
+      });
     }
 
     if (!Array.isArray(cases) || cases.length === 0) {
-      return { statusCode: 404, headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ok: false, error: "Case not found" }) };
+      return json(404, { ok: false, error: "Case not found" });
     }
 
     const row = cases[0];
 
     if (row.payment_status !== "paid") {
-      return { statusCode: 403, headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ok: false, error: "Case is not paid" }) };
+      return json(403, { ok: false, error: "Case is not paid" });
     }
 
-    const expectedToken = row.shell_download_token || row.download_token || row.access_token || null;
+    const expectedToken =
+      row.download_token ||
+      row.shell_download_token ||
+      row.access_token ||
+      null;
 
     if (!expectedToken) {
-      return {
-        statusCode: 409,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ok: false, error: "No token stored for this case yet" })
-      };
+      return json(409, {
+        ok: false,
+        error: "No token stored for this case yet"
+      });
     }
 
     if (String(expectedToken) !== downloadToken) {
-      return { statusCode: 403, headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ok: false, error: "Invalid token" }) };
+      return json(403, { ok: false, error: "Invalid token" });
     }
 
     const now = new Date();
     const safeTimestamp = now.toISOString().replace(/[:.]/g, "-");
     const safeCaseId = caseId.replace(/[^a-zA-Z0-9_-]/g, "_");
+
     const objectPath = `${safeCaseId}/${safeTimestamp}_support_snapshot.json`;
 
     const snapshot = {
@@ -89,8 +113,8 @@ exports.handler = async function(event) {
       {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-          "apikey": SUPABASE_SERVICE_ROLE_KEY,
+          apikey: SUPABASE_SERVICE_ROLE_KEY,
+          Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
           "Content-Type": "application/json",
           "x-upsert": "false"
         },
@@ -101,11 +125,11 @@ exports.handler = async function(event) {
     const uploadText = await uploadResponse.text();
 
     if (!uploadResponse.ok) {
-      return {
-        statusCode: uploadResponse.status,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ok: false, error: "Storage upload failed", details: uploadText })
-      };
+      return json(uploadResponse.status, {
+        ok: false,
+        error: "Storage upload failed",
+        details: uploadText
+      });
     }
 
     try {
@@ -114,25 +138,28 @@ exports.handler = async function(event) {
         {
           method: "PATCH",
           headers: {
-            "apikey": SUPABASE_SERVICE_ROLE_KEY,
-            "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+            apikey: SUPABASE_SERVICE_ROLE_KEY,
+            Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ last_support_snapshot_at: now.toISOString() })
+          body: JSON.stringify({
+            last_support_snapshot_at: now.toISOString()
+          })
         }
       );
     } catch (_) {}
 
-    return {
-      statusCode: 200,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ok: true, case_id: caseId, bucket: "support", path: objectPath })
-    };
+    return json(200, {
+      ok: true,
+      case_id: caseId,
+      bucket: "support",
+      path: objectPath
+    });
   } catch (error) {
-    return {
-      statusCode: 500,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ok: false, error: "Function failed", details: error.message })
-    };
+    return json(500, {
+      ok: false,
+      error: "Function failed",
+      details: error.message
+    });
   }
 };
