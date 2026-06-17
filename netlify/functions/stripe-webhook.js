@@ -40,6 +40,87 @@ function verifyStripeSignature(rawBody, signatureHeader, endpointSecret) {
   return true;
 }
 
+async function sendAccessMail({ to, caseId, accessLink }) {
+  const RESEND_API_KEY = process.env.RESEND_API_KEY;
+  const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "Psynovia <info@psynovia.de>";
+
+  if (!RESEND_API_KEY) {
+    console.error("RESEND_API_KEY missing");
+    return { ok: false, error: "RESEND_API_KEY missing" };
+  }
+
+  if (!to) {
+    console.error("Recipient email missing");
+    return { ok: false, error: "Recipient email missing" };
+  }
+
+  const subject = "Ihr Zugang zur Psynovia Datenerhebung";
+
+  const text = `Vielen Dank für Ihre Buchung.
+
+Ihre Fall-ID lautet: ${caseId}
+
+Über den folgenden Link können Sie das Diagnostiktool herunterladen:
+
+${accessLink}
+
+Bitte bewahren Sie Ihre Fall-ID gut auf.
+
+Die Bearbeitung erfolgt lokal auf Ihrem Gerät. Nach Abschluss laden Sie die erzeugte Ergebnisdatei wie beschrieben hoch.
+
+Bei Fragen erreichen Sie uns unter:
+info@psynovia.de
+
+Freundliche Grüße
+Psynovia`;
+
+  const html = `
+    <p>Vielen Dank für Ihre Buchung.</p>
+
+    <p><strong>Ihre Fall-ID lautet:</strong><br>${caseId}</p>
+
+    <p>Über den folgenden Link können Sie das Diagnostiktool herunterladen:</p>
+
+    <p>
+      <a href="${accessLink}" target="_blank" rel="noopener noreferrer">
+        Diagnostiktool herunterladen
+      </a>
+    </p>
+
+    <p>Bitte bewahren Sie Ihre Fall-ID gut auf.</p>
+
+    <p>Die Bearbeitung erfolgt lokal auf Ihrem Gerät. Nach Abschluss laden Sie die erzeugte Ergebnisdatei wie beschrieben hoch.</p>
+
+    <p>Bei Fragen erreichen Sie uns unter:<br>info@psynovia.de</p>
+
+    <p>Freundliche Grüße<br>Psynovia</p>
+  `;
+
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${RESEND_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      from: RESEND_FROM_EMAIL,
+      to,
+      subject,
+      text,
+      html
+    })
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    console.error("Resend failed", data);
+    return { ok: false, error: data };
+  }
+
+  return { ok: true, data };
+}
+
 exports.handler = async function(event) {
   if (event.httpMethod !== "POST") {
     return {
@@ -94,21 +175,21 @@ exports.handler = async function(event) {
     }
 
     const downloadToken = crypto.randomBytes(32).toString("hex");
-const downloadExpiresAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
+    const downloadExpiresAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
 
-const updatePayload = {
-  payment_status: "paid",
-  status: "paid",
-  stripe_session_id: session.id || null,
-  report_available: false,
-  download_token: downloadToken,
-  download_count: 0,
-  first_downloaded_at: null,
-  last_downloaded_at: null,
-  download_expires_at: downloadExpiresAt,
-  download_locked: false,
-  max_downloads: 3
-};
+    const updatePayload = {
+      payment_status: "paid",
+      status: "paid",
+      stripe_session_id: session.id || null,
+      report_available: false,
+      download_token: downloadToken,
+      download_count: 0,
+      first_downloaded_at: null,
+      last_downloaded_at: null,
+      download_expires_at: downloadExpiresAt,
+      download_locked: false,
+      max_downloads: 3
+    };
 
     const updateUrl = `${SUPABASE_URL}/rest/v1/cases?case_id=eq.${encodeURIComponent(caseId)}`;
 
@@ -148,13 +229,25 @@ const updatePayload = {
       };
     }
 
+    const caseRow = data[0];
+    const recipientEmail = caseRow.email;
+
+    const accessLink = `https://www.psynovia.de/.netlify/functions/get-shell-link?token=${encodeURIComponent(downloadToken)}`;
+
+    const mailResult = await sendAccessMail({
+      to: recipientEmail,
+      caseId,
+      accessLink
+    });
+
     return {
       statusCode: 200,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ok: true,
         case_id: caseId,
-        updated: data.length
+        updated: data.length,
+        mail_sent: mailResult.ok
       })
     };
   } catch (error) {
