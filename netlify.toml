@@ -1,3 +1,6 @@
+[functions]
+  included_files = ["netlify/functions/access-mail-template.html"]
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
