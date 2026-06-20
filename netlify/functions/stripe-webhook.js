@@ -1,4 +1,6 @@
 const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
 
 function timingSafeEqualString(a, b) {
   const aBuf = Buffer.from(a || "", "utf8");
@@ -40,7 +42,42 @@ function verifyStripeSignature(rawBody, signatureHeader, endpointSecret) {
   return true;
 }
 
-async function sendAccessMail({ to, caseId, accessLink }) {
+function escapeHtml(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function loadAccessMailTemplate({ fullName, caseId, accessLink }) {
+  const templatePath = path.join(__dirname, "access-mail-template.html");
+  let html = fs.readFileSync(templatePath, "utf8");
+
+  html = html.replaceAll("Guten Tag, Tobias Winner,", `Guten Tag, ${escapeHtml(fullName)},`);
+  html = html.replaceAll("PSY-2026-000123", escapeHtml(caseId));
+  html = html.replaceAll("PSY-2026-LTFDG9", escapeHtml(caseId));
+
+  html = html.replace(
+    /https:\/\/www\.psynovia\.de\/\.netlify\/functions\/get-shell-link\?token=[^"' <]+/g,
+    escapeHtml(accessLink)
+  );
+
+  html = html.replaceAll(
+    "https://www.psynovia.de/rechtliches/datenschutz.html",
+    "https://www.psynovia.de/rechtliches/datenschutz-intake.html"
+  );
+
+  html = html.replaceAll(
+    "https://www.psynovia.de/rechtliches/behandlungsvertrag.html",
+    "https://www.psynovia.de/rechtliches/behandlungsvertrag-psynovia.html"
+  );
+
+  return html;
+}
+
+async function sendAccessMail({ to, caseId, accessLink, fullName }) {
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
   const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "Psynovia <info@psynovia.de>";
 
@@ -56,17 +93,25 @@ async function sendAccessMail({ to, caseId, accessLink }) {
 
   const subject = "Ihr Zugang zur Psynovia Datenerhebung";
 
-  const text = `Vielen Dank für Ihre Buchung.
+  const text = `Guten Tag, ${fullName},
+
+herzlich willkommen zu Ihrer Psynovia Diagnostik.
+Vielen Dank für Ihr Vertrauen.
 
 Ihre Fall-ID lautet: ${caseId}
 
 Über den folgenden Link können Sie das Diagnostiktool herunterladen:
-
 ${accessLink}
 
-Bitte bewahren Sie Ihre Fall-ID gut auf.
+Für Ihre Unterlagen:
+Datenschutzhinweise:
+https://www.psynovia.de/rechtliches/datenschutz-intake.html
 
-Die Bearbeitung erfolgt lokal auf Ihrem Gerät. Nach Abschluss laden Sie die erzeugte Ergebnisdatei wie beschrieben hoch.
+Behandlungsvertrag:
+https://www.psynovia.de/rechtliches/behandlungsvertrag-psynovia.html
+
+Wir bestätigen den Eingang Ihrer Zahlung für die Psynovia Datenerhebung.
+Die Rechnung nach GOÄ zur möglichen Einreichung bei Ihrer privaten Krankenversicherung oder Beihilfe erhalten Sie gemeinsam mit Ihrem Ergebnisbericht.
 
 Bei Fragen erreichen Sie uns unter:
 info@psynovia.de
@@ -74,27 +119,7 @@ info@psynovia.de
 Freundliche Grüße
 Psynovia`;
 
-  const html = `
-    <p>Vielen Dank für Ihre Buchung.</p>
-
-    <p><strong>Ihre Fall-ID lautet:</strong><br>${caseId}</p>
-
-    <p>Über den folgenden Link können Sie das Diagnostiktool herunterladen:</p>
-
-    <p>
-      <a href="${accessLink}" target="_blank" rel="noopener noreferrer">
-        Diagnostiktool herunterladen
-      </a>
-    </p>
-
-    <p>Bitte bewahren Sie Ihre Fall-ID gut auf.</p>
-
-    <p>Die Bearbeitung erfolgt lokal auf Ihrem Gerät. Nach Abschluss laden Sie die erzeugte Ergebnisdatei wie beschrieben hoch.</p>
-
-    <p>Bei Fragen erreichen Sie uns unter:<br>info@psynovia.de</p>
-
-    <p>Freundliche Grüße<br>Psynovia</p>
-  `;
+  const html = loadAccessMailTemplate({ fullName, caseId, accessLink });
 
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -159,7 +184,11 @@ exports.handler = async function(event) {
       return {
         statusCode: 200,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ received: true, ignored: true, type: stripeEvent.type })
+        body: JSON.stringify({
+          received: true,
+          ignored: true,
+          type: stripeEvent.type
+        })
       };
     }
 
@@ -230,14 +259,19 @@ exports.handler = async function(event) {
     }
 
     const caseRow = data[0];
+
     const recipientEmail = caseRow.email;
+    const fullName = [caseRow.first_name, caseRow.last_name]
+      .filter(Boolean)
+      .join(" ") || "und willkommen";
 
     const accessLink = `https://www.psynovia.de/.netlify/functions/get-shell-link?token=${encodeURIComponent(downloadToken)}`;
 
     const mailResult = await sendAccessMail({
       to: recipientEmail,
       caseId,
-      accessLink
+      accessLink,
+      fullName
     });
 
     return {
@@ -251,6 +285,8 @@ exports.handler = async function(event) {
       })
     };
   } catch (error) {
+    console.error("Webhook failed", error);
+
     return {
       statusCode: 400,
       headers: { "Content-Type": "application/json" },
