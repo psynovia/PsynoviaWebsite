@@ -55,6 +55,53 @@ function loadAccessMailTemplate({ fullName, caseId, accessLink }) {
   const templatePath = path.join(__dirname, "access-mail-template.html");
   let html = fs.readFileSync(templatePath, "utf8");
 
+  html = html.replaceAll(
+    "Guten Tag, Tobias Winner,",
+    `Guten Tag, ${escapeHtml(fullName)},`
+  );
+
+  html = html.replaceAll(
+    "PSY-2026-000123",
+    escapeHtml(caseId)
+  );
+
+  html = html.replaceAll(
+    "PSY-2026-LTFDG9",
+    escapeHtml(caseId)
+  );
+
+  html = html.replace(
+    /https:\/\/www\.psynovia\.de\/\.netlify\/functions\/get-shell-link\?token=[^"' <]+/g,
+    escapeHtml(accessLink)
+  );
+
+  html = html.replaceAll(
+    "https://www.psynovia.de/rechtliches/datenschutz.html",
+    "https://www.psynovia.de/rechtliches/datenschutz-intake.html"
+  );
+
+  html = html.replaceAll(
+    "https://www.psynovia.de/rechtliches/behandlungsvertrag.html",
+    "https://www.psynovia.de/rechtliches/behandlungsvertrag-psynovia.html"
+  );
+
+  // Base64-Logo ersetzen
+  html = html.replace(
+    /<img[^>]*class="brand-logo"[^>]*src="data:image\/[^"]*"[^>]*>/i,
+    '<img class="brand-logo" src="https://www.psynovia.de/psynovia-logo.png" alt="Psynovia">'
+  );
+
+  // Base64-Novi ersetzen
+  html = html.replace(
+    /<img[^>]*class="novi-img"[^>]*src="data:image\/[^"]*"[^>]*>/i,
+    '<img class="novi-img" src="https://www.psynovia.de/novi-hero.png" alt="Novi">'
+  );
+
+  return html;
+}
+  const templatePath = path.join(__dirname, "access-mail-template.html");
+  let html = fs.readFileSync(templatePath, "utf8");
+
   html = html.replaceAll("Guten Tag, Tobias Winner,", `Guten Tag, ${escapeHtml(fullName)},`);
   html = html.replaceAll("PSY-2026-000123", escapeHtml(caseId));
   html = html.replaceAll("PSY-2026-LTFDG9", escapeHtml(caseId));
