@@ -35,9 +35,7 @@ function verifyStripeSignature(rawBody, signatureHeader, endpointSecret) {
     return timingSafeEqualString(receivedSignature, expectedSignature);
   });
 
-  if (!isValid) {
-    throw new Error("Invalid Stripe signature");
-  }
+  if (!isValid) throw new Error("Invalid Stripe signature");
 
   return true;
 }
@@ -52,53 +50,6 @@ function escapeHtml(value) {
 }
 
 function loadAccessMailTemplate({ fullName, caseId, accessLink }) {
-  const templatePath = path.join(__dirname, "access-mail-template.html");
-  let html = fs.readFileSync(templatePath, "utf8");
-
-  html = html.replaceAll(
-    "Guten Tag, Tobias Winner,",
-    `Guten Tag, ${escapeHtml(fullName)},`
-  );
-
-  html = html.replaceAll(
-    "PSY-2026-000123",
-    escapeHtml(caseId)
-  );
-
-  html = html.replaceAll(
-    "PSY-2026-LTFDG9",
-    escapeHtml(caseId)
-  );
-
-  html = html.replace(
-    /https:\/\/www\.psynovia\.de\/\.netlify\/functions\/get-shell-link\?token=[^"' <]+/g,
-    escapeHtml(accessLink)
-  );
-
-  html = html.replaceAll(
-    "https://www.psynovia.de/rechtliches/datenschutz.html",
-    "https://www.psynovia.de/rechtliches/datenschutz-intake.html"
-  );
-
-  html = html.replaceAll(
-    "https://www.psynovia.de/rechtliches/behandlungsvertrag.html",
-    "https://www.psynovia.de/rechtliches/behandlungsvertrag-psynovia.html"
-  );
-
-  // Base64-Logo ersetzen
-  html = html.replace(
-    /<img[^>]*class="brand-logo"[^>]*src="data:image\/[^"]*"[^>]*>/i,
-    '<img class="brand-logo" src="https://www.psynovia.de/psynovia-logo.png" alt="Psynovia">'
-  );
-
-  // Base64-Novi ersetzen
-  html = html.replace(
-    /<img[^>]*class="novi-img"[^>]*src="data:image\/[^"]*"[^>]*>/i,
-    '<img class="novi-img" src="https://www.psynovia.de/novi-hero.png" alt="Novi">'
-  );
-
-  return html;
-}
   const templatePath = path.join(__dirname, "access-mail-template.html");
   let html = fs.readFileSync(templatePath, "utf8");
 
@@ -121,6 +72,16 @@ function loadAccessMailTemplate({ fullName, caseId, accessLink }) {
     "https://www.psynovia.de/rechtliches/behandlungsvertrag-psynovia.html"
   );
 
+  html = html.replace(
+    /<img[^>]*class="brand-logo"[^>]*src="data:image\/[^"]*"[^>]*>/i,
+    '<img class="brand-logo" src="https://www.psynovia.de/psynovia-logo.png" alt="Psynovia">'
+  );
+
+  html = html.replace(
+    /<img[^>]*class="novi-img"[^>]*src="data:image\/[^"]*"[^>]*>/i,
+    '<img class="novi-img" src="https://www.psynovia.de/novi-hero.png" alt="Novi">'
+  );
+
   return html;
 }
 
@@ -128,15 +89,8 @@ async function sendAccessMail({ to, caseId, accessLink, fullName }) {
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
   const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "Psynovia <info@psynovia.de>";
 
-  if (!RESEND_API_KEY) {
-    console.error("RESEND_API_KEY missing");
-    return { ok: false, error: "RESEND_API_KEY missing" };
-  }
-
-  if (!to) {
-    console.error("Recipient email missing");
-    return { ok: false, error: "Recipient email missing" };
-  }
+  if (!RESEND_API_KEY) return { ok: false, error: "RESEND_API_KEY missing" };
+  if (!to) return { ok: false, error: "Recipient email missing" };
 
   const subject = "Ihr Zugang zur Psynovia Datenerhebung";
 
@@ -147,21 +101,15 @@ Vielen Dank für Ihr Vertrauen.
 
 Ihre Fall-ID lautet: ${caseId}
 
-Über den folgenden Link können Sie das Diagnostiktool herunterladen:
+Diagnostiktool herunterladen:
 ${accessLink}
 
 Für Ihre Unterlagen:
-Datenschutzhinweise:
 https://www.psynovia.de/rechtliches/datenschutz-intake.html
-
-Behandlungsvertrag:
 https://www.psynovia.de/rechtliches/behandlungsvertrag-psynovia.html
 
 Wir bestätigen den Eingang Ihrer Zahlung für die Psynovia Datenerhebung.
-Die Rechnung nach GOÄ zur möglichen Einreichung bei Ihrer privaten Krankenversicherung oder Beihilfe erhalten Sie gemeinsam mit Ihrem Ergebnisbericht.
-
-Bei Fragen erreichen Sie uns unter:
-info@psynovia.de
+Die Rechnung nach GOÄ erhalten Sie gemeinsam mit Ihrem Ergebnisbericht.
 
 Freundliche Grüße
 Psynovia`;
@@ -171,7 +119,7 @@ Psynovia`;
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${RESEND_API_KEY}`,
+      Authorization: `Bearer ${RESEND_API_KEY}`,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
@@ -217,7 +165,7 @@ exports.handler = async function(event) {
 
     const rawBody = event.isBase64Encoded
       ? Buffer.from(event.body || "", "base64").toString("utf8")
-      : (event.body || "");
+      : event.body || "";
 
     const stripeSignature =
       event.headers["stripe-signature"] ||
@@ -231,11 +179,7 @@ exports.handler = async function(event) {
       return {
         statusCode: 200,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          received: true,
-          ignored: true,
-          type: stripeEvent.type
-        })
+        body: JSON.stringify({ received: true, ignored: true, type: stripeEvent.type })
       };
     }
 
@@ -273,9 +217,9 @@ exports.handler = async function(event) {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        "apikey": SUPABASE_SERVICE_ROLE_KEY,
-        "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-        "Prefer": "return=representation"
+        apikey: SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+        Prefer: "return=representation"
       },
       body: JSON.stringify(updatePayload)
     });
@@ -306,11 +250,8 @@ exports.handler = async function(event) {
     }
 
     const caseRow = data[0];
-
     const recipientEmail = caseRow.email;
-    const fullName = [caseRow.first_name, caseRow.last_name]
-      .filter(Boolean)
-      .join(" ") || "und willkommen";
+    const fullName = [caseRow.first_name, caseRow.last_name].filter(Boolean).join(" ") || "und willkommen";
 
     const accessLink = `https://www.psynovia.de/.netlify/functions/get-shell-link?token=${encodeURIComponent(downloadToken)}`;
 
