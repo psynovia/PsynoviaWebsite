@@ -188,16 +188,36 @@
       </footer>
     </section>
   </main>
-
   <script>
     (function(){
       const params = new URLSearchParams(window.location.search);
-      const email = params.get("email") || "";
+      const sessionId = params.get("session_id") || "";
       const emailDisplay = document.getElementById("emailDisplay");
 
-      if (email) {
-        emailDisplay.textContent = email;
+      function showFallback(){
+        emailDisplay.textContent = "Ihre angegebene E-Mail-Adresse";
       }
+
+      if (!sessionId) {
+        showFallback();
+        return;
+      }
+
+      fetch("/.netlify/functions/get-thank-you-data?session_id=" + encodeURIComponent(sessionId))
+        .then(function(response){
+          if (!response.ok) throw new Error("Danke-Daten konnten nicht geladen werden.");
+          return response.json();
+        })
+        .then(function(data){
+          if (data && data.email) {
+            emailDisplay.textContent = data.email;
+          } else {
+            showFallback();
+          }
+        })
+        .catch(function(){
+          showFallback();
+        });
     })();
   </script>
 </body>
