@@ -4,119 +4,180 @@
   <meta charset="UTF-8" />
   <meta name="robots" content="noindex,nofollow" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Psynovia | Klinikzugang</title>
+  <title>Psynovia | Klinikzugang ChiemseeWinkel</title>
 
   <style>
     :root {
       --blue: #2454d6;
-      --blue-dark: #183b9a;
-      --bg: #f5f7fb;
+      --navy: #07335f;
+      --blue-soft: #eef9fd;
+      --orange: #ef9f43;
+      --bg: #f2f9fd;
       --card: #ffffff;
       --text: #1f2937;
-      --muted: #6b7280;
-      --border: #d8deea;
-      --soft: #eef3ff;
+      --muted: #58758b;
+      --border: #d8e8f2;
       --danger: #b91c1c;
+      --shadow: 0 14px 34px rgba(7, 51, 95, 0.10);
     }
 
     * {
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 15% 4%, rgba(98,190,227,.20), transparent 30%),
+        radial-gradient(circle at 96% 82%, rgba(239,159,67,.10), transparent 32%),
+        linear-gradient(180deg, #f8fdff 0%, #eef8fd 54%, #f8fbff 100%);
+      color: var(--navy);
       line-height: 1.55;
     }
 
     .page {
       max-width: 820px;
       margin: 0 auto;
-      padding: 24px 16px 48px;
+      padding: 22px 16px 48px;
     }
 
-    .logo {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .logo img {
-      max-width: 180px;
-      height: auto;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 24px;
-      box-shadow: 0 10px 30px rgba(31, 41, 55, 0.08);
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       margin-bottom: 18px;
     }
 
+    .topbar img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      flex: 0 0 auto;
+    }
+
+    .brand-text {
+      min-width: 0;
+      line-height: 1.15;
+    }
+
+    .brand-title {
+      font-weight: 900;
+      font-size: 1.05rem;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+    }
+
+    .brand-subtitle {
+      font-size: 0.92rem;
+      color: var(--muted);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .card {
+      background: rgba(255,255,255,.92);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+      backdrop-filter: blur(8px);
+    }
+
     h1 {
-      margin: 0 0 12px;
-      color: var(--blue);
-      font-size: 1.7rem;
-      line-height: 1.2;
+      margin: 0 0 14px;
+      color: var(--navy);
+      font-size: 1.85rem;
+      line-height: 1.12;
+      letter-spacing: -0.04em;
     }
 
     h2 {
-      margin-top: 0;
-      color: var(--blue-dark);
+      margin: 0 0 12px;
+      color: var(--navy);
       font-size: 1.25rem;
+      line-height: 1.22;
+      letter-spacing: -0.02em;
     }
 
     p {
       margin: 0 0 12px;
+      color: #294f6d;
+      font-size: 1rem;
+    }
+
+    .clinic-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue-soft);
+      border: 1px solid rgba(98,190,227,.30);
+      color: #29516c;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      margin-bottom: 14px;
     }
 
     .steps {
       display: grid;
       gap: 10px;
-      margin-top: 16px;
+      margin-top: 18px;
     }
 
     .step {
       display: flex;
       gap: 12px;
       align-items: flex-start;
-      background: var(--soft);
-      border-radius: 12px;
-      padding: 12px;
+      background: var(--blue-soft);
+      border: 1px solid rgba(98,190,227,.22);
+      border-radius: 14px;
+      padding: 13px;
+      color: #294f6d;
     }
 
     .num {
       flex: 0 0 28px;
       height: 28px;
       border-radius: 50%;
-      background: var(--blue);
+      background: var(--navy);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
+      font-weight: 900;
       font-size: 0.9rem;
     }
 
     label {
       display: block;
       margin: 14px 0 6px;
-      font-weight: bold;
+      font-weight: 800;
+      color: var(--navy);
     }
 
     input,
     select,
     textarea {
       width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px;
+      border: 1px solid rgba(134,184,209,.55);
+      border-radius: 14px;
+      padding: 13px;
       font-size: 1rem;
-      font-family: Arial, sans-serif;
-      background: white;
+      font-family: Arial, Helvetica, sans-serif;
+      background: rgba(255,255,255,.96);
+      color: var(--navy);
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(98,190,227,.95);
+      box-shadow: 0 0 0 4px rgba(98,190,227,.16);
     }
 
     textarea {
@@ -136,41 +197,51 @@
       align-items: flex-start;
       margin: 14px 0;
       font-weight: normal;
+      color: #294f6d;
+      line-height: 1.42;
     }
 
     .check input {
       width: auto;
       margin-top: 5px;
+      flex: 0 0 auto;
     }
 
     .hint {
       color: var(--muted);
-      font-size: 0.94rem;
+      font-size: 0.93rem;
+      margin-top: 5px;
     }
 
     .box {
-      background: #f9fafb;
-      border: 1px solid var(--border);
-      border-radius: 12px;
+      background: #fffaf2;
+      border: 1px solid #f2d9b4;
+      border-radius: 16px;
       padding: 14px;
       margin-top: 12px;
+    }
+
+    .box.blue {
+      background: var(--blue-soft);
+      border-color: rgba(98,190,227,.28);
     }
 
     .button {
       width: 100%;
       border: none;
-      border-radius: 12px;
-      padding: 15px 18px;
-      background: var(--blue);
+      border-radius: 16px;
+      padding: 16px 18px;
+      background: linear-gradient(135deg, #07335f, #0e5c8d);
       color: white;
       font-size: 1.05rem;
-      font-weight: bold;
+      font-weight: 900;
       cursor: pointer;
       margin-top: 18px;
+      box-shadow: 0 16px 30px rgba(7,51,95,.18);
     }
 
     .button:hover {
-      background: var(--blue-dark);
+      background: linear-gradient(135deg, #062b50, #0b4f79);
     }
 
     .button:disabled {
@@ -180,24 +251,39 @@
 
     .error {
       color: var(--danger);
-      font-weight: bold;
+      font-weight: 800;
       margin-top: 12px;
       display: none;
+      background: #fff0ef;
+      border: 1px solid #edb9b4;
+      border-radius: 14px;
+      padding: 12px;
     }
 
     .success {
       display: none;
-      background: #eef3ff;
-      border: 1px solid #b8c7ff;
+      background: var(--blue-soft);
+      border: 1px solid #b8dff1;
       color: #183b9a;
-      border-radius: 14px;
+      border-radius: 16px;
       padding: 18px;
       margin-top: 18px;
+      line-height: 1.45;
     }
 
     a {
       color: var(--blue);
-      font-weight: bold;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .legal-small {
+      font-size: 0.93rem;
+      color: #365c78;
     }
 
     @media (max-width: 680px) {
@@ -207,10 +293,19 @@
 
       .card {
         padding: 20px;
+        border-radius: 20px;
       }
 
       h1 {
-        font-size: 1.45rem;
+        font-size: 1.55rem;
+      }
+
+      .brand-title {
+        font-size: 1rem;
+      }
+
+      .brand-subtitle {
+        font-size: 0.84rem;
       }
     }
   </style>
@@ -218,41 +313,49 @@
 
 <body>
   <main class="page">
-    <div class="logo">
+    <header class="topbar">
       <img src="/psynovia-logo.png" alt="Psynovia Logo">
-    </div>
+      <div class="brand-text">
+        <div class="brand-title">Psynovia</div>
+        <div class="brand-subtitle">Privatpraxis für klinische Diagnostik</div>
+      </div>
+    </header>
 
     <section class="card">
-      <h1>ADHS-Diagnostik über Psynovia</h1>
+      <div class="clinic-label">Klinikzugang · Privatklinik ChiemseeWinkel Seebruck</div>
+
+      <h1>ADHS-diagnostische Abklärung über Psynovia</h1>
+
       <p>
-        Sie wurden über die Privatklinik am Chiemsee zur diagnostischen Datenerhebung eingeladen.
+        Im Rahmen Ihrer Behandlung in der Privatklinik ChiemseeWinkel Seebruck wurde eine ADHS-diagnostische Abklärung über Psynovia empfohlen.
       </p>
+
       <p>
-        Psynovia erhebt strukturierte diagnostische Informationen und stellt diese fachlich für die weitere klinische Einordnung zusammen.
+        Psynovia unterstützt diese Abklärung mit einem strukturierten Verfahren. Dabei werden Fragebögen, biografische Angaben, kurze Testaufgaben und ein klinisches Gespräch zu einem diagnostischen Gesamtbild zusammengeführt.
       </p>
 
       <div class="steps">
         <div class="step">
           <div class="num">1</div>
           <div>
-            <strong>Aufnahme der Daten</strong><br>
-            Sie geben Ihre Kontaktdaten und Einwilligungen ein.
+            <strong>Aufnahme Ihrer Daten und Einwilligungen</strong><br>
+            Sie geben die erforderlichen Angaben für die diagnostische Datenerhebung ein.
           </div>
         </div>
 
         <div class="step">
           <div class="num">2</div>
           <div>
-            <strong>Digitale Datenerhebung</strong><br>
-            Sie erhalten per E-Mail den Zugang zur diagnostischen Datenerhebung.
+            <strong>Digitale diagnostische Datenerhebung</strong><br>
+            Sie erhalten per E-Mail den Zugang zur Datenerhebung.
           </div>
         </div>
 
         <div class="step">
           <div class="num">3</div>
           <div>
-            <strong>Klinisches Interview</strong><br>
-            Die Ergebnisse werden anschließend im Gespräch klinisch eingeordnet.
+            <strong>Klinisches Abschlussgespräch</strong><br>
+            Die erhobenen Informationen werden klinisch eingeordnet.
           </div>
         </div>
 
@@ -260,7 +363,7 @@
           <div class="num">4</div>
           <div>
             <strong>Diagnostische Einordnung und Bericht</strong><br>
-            Nach Abschluss der Diagnostik erhalten Sie eine fachliche Rückmeldung.
+            Nach Abschluss der Diagnostik erfolgt eine fachliche Rückmeldung.
           </div>
         </div>
       </div>
@@ -288,13 +391,11 @@
         </div>
 
         <div>
-          <label for="sex_at_birth">Bei Geburt zugewiesenes Geschlecht</label>
-          <select id="sex_at_birth" name="sex_at_birth">
+          <label for="sex_at_birth">Für die testdiagnostische Einordnung: bei Geburt zugewiesenes Geschlecht</label>
+          <select id="sex_at_birth" name="sex_at_birth" required>
             <option value="">Bitte auswählen</option>
             <option value="female">weiblich</option>
             <option value="male">männlich</option>
-            <option value="diverse">divers / anderes</option>
-            <option value="no_answer">keine Angabe</option>
           </select>
         </div>
       </div>
@@ -310,16 +411,19 @@
 
       <h2 style="margin-top:28px;">Klinikbezogene Angaben</h2>
 
-      <label for="clinic_contact_person">Klinische Ansprechperson in der Klinik, falls bekannt</label>
-      <input id="clinic_contact_person" name="clinic_contact_person" placeholder="z. B. Bezugstherapeut:in / Ärzt:in">
+      <label for="clinic_contact_person">Klinische Ansprechperson – Bezugstherapeut:in/Ärzt:in</label>
+      <input id="clinic_contact_person" name="clinic_contact_person" placeholder="z. B. Name der Bezugstherapeutin, des Arztes oder der Station">
       <p class="hint">Diese Angabe ist freiwillig.</p>
 
       <div class="box">
         <label class="check">
           <input id="release_to_clinic" name="release_to_clinic" type="checkbox">
           <span>
-            Ich entbinde Psynovia freiwillig gegenüber der Privatklinik am Chiemsee von der Schweigepflicht, soweit dies für die diagnostische Abstimmung und Rückmeldung erforderlich ist.
-            Diese Einwilligung ist freiwillig.
+            Ich entbinde die Privatpraxis Psynovia gegenüber der Privatklinik ChiemseeWinkel Seebruck von der Schweigepflicht.
+            <br><br>
+            Die Einwilligung umfasst den fachlichen Austausch, soweit dieser für die ADHS-diagnostische Abklärung erforderlich ist. Dazu gehören insbesondere Rückfragen zum Behandlungsverlauf, zur klinischen Einschätzung, zu anamnestischen Angaben, zu relevanten Vorbefunden sowie die Übermittlung diagnostischer Einschätzungen und Befundinformationen an die benannte klinische Ansprechperson.
+            <br><br>
+            Mir ist bekannt, dass diese Einwilligung freiwillig ist und jederzeit mit Wirkung für die Zukunft widerrufen werden kann.
           </span>
         </label>
       </div>
@@ -344,12 +448,20 @@
         </span>
       </label>
 
-      <label class="check">
-        <input id="service_overview_accepted" name="service_overview_accepted" type="checkbox" required>
-        <span>
-          Ich habe die Leistungsübersicht verstanden. Die digitale Datenerhebung dient der ADHS-bezogenen diagnostischen Abklärung. Die finale klinische Einordnung erfolgt erst nach dem klinischen Interview.
-        </span>
-      </label>
+      <div class="box blue">
+        <label class="check">
+          <input id="service_overview_accepted" name="service_overview_accepted" type="checkbox" required>
+          <span>
+            Ich habe die Leistungsübersicht gelesen und bin mit dem Angebot einverstanden.
+            <br>
+            <a href="/rechtliches/leistungsuebersicht-klinik-chiemseewinkel.html" target="_blank" rel="noopener">Leistungsübersicht öffnen</a>
+          </span>
+        </label>
+      </div>
+
+      <p class="legal-small">
+        Nach dem Absenden wird ein persönlicher Zugang zur digitalen diagnostischen Datenerhebung erstellt und an die angegebene E-Mail-Adresse gesendet.
+      </p>
 
       <button id="submitBtn" class="button" type="submit">
         Zugang zur Datenerhebung anfordern
@@ -400,7 +512,7 @@
         service_overview_accepted: checked("service_overview_accepted")
       };
 
-      if (!payload.first_name || !payload.last_name || !payload.birth || !payload.email) {
+      if (!payload.first_name || !payload.last_name || !payload.birth || !payload.sex_at_birth || !payload.email) {
         showError("Bitte füllen Sie die erforderlichen Angaben aus.");
         return;
       }
@@ -452,6 +564,7 @@
     function showError(message) {
       errorBox.textContent = message;
       errorBox.style.display = "block";
+      errorBox.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   </script>
 </body>
