@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Psynovia | Klinikzugang</title>
+
+  <style>
+    :root {
+      --blue: #2454d6;
+      --blue-dark: #183b9a;
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #d8deea;
+      --soft: #eef3ff;
+      --danger: #b91c1c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .page {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo img {
+      max-width: 180px;
+      height: auto;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(31, 41, 55, 0.08);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      color: var(--blue);
+      font-size: 1.7rem;
+      line-height: 1.2;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: var(--blue-dark);
+      font-size: 1.25rem;
+    }
+
+    p {
+      margin: 0 0 12px;
+    }
+
+    .steps {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--soft);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .num {
+      flex: 0 0 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    label {
+      display: block;
+      margin: 14px 0 6px;
+      font-weight: bold;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 1rem;
+      font-family: Arial, sans-serif;
+      background: white;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .check {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin: 14px 0;
+      font-weight: normal;
+    }
+
+    .check input {
+      width: auto;
+      margin-top: 5px;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .box {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+
+    .button {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 15px 18px;
+      background: var(--blue);
+      color: white;
+      font-size: 1.05rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 18px;
+    }
+
+    .button:hover {
+      background: var(--blue-dark);
+    }
+
+    .button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .error {
+      color: var(--danger);
+      font-weight: bold;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .success {
+      display: none;
+      background: #eef3ff;
+      border: 1px solid #b8c7ff;
+      color: #183b9a;
+      border-radius: 14px;
+      padding: 18px;
+      margin-top: 18px;
+    }
+
+    a {
+      color: var(--blue);
+      font-weight: bold;
+    }
+
+    @media (max-width: 680px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.45rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <div class="logo">
+      <img src="/psynovia-logo.png" alt="Psynovia Logo">
+    </div>
+
+    <section class="card">
+      <h1>ADHS-Diagnostik über Psynovia</h1>
+      <p>
+        Sie wurden über die Privatklinik am Chiemsee zur diagnostischen Datenerhebung eingeladen.
+      </p>
+      <p>
+        Psynovia erhebt strukturierte diagnostische Informationen und stellt diese fachlich für die weitere klinische Einordnung zusammen.
+      </p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="num">1</div>
+          <div>
+            <strong>Aufnahme der Daten</strong><br>
+            Sie geben Ihre Kontaktdaten und Einwilligungen ein.
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="num">2</div>
+          <div>
+            <strong>Digitale Datenerhebung</strong><br>
+            Sie erhalten per E-Mail den Zugang zur diagnostischen Datenerhebung.
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="num">3</div>
+          <div>
+            <strong>Klinisches Interview</strong><br>
+            Die Ergebnisse werden anschließend im Gespräch klinisch eingeordnet.
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="num">4</div>
+          <div>
+            <strong>Diagnostische Einordnung und Bericht</strong><br>
+            Nach Abschluss der Diagnostik erhalten Sie eine fachliche Rückmeldung.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <form id="clinicForm" class="card">
+      <h2>Ihre Angaben</h2>
+
+      <div class="grid">
+        <div>
+          <label for="first_name">Vorname</label>
+          <input id="first_name" name="first_name" autocomplete="given-name" required>
+        </div>
+
+        <div>
+          <label for="last_name">Nachname</label>
+          <input id="last_name" name="last_name" autocomplete="family-name" required>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div>
+          <label for="birth">Geburtsdatum</label>
+          <input id="birth" name="birth" type="date" required>
+        </div>
+
+        <div>
+          <label for="sex_at_birth">Bei Geburt zugewiesenes Geschlecht</label>
+          <select id="sex_at_birth" name="sex_at_birth">
+            <option value="">Bitte auswählen</option>
+            <option value="female">weiblich</option>
+            <option value="male">männlich</option>
+            <option value="diverse">divers / anderes</option>
+            <option value="no_answer">keine Angabe</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="email">E-Mail-Adresse</label>
+      <input id="email" name="email" type="email" autocomplete="email" required>
+
+      <label for="email_confirm">E-Mail-Adresse wiederholen</label>
+      <input id="email_confirm" name="email_confirm" type="email" autocomplete="email" required>
+
+      <label for="phone">Telefonnummer</label>
+      <input id="phone" name="phone" autocomplete="tel">
+
+      <h2 style="margin-top:28px;">Klinikbezogene Angaben</h2>
+
+      <label for="clinic_contact_person">Klinische Ansprechperson in der Klinik, falls bekannt</label>
+      <input id="clinic_contact_person" name="clinic_contact_person" placeholder="z. B. Bezugstherapeut:in / Ärzt:in">
+      <p class="hint">Diese Angabe ist freiwillig.</p>
+
+      <div class="box">
+        <label class="check">
+          <input id="release_to_clinic" name="release_to_clinic" type="checkbox">
+          <span>
+            Ich entbinde Psynovia freiwillig gegenüber der Privatklinik am Chiemsee von der Schweigepflicht, soweit dies für die diagnostische Abstimmung und Rückmeldung erforderlich ist.
+            Diese Einwilligung ist freiwillig.
+          </span>
+        </label>
+      </div>
+
+      <h2 style="margin-top:28px;">Einwilligungen</h2>
+
+      <label class="check">
+        <input id="privacy_accepted" name="privacy_accepted" type="checkbox" required>
+        <span>
+          Ich habe die Datenschutzhinweise gelesen und stimme der Verarbeitung meiner Angaben zur Durchführung der diagnostischen Datenerhebung zu.
+          <br>
+          <a href="/rechtliches/datenschutz-intake.html" target="_blank" rel="noopener">Datenschutzhinweise öffnen</a>
+        </span>
+      </label>
+
+      <label class="check">
+        <input id="contract_accepted" name="contract_accepted" type="checkbox" required>
+        <span>
+          Ich habe den Behandlungsvertrag gelesen und stimme diesem zu.
+          <br>
+          <a href="/rechtliches/behandlungsvertrag-psynovia.html" target="_blank" rel="noopener">Behandlungsvertrag öffnen</a>
+        </span>
+      </label>
+
+      <label class="check">
+        <input id="service_overview_accepted" name="service_overview_accepted" type="checkbox" required>
+        <span>
+          Ich habe die Leistungsübersicht verstanden. Die digitale Datenerhebung dient der ADHS-bezogenen diagnostischen Abklärung. Die finale klinische Einordnung erfolgt erst nach dem klinischen Interview.
+        </span>
+      </label>
+
+      <button id="submitBtn" class="button" type="submit">
+        Zugang zur Datenerhebung anfordern
+      </button>
+
+      <div id="errorBox" class="error"></div>
+
+      <div id="successBox" class="success">
+        <strong>Ihre Angaben wurden erfolgreich übermittelt.</strong><br>
+        Der persönliche Zugang zur Datenerhebung wurde per E-Mail versendet.
+        Bitte prüfen Sie auch den Spam-Ordner.
+      </div>
+    </form>
+  </main>
+
+  <script>
+    const form = document.getElementById("clinicForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const errorBox = document.getElementById("errorBox");
+    const successBox = document.getElementById("successBox");
+
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      errorBox.style.display = "none";
+      errorBox.textContent = "";
+      successBox.style.display = "none";
+
+      const email = value("email").toLowerCase();
+      const emailConfirm = value("email_confirm").toLowerCase();
+
+      if (email !== emailConfirm) {
+        showError("Bitte prüfen Sie die E-Mail-Adresse. Beide Eingaben müssen übereinstimmen.");
+        return;
+      }
+
+      const payload = {
+        first_name: value("first_name"),
+        last_name: value("last_name"),
+        birth: value("birth"),
+        sex_at_birth: value("sex_at_birth"),
+        email,
+        phone: value("phone"),
+        clinic_contact_person: value("clinic_contact_person"),
+        release_to_clinic: checked("release_to_clinic"),
+        privacy_accepted: checked("privacy_accepted"),
+        contract_accepted: checked("contract_accepted"),
+        service_overview_accepted: checked("service_overview_accepted")
+      };
+
+      if (!payload.first_name || !payload.last_name || !payload.birth || !payload.email) {
+        showError("Bitte füllen Sie die erforderlichen Angaben aus.");
+        return;
+      }
+
+      if (!payload.privacy_accepted || !payload.contract_accepted || !payload.service_overview_accepted) {
+        showError("Bitte bestätigen Sie die erforderlichen Einwilligungen.");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Zugang wird erstellt ...";
+
+      try {
+        const response = await fetch("/.netlify/functions/create-clinic-case", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.ok) {
+          throw new Error(data.error || "Der Zugang konnte nicht erstellt werden.");
+        }
+
+        form.reset();
+        successBox.style.display = "block";
+        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+
+      } catch (error) {
+        showError("Es gab ein technisches Problem. Bitte versuchen Sie es erneut oder wenden Sie sich an Psynovia.");
+        console.error(error);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Zugang zur Datenerhebung anfordern";
+      }
+    });
+
+    function value(id) {
+      return String(document.getElementById(id).value || "").trim();
+    }
+
+    function checked(id) {
+      return Boolean(document.getElementById(id).checked);
+    }
+
+    function showError(message) {
+      errorBox.textContent = message;
+      errorBox.style.display = "block";
+    }
+  </script>
+</body>
+</html>
