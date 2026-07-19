@@ -25,6 +25,10 @@ exports.handler = async function(event) {
       return json(400, { error: "Missing required patient data" });
     }
 
+    if (!payload.privacy_accepted || !payload.contract_accepted || !payload.service_overview_accepted) {
+      return json(400, { error: "Required consents missing" });
+    }
+
     const now = new Date();
     const year = now.getFullYear();
     const random = crypto.randomBytes(3).toString("hex").toUpperCase();
@@ -50,7 +54,7 @@ exports.handler = async function(event) {
       },
       clinic: {
         clinic_name: "Privatklinik ChiemseeWinkel Seebruck",
-        billing_mode: "clinic_cooperation_no_stripe",
+        billing_mode: "clinic_cooperation_manual_access",
         release_to_clinic: Boolean(payload.release_to_clinic),
         clinic_contact_person: clean(payload.clinic_contact_person),
         clinical_contact_optional: true
@@ -78,21 +82,27 @@ exports.handler = async function(event) {
       }
     };
 
-    if (!payload.privacy_accepted || !payload.contract_accepted || !payload.service_overview_accepted) {
-      return json(400, { error: "Required consents missing" });
-    }
-
     const row = {
       case_id: caseId,
       first_name: firstName,
       last_name: lastName,
       email,
+
+      // Für den Klinik-MVP bleibt paid gesetzt,
+      // damit spätere manuelle Freischaltung / Shell-Zugang technisch kompatibel bleibt.
       payment_status: "paid",
+
       intake_completed: true,
       assessment_completed: false,
       report_available: false,
-      status: "clinic_access_granted",
+
+      // Übergangsstatus: Zugang wird NICHT automatisch per Mail verschickt.
+      status: "clinic_pending_manual_access",
+
       intake_json: intakeJson,
+
+      // Token wird trotzdem intern erzeugt,
+      // damit du den Zugang später manuell freischalten oder verwenden kannst.
       download_token: downloadToken,
       download_count: 0,
       max_downloads: 99,
@@ -120,24 +130,20 @@ exports.handler = async function(event) {
       });
     }
 
-    const shellLink =
-      `https://www.psynovia.de/.netlify/functions/get-shell-link?token=${encodeURIComponent(downloadToken)}`;
-
-    await sendAccessMail({
+    await sendManualAccessMail({
       apiKey: RESEND_API_KEY,
       from: RESEND_FROM_EMAIL,
       to: email,
       firstName,
       lastName,
-      caseId,
-      shellLink
+      caseId
     });
 
     return json(200, {
       ok: true,
       case_id: caseId,
       email,
-      status: "clinic_access_granted"
+      status: "clinic_pending_manual_access"
     });
 
   } catch (error) {
@@ -162,37 +168,27 @@ function json(statusCode, body) {
   };
 }
 
-async function sendAccessMail({ apiKey, from, to, firstName, lastName, caseId, shellLink }) {
+async function sendManualAccessMail({ apiKey, from, to, firstName, lastName, caseId }) {
   const safeFirstName = escapeHtml(firstName);
   const safeLastName = escapeHtml(lastName);
   const safeCaseId = escapeHtml(caseId);
 
-  const subject = "Ihr Zugang zur diagnostischen Datenerhebung";
+  const subject = "Ihre Anmeldung zur ADHS-diagnostischen Abklärung";
 
   const text = `
 Guten Tag ${firstName} ${lastName},
 
-wir freuen uns, Sie im Rahmen Ihrer Behandlung in der Privatklinik ChiemseeWinkel Seebruck diagnostisch begleiten zu dürfen. Ihre Daten sind bei Psynovia eingegangen, sodass Sie nun mit der digitalen diagnostischen Datenerhebung beginnen können.
+wir freuen uns, Sie im Rahmen Ihrer Behandlung in der Privatklinik ChiemseeWinkel Seebruck diagnostisch begleiten zu dürfen.
 
-Bitte laden Sie das Diagnostiktool über den folgenden Link herunter:
+Ihre Angaben sind bei Psynovia eingegangen. Ihre persönliche Fall-ID lautet:
 
-${shellLink}
+${caseId}
 
-Wichtig: Der Link lädt eine Datei auf Ihr Gerät herunter. Die Datei heißt:
+Der Zugang zur digitalen diagnostischen Datenerhebung wird anschließend manuell freigeschaltet. Sie erhalten dazu eine gesonderte Nachricht mit dem weiteren Vorgehen.
 
-PsynoviaADHSDiagnostiktool.html
+Bitte bewahren Sie diese Fall-ID auf. Sie dient der eindeutigen Zuordnung Ihrer diagnostischen Datenerhebung.
 
-Sie finden diese Datei in der Regel im Download-Ordner Ihres Geräts – auch dann, wenn nach dem Download keine besondere Anzeige erscheint.
-
-Bitte öffnen Sie für die Bearbeitung möglichst immer diese heruntergeladene Datei. Wenn Sie die Datenerhebung unterbrechen, öffnen Sie später dieselbe Datei erneut aus Ihrem Download-Ordner.
-
-Die Datenerhebung umfasst Fragebögen, biografische Angaben und kurze Testaufgaben. Bitte bearbeiten Sie die Module möglichst in einer ruhigen Umgebung und nehmen Sie sich ausreichend Zeit.
-
-Am Ende der Datenerhebung wird die Ergebnisdatei automatisch verschlüsselt an die Praxis übermittelt. Im Diagnostiktool erhalten Sie anschließend eine Eingangsbestätigung.
-
-Nach Eingang der Ergebnisdatei beginnt die fachliche Auswertung. Psynovia meldet sich innerhalb von 1 bis 2 Werktagen mit Terminvorschlägen für das klinische Interview sowie mit Informationen zum weiteren Vorgehen.
-
-Bei technischen Problemen können Sie direkt auf diese E-Mail antworten.
+Bei technischen Fragen können Sie direkt auf diese E-Mail antworten.
 
 Mit freundlichen Grüßen
 Tobias Winner, M.Sc.
@@ -207,12 +203,12 @@ Technische Referenz: ${caseId}
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ihr Zugang zur diagnostischen Datenerhebung</title>
+    <title>Ihre Anmeldung zur ADHS-diagnostischen Abklärung</title>
   </head>
 
   <body style="margin:0;padding:0;background:#eaf5fb;font-family:Arial,Helvetica,sans-serif;color:#07335f;">
     <div style="display:none;max-height:0;overflow:hidden;opacity:0;">
-      Ihr Zugang zur digitalen diagnostischen Datenerhebung.
+      Ihre Angaben sind bei Psynovia eingegangen.
     </div>
 
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#eaf5fb;margin:0;padding:24px 12px 34px;">
@@ -248,35 +244,25 @@ Technische Referenz: ${caseId}
                 </p>
 
                 <p style="margin:0 0 18px;font-size:16px;line-height:1.58;color:#294f6d;">
-                  Wir freuen uns, Sie im Rahmen Ihrer Behandlung in der Privatklinik ChiemseeWinkel Seebruck diagnostisch begleiten zu dürfen. Ihre Daten sind bei Psynovia eingegangen, sodass Sie nun mit der digitalen diagnostischen Datenerhebung beginnen können.
+                  Wir freuen uns, Sie im Rahmen Ihrer Behandlung in der Privatklinik ChiemseeWinkel Seebruck diagnostisch begleiten zu dürfen.
                 </p>
 
                 <p style="margin:0 0 18px;font-size:16px;line-height:1.55;color:#294f6d;">
-                  Bitte laden Sie das Diagnostiktool über den folgenden Link herunter:
+                  Ihre Angaben sind bei Psynovia eingegangen.
                 </p>
               </td>
             </tr>
 
             <tr>
-              <td align="center" style="padding:10px 28px 24px;">
-                <a href="${shellLink}" style="display:inline-block;background:#07335f;color:#ffffff;text-decoration:none;font-size:17px;font-weight:900;padding:15px 26px;border-radius:16px;box-shadow:0 12px 24px rgba(7,51,95,0.22);">
-                  Diagnostiktool herunterladen
-                </a>
-              </td>
-            </tr>
-
-            <tr>
-              <td style="padding:0 28px 12px;">
+              <td style="padding:8px 28px 14px;">
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td style="padding:15px 16px;background:#eef9fd;border:1px solid #cfe8f3;border-radius:16px;">
-                      <div style="font-size:15px;line-height:1.5;color:#294f6d;">
-                        <strong style="color:#07335f;">Wichtig:</strong><br>
-                        Der Link lädt eine Datei auf Ihr Gerät herunter. Die Datei heißt:
-                        <br><br>
-                        <strong style="color:#07335f;">PsynoviaADHSDiagnostiktool.html</strong>
-                        <br><br>
-                        Sie finden diese Datei in der Regel im <strong>Download-Ordner</strong> Ihres Geräts – auch dann, wenn nach dem Download keine besondere Anzeige erscheint.
+                    <td style="padding:18px 18px;background:#eef9fd;border:1px solid #cfe8f3;border-radius:16px;text-align:center;">
+                      <div style="font-size:13px;line-height:1.4;color:#58758b;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;">
+                        Ihre persönliche Fall-ID
+                      </div>
+                      <div style="font-size:24px;line-height:1.25;color:#07335f;font-weight:900;margin-top:8px;letter-spacing:0.02em;">
+                        ${safeCaseId}
                       </div>
                     </td>
                   </tr>
@@ -285,17 +271,13 @@ Technische Referenz: ${caseId}
             </tr>
 
             <tr>
-              <td style="padding:6px 28px 10px;">
+              <td style="padding:8px 28px 12px;">
                 <p style="margin:0 0 14px;font-size:15.5px;line-height:1.55;color:#294f6d;">
-                  Bitte öffnen Sie für die Bearbeitung möglichst immer diese heruntergeladene Datei. Wenn Sie die Datenerhebung unterbrechen, öffnen Sie später dieselbe Datei erneut aus Ihrem Download-Ordner.
+                  Der Zugang zur digitalen diagnostischen Datenerhebung wird anschließend manuell freigeschaltet. Sie erhalten dazu eine gesonderte Nachricht mit dem weiteren Vorgehen.
                 </p>
 
                 <p style="margin:0 0 14px;font-size:15.5px;line-height:1.55;color:#294f6d;">
-                  Die Datenerhebung umfasst Fragebögen, biografische Angaben und kurze Testaufgaben. Bitte bearbeiten Sie die Module möglichst in einer ruhigen Umgebung und nehmen Sie sich ausreichend Zeit.
-                </p>
-
-                <p style="margin:0 0 14px;font-size:15.5px;line-height:1.55;color:#294f6d;">
-                  Am Ende der Datenerhebung wird die Ergebnisdatei automatisch verschlüsselt an die Praxis übermittelt. Im Diagnostiktool erhalten Sie anschließend eine Eingangsbestätigung.
+                  Bitte bewahren Sie diese Fall-ID auf. Sie dient der eindeutigen Zuordnung Ihrer diagnostischen Datenerhebung.
                 </p>
               </td>
             </tr>
@@ -306,7 +288,7 @@ Technische Referenz: ${caseId}
                   <tr>
                     <td style="padding:14px 16px;background:#fffaf2;border:1px solid #f2d9b4;border-radius:16px;">
                       <div style="font-size:15px;line-height:1.5;color:#67420d;">
-                        Nach Eingang der Ergebnisdatei beginnt die fachliche Auswertung. Psynovia meldet sich innerhalb von <strong>1 bis 2 Werktagen</strong> mit Terminvorschlägen für das klinische Interview sowie mit Informationen zum weiteren Vorgehen.
+                        Bei technischen Fragen können Sie direkt auf diese E-Mail antworten.
                       </div>
                     </td>
                   </tr>
@@ -316,10 +298,6 @@ Technische Referenz: ${caseId}
 
             <tr>
               <td style="padding:12px 28px 26px;">
-                <p style="margin:0 0 14px;font-size:15.5px;line-height:1.55;color:#294f6d;">
-                  Bei technischen Problemen können Sie direkt auf diese E-Mail antworten.
-                </p>
-
                 <p style="margin:0;font-size:15.5px;line-height:1.55;color:#294f6d;">
                   Mit freundlichen Grüßen<br>
                   <strong>Tobias Winner, M.Sc.</strong><br>
