@@ -1947,10 +1947,16 @@ $("v50PayBtn").onclick=async()=>{
       }
 
       /*
-        Nach erfolgreicher Fallanlage wird direkt zu Stripe weitergeleitet.
-        Die case_id wird als client_reference_id mitgegeben.
+        Nach erfolgreicher Fallanlage wäre der direkte Stripe-Checkout vorbereitet.
+        TEMPORÄR ist der direkte Zahlungs-/Shell-Flow wegen technischem Umbau pausiert.
+        Die Fallanlage im Backend bleibt aktiv; Patient:innen werden auf die Umbau-Seite geleitet.
       */
-      window.location.href="https://book.stripe.com/5kQ3cufU6a532x0flS8N201?client_reference_id="+encodeURIComponent(s.case_id||result.case_id||"");
+      const STRIPE_CHECKOUT_URL="https://book.stripe.com/5kQ3cufU6a532x0flS8N201?client_reference_id="+encodeURIComponent(s.case_id||result.case_id||"");
+
+      window.location.href="/diagnostik-umbau.html?case_id="+encodeURIComponent(s.case_id||result.case_id||"");
+
+      // WIEDER AKTIVIEREN, WENN DER DIREKTE FLOW ZURÜCK SOLL:
+      // window.location.href=STRIPE_CHECKOUT_URL;
     }catch(err){
       console.error("Psynovia backend submit failed",err);
       alert("Die Daten konnten gerade nicht sicher vorbereitet werden. Bitte versuchen Sie es erneut oder schreiben Sie an info@psynovia.de.");

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Psynovia | Diagnostik im technischen Umbau</title>
+
+  <style>
+    :root {
+      --navy: #07335f;
+      --blue-soft: #eef9fd;
+      --bg: #f2f9fd;
+      --card: #ffffff;
+      --text: #294f6d;
+      --muted: #58758b;
+      --border: #d8e8f2;
+      --orange-soft: #fff7ea;
+      --orange-border: #f2d9b4;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 15% 4%, rgba(98,190,227,.20), transparent 30%),
+        radial-gradient(circle at 96% 82%, rgba(239,159,67,.10), transparent 32%),
+        linear-gradient(180deg, #f8fdff 0%, #eef8fd 54%, #f8fbff 100%);
+      color: var(--navy);
+      line-height: 1.55;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 16px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 720px;
+      background: rgba(255,255,255,.94);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 14px 34px rgba(7, 51, 95, 0.10);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .brand img {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+    }
+
+    .brand-title {
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: var(--navy);
+      line-height: 1.15;
+    }
+
+    .brand-subtitle {
+      font-size: 0.92rem;
+      color: var(--muted);
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: 1.75rem;
+      line-height: 1.16;
+      letter-spacing: -0.035em;
+      color: var(--navy);
+    }
+
+    p {
+      margin: 0 0 14px;
+      font-size: 1.02rem;
+      color: var(--text);
+    }
+
+    .info {
+      background: var(--blue-soft);
+      border: 1px solid rgba(98,190,227,.30);
+      border-radius: 16px;
+      padding: 16px;
+      margin: 20px 0;
+      color: var(--text);
+    }
+
+    .warm {
+      background: var(--orange-soft);
+      border: 1px solid var(--orange-border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 18px;
+      color: #67420d;
+    }
+
+    a {
+      color: var(--navy);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .small {
+      margin-top: 22px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 640px) {
+      .card {
+        padding: 22px;
+        border-radius: 20px;
+      }
+
+      h1 { font-size: 1.48rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <section class="card">
+      <div class="brand">
+        <img src="/psynovia-logo.png" alt="Psynovia Logo">
+        <div>
+          <div class="brand-title">Psynovia</div>
+          <div class="brand-subtitle">Privatpraxis für klinische Diagnostik</div>
+        </div>
+      </div>
+
+      <h1>Vielen Dank für Ihr Interesse an einer ADHS-Diagnostik über Psynovia</h1>
+
+      <p>
+        Ihre Angaben sind bei Psynovia eingegangen.
+      </p>
+
+      <div class="info">
+        <p>
+          Aktuell befindet sich Psynovia in einem technischen Umbau. Deshalb ist der direkte digitale Zugang zur Datenerhebung vorübergehend pausiert.
+        </p>
+        <p style="margin-bottom:0;">
+          Wir melden uns zeitnah bei Ihnen, um Ihnen die diagnostische Abklärung dennoch zu ermöglichen.
+        </p>
+      </div>
+
+      <p>
+        Wir arbeiten mit Hochdruck daran, die direkte digitale Versorgung wieder bereitzustellen.
+      </p>
+
+      <div class="warm">
+        Bei Fragen können Sie uns jederzeit unter
+        <a href="mailto:info@psynovia.de">info@psynovia.de</a>
+        erreichen.
+      </div>
+
+      <p class="small">
+        Psynovia · Privatpraxis für klinische Diagnostik
+      </p>
+    </section>
+  </main>
+</body>
+</html>
