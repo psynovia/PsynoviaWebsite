@@ -208,7 +208,7 @@ exports.handler = async function(event) {
       last_downloaded_at: null,
       download_expires_at: downloadExpiresAt,
       download_locked: false,
-      max_downloads: 3
+      max_downloads: 0
     };
 
     const updateUrl = `${SUPABASE_URL}/rest/v1/cases?case_id=eq.${encodeURIComponent(caseId)}`;
