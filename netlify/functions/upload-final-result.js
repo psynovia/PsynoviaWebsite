@@ -170,7 +170,6 @@ exports.handler = async function handler(event) {
     const nowIso = new Date().toISOString();
     const patchBody = {
       assessment_completed: true,
-      result_uploaded_at: nowIso,
       status: "assessment_uploaded",
       assessment_json: {
         uploaded: true,
