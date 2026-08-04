@@ -118,7 +118,7 @@ exports.handler = async function handler(event) {
 
   try {
     const caseResponse = await fetch(
-      `${SUPABASE_URL}/rest/v1/cases?case_id=eq.${encodeURIComponent(caseId)}&select=id,case_id,payment_status,status,download_locked,download_expires_at,download_token,shell_download_token,access_token&limit=1`,
+      `${SUPABASE_URL}/rest/v1/cases?case_id=eq.${encodeURIComponent(caseId)}&select=id,case_id,payment_status,status,download_locked,download_expires_at,download_token&limit=1`,
       {
         method: "GET",
         headers: supabaseHeaders(SUPABASE_SERVICE_ROLE_KEY)
@@ -210,8 +210,16 @@ exports.handler = async function handler(event) {
 
     if (!patchResponse.ok) {
       let patchText = "";
-      try { patchText = await patchResponse.text(); } catch (_) {}
-      console.error("upload-final-result: case status update failed", patchResponse.status, patchText);
+      try {
+        patchText = await patchResponse.text();
+      } catch (_) {}
+
+      console.error(
+        "upload-final-result: case status update failed",
+        patchResponse.status,
+        patchText
+      );
+
       return json(503, {
         ok: false,
         stored: true,
@@ -272,7 +280,8 @@ function validateCaseAccess(row, suppliedToken) {
     return { ok: false, statusCode: 403, error: "Case status does not allow upload" };
   }
 
-  const expectedToken = row.download_token || row.shell_download_token || row.access_token || null;
+  const expectedToken = row.download_token || null;
+
   if (!expectedToken) {
     return { ok: false, statusCode: 409, error: "No token stored for this case" };
   }
@@ -287,7 +296,11 @@ function validateCaseAccess(row, suppliedToken) {
 function safeTokenEqual(expected, actual) {
   const expectedBuffer = Buffer.from(expected, "utf8");
   const actualBuffer = Buffer.from(actual, "utf8");
-  if (expectedBuffer.length !== actualBuffer.length) return false;
+
+  if (expectedBuffer.length !== actualBuffer.length) {
+    return false;
+  }
+
   return crypto.timingSafeEqual(expectedBuffer, actualBuffer);
 }
 
@@ -310,7 +323,11 @@ function validateEncryptedContainer(value) {
     return { ok: false, error: "Invalid AES-GCM ciphertext" };
   }
 
-  return { ok: true, ivBytes: iv.buffer.length, ciphertextBytes: ciphertext.buffer.length };
+  return {
+    ok: true,
+    ivBytes: iv.buffer.length,
+    ciphertextBytes: ciphertext.buffer.length
+  };
 }
 
 function decodeStrictBase64(value) {
@@ -324,9 +341,11 @@ function decodeStrictBase64(value) {
 
   try {
     const buffer = Buffer.from(value, "base64");
+
     if (buffer.length === 0 || buffer.toString("base64") !== value) {
       return { ok: false, buffer: Buffer.alloc(0) };
     }
+
     return { ok: true, buffer };
   } catch (_) {
     return { ok: false, buffer: Buffer.alloc(0) };
@@ -339,6 +358,7 @@ function sanitizePathPart(value, fallback) {
     .replace(/[^a-zA-Z0-9_-]/g, "_")
     .replace(/^_+|_+$/g, "")
     .slice(0, 160);
+
   return safe || fallback;
 }
 
