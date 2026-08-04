@@ -59,9 +59,10 @@ exports.handler = async function(event) {
     }
 
     const currentCount = Number(caseRow.download_count || 0);
-    const maxDownloads = Number(caseRow.max_downloads || 3);
+    const maxDownloads = Number(caseRow.max_downloads || 0);
+    const hasDownloadLimit = Number.isFinite(maxDownloads) && maxDownloads > 0;
 
-    if (currentCount >= maxDownloads) {
+    if (hasDownloadLimit && currentCount >= maxDownloads) {
       return json(403, { ok: false, error: "Download limit reached" });
     }
 
