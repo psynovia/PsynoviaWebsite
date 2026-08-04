@@ -36,6 +36,7 @@ exports.handler = async function(event) {
       assessment_completed: false,
       report_available: false,
       status: "intake_completed",
+      max_downloads: 0,
       intake_json: payload.intake_json || payload
     };
 
