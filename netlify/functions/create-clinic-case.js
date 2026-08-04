@@ -87,25 +87,15 @@ exports.handler = async function(event) {
       first_name: firstName,
       last_name: lastName,
       email,
-
-      // Für den Klinik-MVP bleibt paid gesetzt,
-      // damit spätere manuelle Freischaltung / Shell-Zugang technisch kompatibel bleibt.
       payment_status: "paid",
-
       intake_completed: true,
       assessment_completed: false,
       report_available: false,
-
-      // Übergangsstatus: Zugang wird NICHT automatisch per Mail verschickt.
       status: "clinic_pending_manual_access",
-
       intake_json: intakeJson,
-
-      // Token wird trotzdem intern erzeugt,
-      // damit du den Zugang später manuell freischalten oder verwenden kannst.
       download_token: downloadToken,
       download_count: 0,
-      max_downloads: 99,
+      max_downloads: 0,
       download_locked: false,
       download_expires_at: expires.toISOString()
     };
