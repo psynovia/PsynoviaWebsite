@@ -451,11 +451,17 @@ exports.handler = async function handler(event) {
 
     const session = stripeEvent.data?.object;
     const caseId = String(session?.client_reference_id || "").trim();
+    const stripePaymentStatus = String(session?.payment_status || "").trim();
 
-    if (session?.payment_status && session.payment_status !== "paid") {
+    if (
+      stripePaymentStatus &&
+      stripePaymentStatus !== "paid" &&
+      stripePaymentStatus !== "no_payment_required"
+    ) {
       return jsonResponse(200, {
         received: true,
         payment_pending: true,
+        payment_status: stripePaymentStatus,
         case_id: caseId || null
       });
     }
