@@ -1,5 +1,8 @@
 [functions]
-  included_files = ["netlify/functions/access-mail-template.html"]
+  included_files = [
+    "netlify/functions/access-mail-template.html",
+    "netlify/functions/access-mail-template-v2.html"
+  ]
 
 [[redirects]]
   from = "/*"
