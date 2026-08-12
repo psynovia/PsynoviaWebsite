@@ -5,6 +5,12 @@
   ]
 
 [[redirects]]
+  from = "/diagnostik-umbau.html"
+  to = "/index.html"
+  status = 302
+  force = true
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
