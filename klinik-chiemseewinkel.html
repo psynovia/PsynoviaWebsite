@@ -1,152 +1,92 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="robots" content="noindex,nofollow,noarchive">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Psynovia | Klinikaufnahme</title>
-  <style>
-    :root {
-      --navy:#07335f; --blue:#2454d6; --soft:#eef9fd; --bg:#f2f9fd;
-      --text:#294f6d; --muted:#58758b; --border:#d8e8f2; --danger:#b91c1c;
-      --success:#17603a; --shadow:0 14px 34px rgba(7,51,95,.10);
-    }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#f8fdff,#eef8fd 55%,#f8fbff);color:var(--navy);line-height:1.5}
-    .page{max-width:760px;margin:0 auto;padding:22px 16px 48px}
-    .topbar{display:flex;align-items:center;gap:12px;margin-bottom:18px}
-    .topbar img{width:42px;height:42px;object-fit:contain}
-    .brand-title{font-size:1.05rem;font-weight:900}
-    .brand-subtitle{font-size:.9rem;color:var(--muted);font-weight:700}
-    .card{background:#fff;border:1px solid var(--border);border-radius:22px;padding:24px;box-shadow:var(--shadow);margin-bottom:18px}
-    h1{font-size:1.7rem;line-height:1.15;margin:0 0 12px;letter-spacing:-.03em}
-    h2{font-size:1.25rem;margin:0 0 14px}
-    p{color:var(--text);margin:0 0 12px}
-    .clinic-label{display:inline-block;background:var(--soft);border:1px solid #cae6f2;border-radius:999px;padding:7px 11px;font-size:.9rem;font-weight:800;margin-bottom:14px}
-    .progress{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:18px 0 4px}
-    .progress span{height:7px;border-radius:99px;background:#dceaf2}
-    .progress span.active{background:var(--navy)}
-    .step{display:none}
-    .step.active{display:block}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    label.field{display:block;margin:14px 0 6px;font-weight:800}
-    input,select{width:100%;border:1px solid #aacbda;border-radius:13px;padding:13px;font-size:1rem;color:var(--navy);background:#fff}
-    input:focus,select:focus{outline:none;border-color:#62bee3;box-shadow:0 0 0 4px rgba(98,190,227,.16)}
-    .box{background:#f8fcfe;border:1px solid var(--border);border-radius:16px;padding:15px;margin:14px 0}
-    .box.warn{background:#fffaf2;border-color:#efd9b8}
-    .check{display:flex;gap:10px;align-items:flex-start;color:var(--text);font-weight:400;margin:0}
-    .check input{width:auto;margin-top:5px;flex:0 0 auto}
-    .hint{font-size:.9rem;color:var(--muted)}
-    .buttons{display:flex;gap:10px;margin-top:20px}
-    button{border:0;border-radius:14px;padding:14px 18px;font-size:1rem;font-weight:900;cursor:pointer}
-    .primary{background:var(--navy);color:white;flex:1}
-    .secondary{background:#eaf4f9;color:var(--navy)}
-    button:disabled{opacity:.55;cursor:not-allowed}
-    .error{display:none;background:#fff0ef;border:1px solid #edb9b4;color:var(--danger);border-radius:13px;padding:12px;margin-top:14px;font-weight:700}
-    .success{display:none;background:#eef9f3;border:1px solid #b7ddc6;color:var(--success);border-radius:16px;padding:18px}
-    .review{background:var(--soft);border-radius:14px;padding:14px;margin:12px 0;color:var(--text)}
-    a{color:var(--blue);font-weight:800;text-decoration:none}
-    a:hover{text-decoration:underline}
-    .secure-note{font-size:.9rem;color:var(--muted);margin-top:12px}
-    @media(max-width:620px){.grid{grid-template-columns:1fr}.card{padding:20px}h1{font-size:1.5rem}.buttons{flex-direction:column-reverse}.secondary{width:100%}}
-  </style>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Psynovia | Klinikaufnahme</title>
+<style>
+:root{--navy:#07335f;--blue:#2454d6;--soft:#eef9fd;--text:#294f6d;--muted:#58758b;--border:#d8e8f2;--danger:#b91c1c;--success:#17603a;--shadow:0 14px 34px rgba(7,51,95,.10)}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#f8fdff,#eef8fd 55%,#f8fbff);color:var(--navy);line-height:1.5}.page{max-width:760px;margin:0 auto;padding:22px 16px 48px}.topbar{display:flex;align-items:center;gap:12px;margin-bottom:18px}.topbar img{width:42px;height:42px;object-fit:contain}.brand-title{font-size:1.05rem;font-weight:900}.brand-subtitle{font-size:.9rem;color:var(--muted);font-weight:700}.card{background:#fff;border:1px solid var(--border);border-radius:22px;padding:24px;box-shadow:var(--shadow);margin-bottom:18px}.screen{display:none}.screen.active{display:block}h1{font-size:1.75rem;line-height:1.15;margin:0 0 14px;letter-spacing:-.03em}h2{font-size:1.25rem;margin:0 0 14px}p{color:var(--text);margin:0 0 12px}.clinic-label{display:inline-block;background:var(--soft);border:1px solid #cae6f2;border-radius:999px;padding:7px 11px;font-size:.9rem;font-weight:800;margin-bottom:14px}.box{background:#f8fcfe;border:1px solid var(--border);border-radius:16px;padding:15px;margin:14px 0}.box.warn{background:#fffaf2;border-color:#efd9b8}.secure{background:var(--soft);border-color:#cae6f2}.steps-list{display:grid;gap:10px;margin:18px 0}.mini-step{display:flex;gap:12px;align-items:flex-start;padding:12px 13px;border:1px solid var(--border);border-radius:14px;background:#fbfdfe}.num{width:28px;height:28px;flex:0 0 28px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--navy);color:#fff;font-weight:900}.progress{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:0 0 20px}.progress span{height:7px;border-radius:99px;background:#dceaf2}.progress span.active{background:var(--navy)}.step{display:none}.step.active{display:block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}label.field{display:block;margin:14px 0 6px;font-weight:800}input,select{width:100%;border:1px solid #aacbda;border-radius:13px;padding:13px;font-size:1rem;color:var(--navy);background:#fff}input:focus,select:focus{outline:none;border-color:#62bee3;box-shadow:0 0 0 4px rgba(98,190,227,.16)}.check,.radio{display:flex;gap:10px;align-items:flex-start;color:var(--text);font-weight:400;margin:0}.check input,.radio input{width:auto;margin-top:5px;flex:0 0 auto}.choice{display:grid;gap:10px}.hint{font-size:.9rem;color:var(--muted)}.buttons{display:flex;gap:10px;margin-top:20px}button{border:0;border-radius:14px;padding:14px 18px;font-size:1rem;font-weight:900;cursor:pointer}.primary{background:var(--navy);color:#fff;flex:1}.secondary{background:#eaf4f9;color:var(--navy)}button:disabled{opacity:.55;cursor:not-allowed}.error{display:none;background:#fff0ef;border:1px solid #edb9b4;color:var(--danger);border-radius:13px;padding:12px;margin-top:14px;font-weight:700}.review{background:var(--soft);border-radius:14px;padding:14px;margin:12px 0;color:var(--text)}.success{background:#eef9f3;border:1px solid #b7ddc6}.reference{font-size:1.15rem;font-weight:900;color:var(--navy);letter-spacing:.04em}a{color:var(--blue);font-weight:800;text-decoration:none}a:hover{text-decoration:underline}@media(max-width:620px){.grid{grid-template-columns:1fr}.card{padding:20px}h1{font-size:1.5rem}.buttons{flex-direction:column-reverse}.secondary{width:100%}}
+</style>
 </head>
 <body>
 <main class="page">
-  <header class="topbar">
-    <img src="/psynovia-logo.png" alt="Psynovia Logo">
-    <div><div class="brand-title">Psynovia</div><div class="brand-subtitle">Privatpraxis für klinische Diagnostik</div></div>
-  </header>
+<header class="topbar"><img src="/psynovia-logo.png" alt="Psynovia Logo"><div><div class="brand-title">Psynovia</div><div class="brand-subtitle">Privatpraxis für klinische Diagnostik</div></div></header>
 
-  <section class="card">
-    <div class="clinic-label">Klinikzugang · Privatklinik ChiemseeWinkel Seebruck</div>
-    <h1>Digitale Aufnahme für die diagnostische Zusammenarbeit</h1>
-    <p>Hier erfassen Sie Ihre Stammdaten und die für die Zusammenarbeit mit Ihrer behandelnden Klinik erforderlichen Erklärungen.</p>
-    <p>Nach Eingang Ihrer Angaben meldet sich Psynovia persönlich bei Ihnen. <strong>Die diagnostische Datenerhebung wird erst nach der persönlichen Aufklärung freigeschaltet.</strong></p>
-    <div class="box">
-      <strong>Sichere Übertragung</strong>
-      <p class="secure-note">Die Inhalte dieses Formulars werden vor dem Upload direkt in Ihrem Browser verschlüsselt. An den Server wird ausschließlich der verschlüsselte Datensatz übertragen. Der private Entschlüsselungsschlüssel befindet sich nicht auf dem Server.</p>
-    </div>
-    <div class="progress" aria-label="Fortschritt">
-      <span class="active"></span><span></span><span></span><span></span>
-    </div>
-  </section>
+<section id="startScreen" class="card screen active">
+<div class="clinic-label">Klinikzugang · Privatklinik ChiemseeWinkel Seebruck</div>
+<h1>Willkommen bei Psynovia</h1>
+<p>Zur Aufnahme in die Praxis füllen Sie bitte zunächst unser digitales Stammdatenblatt aus.</p>
+<p>Im Anschluss melde ich mich innerhalb von <strong>zwei Werktagen</strong> per E-Mail bei Ihnen und informiere Sie über den weiteren Ablauf der diagnostischen Datenerhebung.</p>
+<div class="steps-list">
+<div class="mini-step"><div class="num">1</div><div><strong>Stammdaten erfassen</strong><br><span class="hint">Kontaktdaten und Angaben zur Zusammenarbeit mit Ihrer Klinik.</span></div></div>
+<div class="mini-step"><div class="num">2</div><div><strong>Persönliche Rückmeldung</strong><br><span class="hint">Sie erhalten innerhalb von zwei Werktagen eine E-Mail von Psynovia.</span></div></div>
+<div class="mini-step"><div class="num">3</div><div><strong>Weitere Datenerhebung</strong><br><span class="hint">Danach erhalten Sie die nächsten Schritte für die diagnostische Datenerhebung.</span></div></div>
+</div>
+<div class="box secure"><strong>Sichere Übertragung</strong><p class="hint" style="margin-top:6px">Alle Daten, die Sie hier eingeben, werden sicher und Ende-zu-Ende verschlüsselt an die Praxis übertragen.</p></div>
+<div class="buttons"><button id="startBtn" type="button" class="primary">Stammdatenblatt starten</button></div>
+</section>
 
-  <form id="clinicForm" class="card" novalidate>
-    <section class="step active" data-step="0">
-      <h2>1. Ihre Stammdaten</h2>
-      <div class="grid">
-        <div><label class="field" for="first_name">Vorname</label><input id="first_name" autocomplete="given-name" required></div>
-        <div><label class="field" for="last_name">Nachname</label><input id="last_name" autocomplete="family-name" required></div>
-      </div>
-      <label class="field" for="birth">Geburtsdatum</label>
-      <input id="birth" type="date" required>
-      <label class="field" for="street">Straße und Hausnummer</label>
-      <input id="street" autocomplete="street-address" required>
-      <div class="grid">
-        <div><label class="field" for="zip">PLZ</label><input id="zip" autocomplete="postal-code" required></div>
-        <div><label class="field" for="city">Ort</label><input id="city" autocomplete="address-level2" required></div>
-      </div>
-      <label class="field" for="email">E-Mail-Adresse</label>
-      <input id="email" type="email" autocomplete="email" required>
-      <label class="field" for="email_confirm">E-Mail-Adresse wiederholen</label>
-      <input id="email_confirm" type="email" autocomplete="off" required>
-      <label class="field" for="phone">Telefonnummer <span class="hint">(optional)</span></label>
-      <input id="phone" autocomplete="tel">
-      <div class="buttons"><button type="button" class="primary next">Weiter</button></div>
-    </section>
+<section id="formScreen" class="screen">
+<div class="card">
+<div class="progress" aria-label="Fortschritt"><span class="active"></span><span></span><span></span><span></span></div>
+<form id="clinicForm" novalidate>
+<section class="step active" data-step="0">
+<h2>1. Ihre Stammdaten</h2>
+<div class="grid"><div><label class="field" for="first_name">Vorname</label><input id="first_name" autocomplete="given-name" required></div><div><label class="field" for="last_name">Nachname</label><input id="last_name" autocomplete="family-name" required></div></div>
+<label class="field" for="birth">Geburtsdatum</label><input id="birth" type="date" required>
+<label class="field" for="street">Straße und Hausnummer</label><input id="street" autocomplete="street-address" required>
+<div class="grid"><div><label class="field" for="zip">PLZ</label><input id="zip" autocomplete="postal-code" required></div><div><label class="field" for="city">Ort</label><input id="city" autocomplete="address-level2" required></div></div>
+<label class="field" for="email">E-Mail-Adresse</label><input id="email" type="email" autocomplete="email" required>
+<label class="field" for="email_confirm">E-Mail-Adresse wiederholen</label><input id="email_confirm" type="email" autocomplete="off" required>
+<p class="hint">Diese E-Mail-Adresse verwenden wir für die organisatorische Kommunikation zum weiteren Ablauf. Diagnostische Befunde und besonders sensible Dokumente werden nicht ungeschützt per E-Mail versendet.</p>
+<label class="field" for="phone">Telefonnummer <span class="hint">(optional)</span></label><input id="phone" autocomplete="tel">
+<div class="buttons"><button type="button" class="primary next">Weiter</button></div>
+</section>
 
-    <section class="step" data-step="1">
-      <h2>2. Zusammenarbeit mit der Klinik</h2>
-      <p>Die diagnostische Abklärung erfolgt im Rahmen Ihrer laufenden Behandlung in der Privatklinik ChiemseeWinkel Seebruck. Die Kosten der vereinbarten Psynovia-Leistungen werden von der Klinik übernommen; für Sie entstehen hierfür keine Kosten.</p>
-      <label class="field" for="clinic_contact_person">Behandelnde Ansprechperson in der Klinik <span class="hint">(optional)</span></label>
-      <input id="clinic_contact_person" placeholder="z. B. Bezugstherapeut:in oder Ärzt:in">
-      <div class="box warn">
-        <label class="check">
-          <input id="release_to_clinic" type="checkbox" required>
-          <span id="releaseText">Ich entbinde Psynovia und die an meiner Behandlung beteiligten Ärzt:innen und Psychotherapeut:innen der Privatklinik ChiemseeWinkel Seebruck gegenseitig von der Schweigepflicht, soweit dies für die Durchführung und klinische Einordnung der vereinbarten ADHS-diagnostischen Abklärung erforderlich ist. Dies umfasst insbesondere relevante anamnestische und klinische Informationen, diagnostische Vorbefunde sowie die von Psynovia erhobenen Befunde. Die Einwilligung ist freiwillig und kann jederzeit mit Wirkung für die Zukunft widerrufen werden. Meine sonstige Behandlung in der Klinik bleibt davon unberührt. Ohne diese Einwilligung ist der für die Psynovia-Abklärung erforderliche fachliche Austausch mit der Klinik nicht möglich.</span>
-        </label>
-      </div>
-      <div class="buttons"><button type="button" class="secondary back">Zurück</button><button type="button" class="primary next">Weiter</button></div>
-    </section>
+<section class="step" data-step="1">
+<h2>2. Zusammenarbeit mit der Klinik</h2>
+<p>Die diagnostische Abklärung erfolgt im Rahmen Ihrer laufenden Behandlung in der Privatklinik ChiemseeWinkel Seebruck. Die Kosten der vereinbarten Psynovia-Leistungen werden von der Klinik übernommen; für Sie entstehen hierfür keine Kosten.</p>
+<label class="field" for="clinic_contact_person">Behandelnde Ansprechperson in der Klinik <span class="hint">(optional)</span></label><input id="clinic_contact_person" placeholder="z. B. Bezugstherapeut:in oder Ärzt:in">
+<div class="box warn"><label class="check"><input id="release_to_clinic" type="checkbox"><span id="releaseText"><strong>Optional:</strong> Ich entbinde Psynovia und die an meiner Behandlung beteiligten Ärzt:innen und Psychotherapeut:innen der Privatklinik ChiemseeWinkel Seebruck gegenseitig von der Schweigepflicht, soweit dies für die diagnostische Abklärung erforderlich ist. Dies umfasst relevante anamnestische und klinische Informationen, diagnostische Vorbefunde sowie die von Psynovia erhobenen Befunde. Die Entbindung kann jederzeit mit Wirkung für die Zukunft widerrufen werden.</span></label></div>
+<p class="hint">Wenn Sie die Schweigepflichtentbindung nicht erteilen, findet zunächst kein fachlicher Austausch mit der Klinik statt. Psynovia klärt mit Ihnen, wie das weitere Vorgehen gestaltet werden kann.</p>
+<div class="buttons"><button type="button" class="secondary back">Zurück</button><button type="button" class="primary next">Weiter</button></div>
+</section>
 
-    <section class="step" data-step="2">
-      <h2>3. Datenschutz und Kommunikation</h2>
-      <div class="box">
-        <label class="check">
-          <input id="privacy_acknowledged" type="checkbox" required>
-          <span>Ich habe die <a href="/rechtliches/datenschutz-intake.html" target="_blank" rel="noopener">Datenschutzhinweise</a> zur Kenntnis genommen.</span>
-        </label>
-      </div>
-      <div class="box">
-        <label class="check">
-          <input id="email_communication" type="checkbox">
-          <span id="emailText">Ich wünsche die Kommunikation mit Psynovia über meine angegebene E-Mail-Adresse. Mir ist bekannt, dass gewöhnliche E-Mails trotz üblicher Transportverschlüsselung nicht Ende-zu-Ende verschlüsselt sind und daher ein Restrisiko für die Vertraulichkeit besteht. Ich wünsche dennoch die Kommunikation auf diesem Weg. Diese Entscheidung kann ich jederzeit für die Zukunft ändern. Diagnostische Befunde, Testergebnisse und besonders sensible Dokumente werden nicht ungeschützt per E-Mail versendet.</span>
-        </label>
-      </div>
-      <p class="hint">Wenn Sie die E-Mail-Kommunikation nicht auswählen, meldet sich Psynovia über einen anderen vereinbarten Kontaktweg.</p>
-      <div class="buttons"><button type="button" class="secondary back">Zurück</button><button type="button" class="primary next">Weiter</button></div>
-    </section>
+<section class="step" data-step="2">
+<h2>3. Datenschutz und Aufklärung</h2>
+<div class="box"><label class="check"><input id="privacy_acknowledged" type="checkbox" required><span>Ich habe die <a href="/Rechtliches/datenschutz-intake.html" target="_blank" rel="noopener">Datenschutzhinweise</a> zur Kenntnis genommen.</span></label></div>
+<p><strong>Aufklärung zur diagnostischen Datenerhebung</strong></p>
+<div class="choice">
+<div class="box"><label class="radio"><input type="radio" name="explanation_status" value="completed" required><span>Ich wurde durch meine behandelnde Ärztin/meinen behandelnden Arzt bzw. Psychotherapeut:in über Ziel, Ablauf und das weitere Vorgehen der Psynovia-Datenerhebung informiert und hatte Gelegenheit, Fragen zu stellen.</span></label></div>
+<div class="box"><label class="radio"><input type="radio" name="explanation_status" value="questions_open" required><span>Ich habe vor Beginn der Datenerhebung noch Fragen und möchte diese zunächst mit Psynovia klären.</span></label></div>
+</div>
+<div class="buttons"><button type="button" class="secondary back">Zurück</button><button type="button" class="primary next">Weiter</button></div>
+</section>
 
-    <section class="step" data-step="3">
-      <h2>4. Prüfen und sicher übermitteln</h2>
-      <div id="review" class="review"></div>
-      <p>Mit „Sicher übermitteln“ wird aus Ihren Angaben lokal im Browser ein verschlüsselter Datensatz erzeugt und anschließend hochgeladen.</p>
-      <div class="buttons"><button type="button" class="secondary back">Zurück</button><button id="submitBtn" type="submit" class="primary">Sicher übermitteln</button></div>
-      <div id="errorBox" class="error"></div>
-    </section>
-  </form>
+<section class="step" data-step="3">
+<h2>4. Angaben prüfen</h2>
+<div id="review" class="review"></div>
+<p>Mit „Sicher übermitteln“ werden Ihre Angaben direkt in Ihrem Browser verschlüsselt und anschließend sicher an Psynovia übertragen.</p>
+<div class="buttons"><button type="button" class="secondary back">Zurück</button><button id="submitBtn" type="submit" class="primary">Sicher übermitteln</button></div>
+<div id="errorBox" class="error"></div>
+</section>
+</form>
+</div>
+</section>
 
-  <section id="successBox" class="card success">
-    <h2>Ihre Angaben wurden sicher übermittelt.</h2>
-    <p>Psynovia meldet sich persönlich bei Ihnen zum weiteren Ablauf. Die diagnostische Datenerhebung beginnt erst nach der persönlichen Aufklärung.</p>
-    <p class="hint">Technische Eingangsreferenz: <span id="receiptId"></span></p>
-  </section>
+<section id="successScreen" class="card screen success">
+<h1>Vielen Dank</h1>
+<p>Ihre Angaben wurden sicher an Psynovia übermittelt.</p>
+<p>Ich melde mich innerhalb von <strong>zwei Werktagen</strong> per E-Mail bei Ihnen und informiere Sie über den weiteren Ablauf.</p>
+<div class="box"><div class="hint">Ihre Aufnahmereferenz</div><div id="receiptId" class="reference"></div><p class="hint" style="margin-top:8px">Bitte bewahren Sie diese Referenz auf. Sie hilft bei technischen Rückfragen bei der eindeutigen Zuordnung Ihrer Anmeldung.</p></div>
+</section>
 </main>
 
 <script>
-const UPLOAD_URL = "https://vbwmtfndmechunmehijw.supabase.co/functions/v1/upload-clinic-intake";
-const PUBLIC_KEY_PEM = `-----BEGIN PUBLIC KEY-----
+const UPLOAD_URL="https://vbwmtfndmechunmehijw.supabase.co/functions/v1/upload-clinic-intake";
+const PUBLIC_KEY_PEM=`-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAyvNcluRAiHMpSzOwQ5cF
 nPiOMzVDE6jWRUvX40WkekYu5UIEe0zRAvNAeUMFsOFc2iMImeZ6gmhY85EN8LHA
 fpw9Xi40yez4TXGZkPEY1jk5XqXCJrbPqIFtUczKNHmKLdtKL17c/Ee89zr69Pio
@@ -160,202 +100,19 @@ XzojNRS8wtlvLowNn+Oz4QNLe0ddTbwKOrKBNnN/X2bDhg+H2UUXDyvq5q2oqvqz
 SVYvGva4sbOX1AT1/6HnM4iF4zmKL6mIM+7b3x2+xF9zURGJxH9Nqp5QLUZNCQRf
 IGY0u9QXiuHxZpWEKwsmyTkCAwEAAQ==
 -----END PUBLIC KEY-----`;
-
-const form = document.getElementById("clinicForm");
-const steps = [...document.querySelectorAll(".step")];
-const progress = [...document.querySelectorAll(".progress span")];
-const errorBox = document.getElementById("errorBox");
-const successBox = document.getElementById("successBox");
-const submitBtn = document.getElementById("submitBtn");
-let currentStep = 0;
-
-document.querySelectorAll(".next").forEach(btn => btn.addEventListener("click", () => {
-  if (!validateStep(currentStep)) return;
-  if (currentStep === 0 && value("email").toLowerCase() !== value("email_confirm").toLowerCase()) {
-    showError("Bitte prüfen Sie die E-Mail-Adresse. Beide Eingaben müssen übereinstimmen.");
-    return;
-  }
-  showError("");
-  if (currentStep < steps.length - 1) showStep(currentStep + 1);
-}));
-
-document.querySelectorAll(".back").forEach(btn => btn.addEventListener("click", () => {
-  showError("");
-  if (currentStep > 0) showStep(currentStep - 1);
-}));
-
-function showStep(index) {
-  currentStep = index;
-  steps.forEach((s,i) => s.classList.toggle("active", i === index));
-  progress.forEach((p,i) => p.classList.toggle("active", i <= index));
-  if (index === 3) renderReview();
-  form.scrollIntoView({behavior:"smooth", block:"start"});
-}
-
-function validateStep(index) {
-  const controls = [...steps[index].querySelectorAll("input,select")];
-  for (const el of controls) {
-    if (!el.checkValidity()) {
-      el.reportValidity();
-      return false;
-    }
-  }
-  return true;
-}
-
-function renderReview() {
-  const mail = value("email");
-  const address = [value("street"), value("zip"), value("city")].filter(Boolean).join(", ");
-  document.getElementById("review").innerHTML =
-    `<strong>${escapeHtml(value("first_name"))} ${escapeHtml(value("last_name"))}</strong><br>` +
-    `Geburtsdatum: ${escapeHtml(value("birth"))}<br>` +
-    `Anschrift: ${escapeHtml(address)}<br>` +
-    `E-Mail: ${escapeHtml(mail)}<br>` +
-    `Schweigepflichtentbindung: bestätigt<br>` +
-    `E-Mail-Kommunikation: ${checked("email_communication") ? "gewünscht" : "nicht ausgewählt"}`;
-}
-
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  showError("");
-  if (!validateStep(3)) return;
-  if (!checked("release_to_clinic") || !checked("privacy_acknowledged")) {
-    showError("Bitte prüfen Sie die erforderlichen Erklärungen.");
-    return;
-  }
-  if (!window.isSecureContext || !window.crypto?.subtle) {
-    showError("Die sichere Browser-Verschlüsselung ist auf diesem Gerät nicht verfügbar. Bitte verwenden Sie einen aktuellen Browser.");
-    return;
-  }
-
-  submitBtn.disabled = true;
-  submitBtn.textContent = "Verschlüssele und übermittle …";
-
-  try {
-    const intake = buildIntakePayload();
-    const envelope = await encryptIntake(intake);
-    const response = await fetch(UPLOAD_URL, {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify(envelope),
-      cache: "no-store",
-      credentials: "omit",
-      referrerPolicy: "no-referrer"
-    });
-
-    const result = await response.json().catch(() => ({}));
-    if (!response.ok || !result.ok) throw new Error(result.error || "upload_failed");
-
-    form.reset();
-    form.style.display = "none";
-    document.querySelector(".progress").style.display = "none";
-    document.getElementById("receiptId").textContent = result.submission_id || "—";
-    successBox.style.display = "block";
-    successBox.scrollIntoView({behavior:"smooth", block:"center"});
-  } catch (err) {
-    console.error("Clinic intake upload failed:", err);
-    showError("Die sichere Übermittlung ist technisch fehlgeschlagen. Ihre Angaben wurden nicht als erfolgreich übermittelt markiert. Bitte versuchen Sie es erneut.");
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = "Sicher übermitteln";
-  }
-});
-
-function buildIntakePayload() {
-  return {
-    schema_version: "psynovia_clinic_intake_v2",
-    created_client_iso: new Date().toISOString(),
-    source: "clinic_chiemseewinkel",
-    patient: {
-      first_name: value("first_name"),
-      last_name: value("last_name"),
-      birth: value("birth"),
-      street: value("street"),
-      zip: value("zip"),
-      city: value("city"),
-      email: value("email").toLowerCase(),
-      phone: value("phone")
-    },
-    clinic: {
-      name: "Privatklinik ChiemseeWinkel Seebruck",
-      contact_person: value("clinic_contact_person")
-    },
-    declarations: {
-      privacy_acknowledged: {
-        accepted: checked("privacy_acknowledged"),
-        version: "clinic_privacy_notice_2026-08-25"
-      },
-      clinic_release: {
-        accepted: checked("release_to_clinic"),
-        text: document.getElementById("releaseText").innerText.trim(),
-        version: "clinic_release_v2"
-      },
-      email_communication: {
-        accepted: checked("email_communication"),
-        text: document.getElementById("emailText").innerText.trim(),
-        version: "email_communication_v1"
-      }
-    }
-  };
-}
-
-async function encryptIntake(data) {
-  const publicKey = await importPublicKey(PUBLIC_KEY_PEM);
-  const aesKey = await crypto.subtle.generateKey({name:"AES-GCM", length:256}, true, ["encrypt"]);
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const plaintext = new TextEncoder().encode(JSON.stringify(data));
-  const ciphertext = await crypto.subtle.encrypt({name:"AES-GCM", iv}, aesKey, plaintext);
-  const rawAesKey = await crypto.subtle.exportKey("raw", aesKey);
-  const wrappedKey = await crypto.subtle.encrypt({name:"RSA-OAEP"}, publicKey, rawAesKey);
-
-  return {
-    v: 1,
-    type: "psynovia_clinic_intake",
-    content_encryption: "AES-256-GCM",
-    key_encryption: "RSA-OAEP-256",
-    iv_b64: bytesToBase64(iv),
-    wrapped_key_b64: bytesToBase64(new Uint8Array(wrappedKey)),
-    ciphertext_b64: bytesToBase64(new Uint8Array(ciphertext))
-  };
-}
-
-async function importPublicKey(pem) {
-  const b64 = pem.replace(/-----BEGIN PUBLIC KEY-----|-----END PUBLIC KEY-----|\s/g, "");
-  const der = base64ToBytes(b64);
-  return crypto.subtle.importKey(
-    "spki",
-    der.buffer,
-    {name:"RSA-OAEP", hash:"SHA-256"},
-    false,
-    ["encrypt"]
-  );
-}
-
-function bytesToBase64(bytes) {
-  let binary = "";
-  const chunk = 0x8000;
-  for (let i=0; i<bytes.length; i+=chunk) {
-    binary += String.fromCharCode(...bytes.subarray(i, i+chunk));
-  }
-  return btoa(binary);
-}
-
-function base64ToBytes(b64) {
-  const binary = atob(b64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i=0; i<binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  return bytes;
-}
-
-function value(id) { return String(document.getElementById(id)?.value || "").trim(); }
-function checked(id) { return Boolean(document.getElementById(id)?.checked); }
-function showError(message) {
-  errorBox.textContent = message;
-  errorBox.style.display = message ? "block" : "none";
-}
-function escapeHtml(value) {
-  return String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-}
+const startScreen=document.getElementById("startScreen"),formScreen=document.getElementById("formScreen"),successScreen=document.getElementById("successScreen"),form=document.getElementById("clinicForm"),steps=[...document.querySelectorAll(".step")],progress=[...document.querySelectorAll(".progress span")],errorBox=document.getElementById("errorBox"),submitBtn=document.getElementById("submitBtn");let currentStep=0;
+document.getElementById("startBtn").onclick=()=>{startScreen.classList.remove("active");formScreen.classList.add("active");window.scrollTo({top:0,behavior:"smooth"})};
+document.querySelectorAll(".next").forEach(b=>b.onclick=()=>{if(!validateStep(currentStep))return;if(currentStep===0&&value("email").toLowerCase()!==value("email_confirm").toLowerCase()){showError("Bitte prüfen Sie die E-Mail-Adresse. Beide Eingaben müssen übereinstimmen.");return}showError("");if(currentStep<3)showStep(currentStep+1)});
+document.querySelectorAll(".back").forEach(b=>b.onclick=()=>{showError("");if(currentStep>0)showStep(currentStep-1)});
+function showStep(i){currentStep=i;steps.forEach((s,n)=>s.classList.toggle("active",n===i));progress.forEach((p,n)=>p.classList.toggle("active",n<=i));if(i===3)renderReview();window.scrollTo({top:0,behavior:"smooth"})}
+function validateStep(i){for(const el of steps[i].querySelectorAll("input,select")){if(!el.checkValidity()){el.reportValidity();return false}}return true}
+function explanation(){return document.querySelector('input[name="explanation_status"]:checked')?.value||""}
+function renderReview(){document.getElementById("review").innerHTML=`<strong>${esc(value("first_name"))} ${esc(value("last_name"))}</strong><br>Geburtsdatum: ${esc(value("birth"))}<br>Anschrift: ${esc([value("street"),value("zip")+" "+value("city")].join(", "))}<br>E-Mail: ${esc(value("email"))}<br>Schweigepflichtentbindung: ${checked("release_to_clinic")?"erteilt":"nicht erteilt"}<br>Aufklärung: ${explanation()==="completed"?"bereits erfolgt":"Fragen noch offen"}`}
+form.addEventListener("submit",async e=>{e.preventDefault();showError("");if(!checked("privacy_acknowledged")||!explanation()){showError("Bitte prüfen Sie die erforderlichen Angaben.");return}if(!window.isSecureContext||!crypto?.subtle){showError("Die sichere Browser-Verschlüsselung ist auf diesem Gerät nicht verfügbar. Bitte verwenden Sie einen aktuellen Browser.");return}submitBtn.disabled=true;submitBtn.textContent="Verschlüssele und übermittle …";try{const envelope=await encryptIntake(buildPayload());const r=await fetch(UPLOAD_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(envelope),cache:"no-store",credentials:"omit",referrerPolicy:"no-referrer"});const result=await r.json().catch(()=>({}));if(!r.ok||!result.ok)throw new Error(result.error||"upload_failed");form.reset();formScreen.classList.remove("active");document.getElementById("receiptId").textContent=result.intake_reference||result.submission_id||"—";successScreen.classList.add("active");window.scrollTo({top:0,behavior:"smooth"})}catch(err){console.error(err);showError("Die sichere Übermittlung ist technisch fehlgeschlagen. Bitte versuchen Sie es erneut.")}finally{submitBtn.disabled=false;submitBtn.textContent="Sicher übermitteln"}});
+function buildPayload(){return{schema_version:"psynovia_clinic_intake_v3",created_client_iso:new Date().toISOString(),source:"clinic_chiemseewinkel",patient:{first_name:value("first_name"),last_name:value("last_name"),birth:value("birth"),street:value("street"),zip:value("zip"),city:value("city"),email:value("email").toLowerCase(),phone:value("phone")},clinic:{name:"Privatklinik ChiemseeWinkel Seebruck",contact_person:value("clinic_contact_person")},declarations:{privacy_acknowledged:{accepted:checked("privacy_acknowledged"),version:"clinic_privacy_notice_2026-08-25"},clinic_release:{accepted:checked("release_to_clinic"),text:document.getElementById("releaseText").innerText.trim(),version:"clinic_release_v3"},explanation_status:{value:explanation(),version:"clinic_explanation_status_v1"}},communication:{organizational_email:true}}}
+async function encryptIntake(data){const pk=await importPublicKey(PUBLIC_KEY_PEM),aes=await crypto.subtle.generateKey({name:"AES-GCM",length:256},true,["encrypt"]),iv=crypto.getRandomValues(new Uint8Array(12)),plain=new TextEncoder().encode(JSON.stringify(data)),cipher=await crypto.subtle.encrypt({name:"AES-GCM",iv},aes,plain),raw=await crypto.subtle.exportKey("raw",aes),wrapped=await crypto.subtle.encrypt({name:"RSA-OAEP"},pk,raw);return{v:1,type:"psynovia_clinic_intake",content_encryption:"AES-256-GCM",key_encryption:"RSA-OAEP-256",iv_b64:b64(iv),wrapped_key_b64:b64(new Uint8Array(wrapped)),ciphertext_b64:b64(new Uint8Array(cipher))}}
+async function importPublicKey(pem){const der=from64(pem.replace(/-----BEGIN PUBLIC KEY-----|-----END PUBLIC KEY-----|\s/g,""));return crypto.subtle.importKey("spki",der.buffer,{name:"RSA-OAEP",hash:"SHA-256"},false,["encrypt"])}
+function b64(bytes){let s="";for(let i=0;i<bytes.length;i+=0x8000)s+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(s)}function from64(s){const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a}function value(id){return String(document.getElementById(id)?.value||"").trim()}function checked(id){return !!document.getElementById(id)?.checked}function showError(m){errorBox.textContent=m;errorBox.style.display=m?"block":"none"}function esc(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 </script>
 </body>
 </html>
