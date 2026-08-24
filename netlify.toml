@@ -5,6 +5,12 @@
   ]
 
 [[redirects]]
+  from = "/rechtliches/datenschutz-intake.html"
+  to = "/Rechtliches/datenschutz-intake.html"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/diagnostik-umbau.html"
   to = "/index.html"
   status = 302
