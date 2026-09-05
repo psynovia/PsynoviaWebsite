@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 
 const BUCKET = "clinic-documents-encrypted";
-const MAX_ENCRYPTED_BYTES = 26_214_400;
+const MAX_ENCRYPTED_BYTES = 33_554_432;
 const ALLOWED_CASE_STATUSES = new Set([
   "clinic_access_granted",
   "assessment_pending",
@@ -172,7 +172,7 @@ export default async (req) => {
       case_id: access.caseId,
       expires_at: access.expiresAt,
       upload_count: access.uploadCount,
-      max_file_bytes: 20 * 1024 * 1024
+      max_file_bytes: 30 * 1024 * 1024
     });
   }
 
