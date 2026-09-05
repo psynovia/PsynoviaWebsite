@@ -19,7 +19,7 @@
 <div class="box secure"><strong>Verschlüsselung direkt auf Ihrem Gerät</strong><p class="hint" style="margin-top:6px">Die Datei wird bereits in Ihrem Browser verschlüsselt. Erst danach wird sie hochgeladen. Auch der ursprüngliche Dateiname wird nur innerhalb der verschlüsselten Datei gespeichert.</p></div>
 <div id="caseBox" class="box" style="display:none"><div class="hint">Ihre Fall-ID</div><div id="caseId" class="reference"></div><div id="expiry" class="hint" style="margin-top:6px"></div></div>
 <div id="uploadArea" style="display:none">
-<div class="filebox"><label for="files"><strong>Dateien auswählen</strong></label><p class="hint">PDF, JPG, PNG oder HEIC · maximal 20 MB pro Datei</p><input id="files" type="file" multiple accept="application/pdf,image/jpeg,image/png,image/heic,image/heif,.pdf,.jpg,.jpeg,.png,.heic,.heif"></div>
+<div class="filebox"><label for="files"><strong>Dateien auswählen</strong></label><p class="hint">PDF, JPG, PNG oder HEIC · maximal 30 MB pro Datei</p><input id="files" type="file" multiple accept="application/pdf,image/jpeg,image/png,image/heic,image/heif,.pdf,.jpg,.jpeg,.png,.heic,.heif"></div>
 <div id="fileList" class="files"></div>
 <button id="uploadBtn" class="primary" type="button" disabled>Sicher hochladen</button>
 <div class="progress" id="progressWrap" style="display:none"><span id="progressBar"></span></div>
@@ -30,7 +30,7 @@
 </main>
 <script>
 const API_URL="/.netlify/functions/clinic-document-upload";
-const MAX_FILE_BYTES=20*1024*1024;
+const MAX_FILE_BYTES=30*1024*1024;
 const PUBLIC_KEY_PEM=`-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAyvNcluRAiHMpSzOwQ5cF
 nPiOMzVDE6jWRUvX40WkekYu5UIEe0zRAvNAeUMFsOFc2iMImeZ6gmhY85EN8LHA
@@ -58,7 +58,7 @@ async function importPublicKey(){const der=from64(PUBLIC_KEY_PEM.replace(/-----B
 function tokenFromFragment(){const params=new URLSearchParams(location.hash.replace(/^#/,""));return String(params.get("token")||"").trim()}
 async function api(body){const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),cache:"no-store",credentials:"same-origin",referrerPolicy:"no-referrer"});const data=await r.json().catch(()=>({}));if(!r.ok||!data.ok){const e=new Error(data.error||"request_failed");e.code=data.error||"request_failed";throw e}return data}
 function allowedFile(file){const name=file.name.toLowerCase();return name.endsWith(".pdf")||name.endsWith(".jpg")||name.endsWith(".jpeg")||name.endsWith(".png")||name.endsWith(".heic")||name.endsWith(".heif")}
-function renderFiles(){showError("");showSuccess("");const files=[...filesInput.files];fileList.innerHTML="";let valid=files.length>0;for(const f of files){const div=document.createElement("div");div.className="file";div.innerHTML=`<strong>${escapeHtml(f.name)}</strong><br><span class="hint">${fmtBytes(f.size)}</span>`;fileList.appendChild(div);if(!allowedFile(f)||f.size<=0||f.size>MAX_FILE_BYTES)valid=false}if(files.some(f=>f.size>MAX_FILE_BYTES))showError("Mindestens eine Datei ist größer als 20 MB.");else if(files.some(f=>!allowedFile(f)))showError("Bitte nur PDF-, JPG-, PNG- oder HEIC-Dateien auswählen.");uploadBtn.disabled=!valid}
+function renderFiles(){showError("");showSuccess("");const files=[...filesInput.files];fileList.innerHTML="";let valid=files.length>0;for(const f of files){const div=document.createElement("div");div.className="file";div.innerHTML=`<strong>${escapeHtml(f.name)}</strong><br><span class="hint">${fmtBytes(f.size)}</span>`;fileList.appendChild(div);if(!allowedFile(f)||f.size<=0||f.size>MAX_FILE_BYTES)valid=false}if(files.some(f=>f.size>MAX_FILE_BYTES))showError("Mindestens eine Datei ist größer als 30 MB.");else if(files.some(f=>!allowedFile(f)))showError("Bitte nur PDF-, JPG-, PNG- oder HEIC-Dateien auswählen.");uploadBtn.disabled=!valid}
 function escapeHtml(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 
 async function encryptFile(file,publicKey){
