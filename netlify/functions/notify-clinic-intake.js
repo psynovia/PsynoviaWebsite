@@ -21,7 +21,7 @@ exports.handler = async function(event) {
     };
 
     const check = await fetch(
-      `${SUPABASE_URL}/rest/v1/clinic_intake_submissions?intake_reference=eq.${encodeURIComponent(ref)}&select=submission_id,notification_status,created_at&limit=1`,
+      `${SUPABASE_URL}/rest/v1/clinic_intake_submissions?intake_reference=eq.${encodeURIComponent(ref)}&select=submission_id,case_id,notification_status,created_at&limit=1`,
       { headers }
     );
     const rows = await check.json();
@@ -29,8 +29,11 @@ exports.handler = async function(event) {
 
     if (rows[0].notification_status === "sent") return json(200, { ok: true, already_sent: true });
 
-    const subject = `Neue Psynovia-Klinikaufnahme · ${ref}`;
-    const text = `Neue verschlüsselte Klinikaufnahme eingegangen.\n\nAufnahmereferenz: ${ref}\n\nDie personenbezogenen Angaben befinden sich ausschließlich im verschlüsselten Intake. Bitte den Eintrag in Supabase anhand dieser Referenz öffnen und lokal entschlüsseln.`;
+    const caseId = String(rows[0].case_id || "").trim().toUpperCase();
+    const displayId = /^CHIEM-[0-9]{4}-[A-HJ-NP-Z2-9]{8}$/.test(caseId) ? caseId : ref;
+
+    const subject = `Neue Psynovia-Klinikaufnahme · ${displayId}`;
+    const text = `Neue verschlüsselte Klinikaufnahme eingegangen.\n\nFall-ID: ${displayId}\n\nDie personenbezogenen Angaben befinden sich ausschließlich im verschlüsselten Intake. Bitte den Eintrag in Supabase anhand dieser Fall-ID öffnen und lokal entschlüsseln.`;
 
     const mail = await fetch("https://api.resend.com/emails", {
       method: "POST",
