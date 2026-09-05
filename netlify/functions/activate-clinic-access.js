@@ -3,6 +3,7 @@ const { sendGraphMail } = require("./lib/microsoft-graph-mail");
 
 const HOGREFE_TEST_TYPE = "HASE-KOMBI";
 const ACCESS_VALID_DAYS = 14;
+const DOCUMENT_UPLOAD_VALID_DAYS = 14;
 const TEST_HOGREFE_ID = "TEST-HASE-KOMBI";
 const TEST_HOGREFE_URL = "https://example.invalid/psynovia-hogrefe-test";
 
@@ -83,7 +84,32 @@ async function markRealHogrefeMailSent({ supabaseUrl, key, caseId }) {
   if (!response.ok || data !== true) throw new Error("hogrefe_mail_mark_failed");
 }
 
-function buildMail({ caseId, hogrefeId, hogrefeUrl, shellUrl, testMode }) {
+async function createDocumentUploadLink({ supabaseUrl, key, caseId }) {
+  const token = crypto.randomBytes(32).toString("base64url");
+  const tokenHash = hashToken(token);
+  const expiresAt = futureIsoDate(DOCUMENT_UPLOAD_VALID_DAYS);
+
+  const upsert = await sb({
+    url: `${supabaseUrl}/rest/v1/clinic_document_upload_tokens?on_conflict=case_id`,
+    key,
+    method: "POST",
+    prefer: "resolution=merge-duplicates,return=minimal",
+    body: {
+      case_id: caseId,
+      token_hash: tokenHash,
+      expires_at: expiresAt,
+      revoked_at: null,
+      last_used_at: null,
+      upload_count: 0
+    }
+  });
+
+  if (!upsert.response.ok) throw new Error("document_upload_link_failed");
+
+  return `https://www.psynovia.de/klinik-unterlagen.html#token=${encodeURIComponent(token)}`;
+}
+
+function buildMail({ caseId, hogrefeId, hogrefeUrl, shellUrl, documentUploadUrl, testMode }) {
   const testNotice = testMode
     ? `<p style="padding:12px;border:1px solid #f1c27d;border-radius:10px;background:#fff8ed"><strong>TESTVERSAND:</strong> Der Hogrefe-Link unten ist absichtlich kein echter Testzugang und verbraucht keinen Eintrag aus dem Hogrefe-Pool.</p>`
     : "";
@@ -97,6 +123,9 @@ function buildMail({ caseId, hogrefeId, hogrefeUrl, shellUrl, testMode }) {
     <p><strong>Hogrefe-ID:</strong> ${hogrefeId}<br><a href="${hogrefeUrl}">${hogrefeUrl}</a></p>
     <h3>2. Psynovia-Datenerhebung</h3>
     <p><a href="${shellUrl}">${shellUrl}</a></p>
+    <h3>3. Ergänzende Unterlagen</h3>
+    <p>Grundschulzeugnisse und vorhandene diagnostisch relevante Befunde können Sie über den folgenden geschützten Upload übermitteln. Bitte senden Sie diese Unterlagen nicht unverschlüsselt per E-Mail.</p>
+    <p><a href="${documentUploadUrl}">Unterlagen sicher hochladen</a></p>
     <p>Bei technischen Fragen können Sie direkt auf diese E-Mail antworten.</p>
     <p>Mit freundlichen Grüßen<br>Tobias Winner, M.Sc.<br>Psychologischer Psychotherapeut<br>Psynovia</p>
   </body></html>`;
@@ -214,11 +243,13 @@ exports.handler = async function(event) {
   if (!upsertDispatch.response.ok) return json(502, { ok: false, error: "dispatch_prepare_failed" });
 
   try {
+    const documentUploadUrl = await createDocumentUploadLink({ supabaseUrl, key, caseId });
     const html = buildMail({
       caseId,
       hogrefeId: hogrefe.hogrefeId,
       hogrefeUrl: hogrefe.hogrefeUrl,
       shellUrl,
+      documentUploadUrl,
       testMode: mode === "test"
     });
 
