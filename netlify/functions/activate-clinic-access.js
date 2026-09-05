@@ -4,7 +4,7 @@ const { sendGraphMail } = require("./lib/microsoft-graph-mail");
 
 const HOGREFE_TEST_TYPE = "HASE-KOMBI";
 const ACCESS_VALID_DAYS = 14;
-const DOCUMENT_UPLOAD_VALID_DAYS = 14;
+const DOCUMENT_UPLOAD_VALID_DAYS = 30;
 const TEST_HOGREFE_ID = "TEST-HASE-KOMBI";
 const TEST_HOGREFE_URL = "https://example.invalid/psynovia-hogrefe-test";
 
