@@ -1,3 +1,4 @@
+// Clinic access flow: shell, Hogrefe and encrypted document upload.
 const crypto = require("crypto");
 const { sendGraphMail } = require("./lib/microsoft-graph-mail");
 
