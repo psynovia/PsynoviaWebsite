@@ -46,6 +46,38 @@ async function signedDownload(base,key,path){
   const rel=d.signedURL||d.signedUrl||d.url; if(typeof rel!=="string") throw new Error("signed_download_invalid");
   return rel.startsWith("http")?rel:`${base}/storage/v1${rel.startsWith("/")?"":"/"}${rel}`;
 }
+async function notifySuccessfulDownload({base,key,token}){
+  const claim=await sbJson(
+    `${base}/rest/v1/patient_report_deliveries?access_token_hash=eq.${sha(token)}&download_notification_status=in.(pending,failed)&last_downloaded_at=not.is.null&select=report_id,case_id`,
+    key,
+    {method:"PATCH",headers:{Prefer:"return=representation"},body:{download_notification_status:"sending",download_notification_last_error:null}}
+  );
+  if(!claim.r.ok) return {ok:false,error:"claim_failed"};
+  if(!Array.isArray(claim.data)||claim.data.length===0) return {ok:true,already_notified:true};
+  const row=claim.data[0];
+  const resendKey=env("RESEND_API_KEY"), from=env("RESEND_FROM_EMAIL");
+  if(!resendKey||!from){
+    await sbJson(`${base}/rest/v1/patient_report_deliveries?report_id=eq.${row.report_id}`,key,{method:"PATCH",headers:{Prefer:"return=minimal"},body:{download_notification_status:"failed",download_notification_last_error:"resend_config_missing"}}).catch(()=>{});
+    return {ok:false,error:"notification_config_missing"};
+  }
+  const mail=await fetch("https://api.resend.com/emails",{
+    method:"POST",
+    headers:{Authorization:`Bearer ${resendKey}`,"Content-Type":"application/json"},
+    body:JSON.stringify({
+      from,
+      to:"ergebnis@psynovia.de",
+      subject:`Befund erfolgreich abgerufen · ${row.case_id}`,
+      text:`Der Befund wurde im Psynovia-Portal erfolgreich abgerufen und im Browser entschlüsselt.\n\nFall-ID: ${row.case_id}\nZeitpunkt: ${new Date().toISOString()}\n\nDiese Nachricht enthält keine personenbezogenen Daten.`
+    })
+  });
+  if(!mail.ok){
+    await sbJson(`${base}/rest/v1/patient_report_deliveries?report_id=eq.${row.report_id}`,key,{method:"PATCH",headers:{Prefer:"return=minimal"},body:{download_notification_status:"failed",download_notification_last_error:`resend_${mail.status}`}}).catch(()=>{});
+    return {ok:false,error:"notification_mail_failed"};
+  }
+  const sentAt=new Date().toISOString();
+  await sbJson(`${base}/rest/v1/patient_report_deliveries?report_id=eq.${row.report_id}`,key,{method:"PATCH",headers:{Prefer:"return=minimal"},body:{download_notification_status:"sent",download_notification_sent_at:sentAt,download_notification_last_error:null}}).catch(()=>{});
+  return {ok:true,sent:true};
+}
 
 export default async (req) => {
   if(req.method!=="POST") return j(405,{ok:false,error:"method_not_allowed"});
@@ -110,6 +142,13 @@ export default async (req) => {
     await sbJson(`${base}/rest/v1/patient_report_deliveries?report_id=eq.${row.report_id}`,key,{method:"PATCH",headers:{Prefer:"return=minimal"},body:{failed_attempts:0,locked_until:null,last_downloaded_at:now}}).catch(()=>{});
     await fetch(`${base}/rest/v1/rpc/increment_patient_report_download`,{method:"POST",headers:sbHeaders(key),body:JSON.stringify({p_report_id:row.report_id})}).catch(()=>{});
     return j(200,{ok:true,case_id:row.case_id,signed_download_url:url,expires_in_seconds:SIGNED_DOWNLOAD_SECONDS});
+  }
+
+  if(action==="confirm_download"){
+    const token=String(body.access_token||"").trim();
+    if(!validToken(token)) return j(403,{ok:false,error:"access_denied"});
+    const result=await notifySuccessfulDownload({base,key,token});
+    return j(result.ok?200:502,result);
   }
 
   return j(400,{ok:false,error:"unknown_action"});
