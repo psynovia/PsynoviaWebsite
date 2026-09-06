@@ -3,7 +3,7 @@ import { createHash, createHmac, randomBytes, randomUUID, timingSafeEqual } from
 const BUCKET = "patient-reports-encrypted";
 const MAX_ENCRYPTED_BYTES = 33_554_432;
 const REPORT_VALID_DAYS = 30;
-const SIGNED_DOWNLOAD_SECONDS = 60;
+const SIGNED_DOWNLOAD_SECONDS = 15 * 60;
 const MAX_DOB_ATTEMPTS = 5;
 const LOCK_MINUTES = 15;
 
