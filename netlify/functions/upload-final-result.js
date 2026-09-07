@@ -3,6 +3,7 @@
 const crypto = require("crypto");
 
 const RESULT_BUCKET = "results";
+const RESULT_NOTIFICATION_TO = "ergebnis@psynovia.de";
 const MAX_REQUEST_BYTES = 4_500_000;
 const MAX_RESULT_CONTENT_BYTES = 4_000_000;
 const MIN_GCM_CIPHERTEXT_BYTES = 17;
@@ -118,7 +119,7 @@ exports.handler = async function handler(event) {
 
   try {
     const caseResponse = await fetch(
-      `${SUPABASE_URL}/rest/v1/cases?case_id=eq.${encodeURIComponent(caseId)}&select=id,case_id,payment_status,status,download_locked,download_expires_at,download_token&limit=1`,
+      `${SUPABASE_URL}/rest/v1/cases?case_id=eq.${encodeURIComponent(caseId)}&select=id,case_id,payment_status,status,download_locked,download_expires_at,download_token,assessment_json&limit=1`,
       {
         method: "GET",
         headers: supabaseHeaders(SUPABASE_SERVICE_ROLE_KEY)
@@ -147,6 +148,9 @@ exports.handler = async function handler(event) {
     if (!accessCheck.ok) {
       return json(accessCheck.statusCode, { ok: false, error: accessCheck.error });
     }
+
+    const previousContentSha256 = String(row.assessment_json?.content_sha256 || "").toLowerCase();
+    const isNewResult = previousContentSha256 !== contentSha256;
 
     const uploadResponse = await fetch(
       `${SUPABASE_URL}/storage/v1/object/${RESULT_BUCKET}/${encodeURIComponent(objectPath).replace(/%2F/g, "/")}`,
@@ -227,6 +231,14 @@ exports.handler = async function handler(event) {
       });
     }
 
+    let notificationSent = false;
+    if (isNewResult) {
+      notificationSent = await sendResultNotification({
+        caseId,
+        uploadedAt: nowIso
+      });
+    }
+
     return json(200, {
       ok: true,
       case_id: caseId,
@@ -236,13 +248,60 @@ exports.handler = async function handler(event) {
       content_sha256: contentSha256,
       content_bytes: resultContentBytes,
       uploaded_at: nowIso,
-      status: "assessment_uploaded"
+      status: "assessment_uploaded",
+      notification_sent: notificationSent
     });
   } catch (error) {
     console.error("upload-final-result failed", error);
     return json(500, { ok: false, error: "Function failed" });
   }
 };
+
+async function sendResultNotification({ caseId, uploadedAt }) {
+  const resendKey = String(process.env.RESEND_API_KEY || "").trim();
+  const from = String(process.env.RESEND_FROM_EMAIL || "").trim();
+
+  if (!resendKey || !from) {
+    console.error("upload-final-result: result notification skipped; Resend configuration missing");
+    return false;
+  }
+
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${resendKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        from,
+        to: RESULT_NOTIFICATION_TO,
+        subject: `Neue Psynovia-Auswertung eingegangen · ${caseId}`,
+        text:
+          `Eine verschlüsselte Psynovia-Auswertung wurde erfolgreich hochgeladen.\n\n` +
+          `Fall-ID: ${caseId}\n` +
+          `Zeitpunkt: ${uploadedAt}\n` +
+          `Status: assessment_uploaded\n\n` +
+          `Diese Nachricht enthält keine personenbezogenen Daten.`
+      })
+    });
+
+    if (!response.ok) {
+      const responseText = await response.text().catch(() => "");
+      console.error(
+        "upload-final-result: result notification failed",
+        response.status,
+        responseText
+      );
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("upload-final-result: result notification network error", error);
+    return false;
+  }
+}
 
 function supabaseHeaders(serviceRoleKey) {
   return {
