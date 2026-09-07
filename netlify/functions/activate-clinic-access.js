@@ -117,18 +117,61 @@ function buildMail({ caseId, hogrefeId, hogrefeUrl, shellUrl, documentUploadUrl,
 
   return `<!doctype html><html lang="de"><body style="font-family:Arial,Helvetica,sans-serif;color:#173a5e;line-height:1.55">
     <p>Guten Tag,</p>
-    <p>Ihre Zugänge zur diagnostischen Datenerhebung bei Psynovia sind vorbereitet.</p>
+
+    <p>vielen Dank für Ihre Anmeldung in meiner Praxis. Wie bereits durch die Klinik mit Ihnen besprochen, erhalten Sie nun die Unterlagen und Zugänge für die diagnostische Datenerhebung zur Abklärung einer möglichen ADHS im Erwachsenenalter.</p>
+
     ${testNotice}
-    <p><strong>Fall-ID:</strong> ${caseId}</p>
-    <h3>1. Hogrefe Testsystem</h3>
-    <p><strong>Hogrefe-ID:</strong> ${hogrefeId}<br><a href="${hogrefeUrl}">${hogrefeUrl}</a></p>
+
+    <h3>Vor Beginn – was Sie wissen sollten</h3>
+
+    <p>Die Datenerhebung besteht aus verschiedenen Fragebögen und standardisierten Leistungstests. Dabei werden unter anderem aktuelle Beschwerden, Erfahrungen aus Kindheit und Lebensverlauf, mögliche Beeinträchtigungen im Alltag sowie verschiedene Bereiche der Aufmerksamkeit und kognitiven Leistungsfähigkeit erfasst.</p>
+
+    <p><strong>Wichtig ist:</strong></p>
+    <p>Kein einzelner Fragebogen und kein einzelner Test allein kann eine ADHS feststellen oder ausschließen.</p>
+    <p>Die Ergebnisse werden nicht automatisiert diagnostisch bewertet, sondern anschließend von mir fachlich im Gesamtzusammenhang ausgewertet.</p>
+    <p>Nach Auswertung der Datenerhebung erfolgt die weitere klinische Einordnung im diagnostischen Abschlussinterview. Dabei können offene Fragen geklärt und die Ergebnisse gemeinsam in den persönlichen Lebensverlauf eingeordnet werden.</p>
+
+    <p>Bitte beantworten Sie die Fragen möglichst ehrlich und so, wie es für Sie tatsächlich zutrifft. Es gibt keine „richtigen“ oder „erwünschten“ Antworten. Auch bei den Leistungstests geht es nicht darum, möglichst gut abzuschneiden, sondern darum, ein möglichst realistisches Bild unter normalen Bedingungen zu erhalten.</p>
+
+    <p>Falls während der Bearbeitung Fragen entstehen oder Sie unsicher sind, können Sie die Bearbeitung jederzeit unterbrechen und sich gerne bei mir melden.</p>
+
+    <p>Ihre <strong>Psynovia-Fall-ID</strong> lautet:</p>
+    <p><strong>${caseId}</strong></p>
+    <p>Bitte bewahren Sie diese für eventuelle Rückfragen auf.</p>
+
+    <p>Bitte wundern Sie sich nicht, dass im Hogrefe-Testsystem eine andere Kennung angezeigt wird als bei Psynovia. Das ist technisch bedingt und völlig korrekt.</p>
+
+    <p>Die folgenden persönlichen Zugangslinks sind <strong>14 Tage gültig</strong>. Bitte bewahren Sie die Links auf und geben Sie sie nicht an andere Personen weiter.</p>
+
+    <h3>1. Testung über das Hogrefe Testsystem</h3>
+    <p>Ihre dortige Kennung lautet:</p>
+    <p><strong>${hogrefeId}</strong></p>
+    <p>Bitte prüfen Sie zu Beginn der Testung kurz, ob diese Kennung korrekt angezeigt wird.</p>
+    <p><a href="${hogrefeUrl}">${hogrefeUrl}</a></p>
+    <p>Bitte planen Sie hierfür etwa <strong>40 Minuten ungestörte Zeit</strong> ein. Die Hogrefe-Testung sollte möglichst in einem Durchgang bearbeitet werden. Sorgen Sie bitte für eine ruhige Umgebung und vermeiden Sie Unterbrechungen oder einen Wechsel zwischen verschiedenen Geräten.</p>
+
     <h3>2. Psynovia-Datenerhebung</h3>
     <p><a href="${shellUrl}">${shellUrl}</a></p>
+    <p>Für diesen Teil können Sie sich mehr Zeit lassen. Die Datenerhebung dauert etwa <strong>90 Minuten</strong> und kann bei Bedarf unterbrochen und später über denselben persönlichen Link fortgesetzt werden.</p>
+    <p>Bitte bearbeiten Sie insbesondere die Leistungstests in einer möglichst ruhigen Umgebung und nach Möglichkeit nicht unter starkem Zeitdruck, bei ausgeprägter Müdigkeit oder während häufiger Ablenkungen.</p>
+
     <h3>3. Ergänzende Unterlagen</h3>
-    <p>Grundschulzeugnisse und vorhandene diagnostisch relevante Befunde können Sie über den folgenden geschützten Upload übermitteln. Bitte senden Sie diese Unterlagen nicht unverschlüsselt per E-Mail.</p>
-    <p><a href="${documentUploadUrl}">Unterlagen sicher hochladen</a></p>
-    <p>Bei technischen Fragen können Sie direkt auf diese E-Mail antworten.</p>
-    <p>Mit freundlichen Grüßen<br>Tobias Winner, M.Sc.<br>Psychologischer Psychotherapeut<br>Psynovia</p>
+    <p>Sofern Ihnen noch Schulzeugnisse aus der Grundschule oder der weiteren Schulzeit vorliegen, können Sie diese über den folgenden geschützten Upload übermitteln:</p>
+    <p><a href="${documentUploadUrl}"><strong>Unterlagen sicher hochladen</strong></a></p>
+    <p>Dort können Sie Scans oder gut lesbare Fotos verschlüsselt übertragen. Falls keine Zeugnisse mehr vorhanden sind, ist das selbstverständlich kein Problem. Gerne können Sie dort auch andere Dokumente hochladen, die Sie für die diagnostische Einordnung für relevant halten.</p>
+
+    <h3>Wie geht es danach weiter?</h3>
+    <p>Sobald die Datenerhebung vollständig vorliegt, werte ich die Ergebnisse fachlich aus und melde mich zur weiteren Terminplanung beziehungsweise zur Vereinbarung des diagnostischen Abschlussinterviews bei Ihnen.</p>
+
+    <p>Ich wünsche Ihnen viel Freude bei der Datenerhebung. Bei technischen Schwierigkeiten oder Rückfragen können Sie jederzeit direkt auf diese E-Mail antworten.</p>
+
+    <p>Mit freundlichen Grüßen</p>
+    <p><strong>Tobias Winner, M.Sc.</strong><br>
+    Psychologischer Psychotherapeut<br>
+    Psynovia – Privatpraxis für Psychotherapie<br>
+    Grillparzerstraße 16<br>
+    83024 Rosenheim<br>
+    tobiaswinner@psynovia.de</p>
   </body></html>`;
 }
 
@@ -258,7 +301,7 @@ exports.handler = async function(event) {
       to: recipient,
       subject: mode === "test"
         ? `TEST · Ihre Psynovia-Zugänge · ${caseId}`
-        : "Ihre Zugänge zur ADHS-Diagnostik bei Psynovia",
+        : "Ihre Psynovia-Zugänge",
       html
     });
 
@@ -303,18 +346,26 @@ exports.handler = async function(event) {
       hogrefe_source: hogrefe.source
     });
   } catch (error) {
+    const errorCode = String(error?.message || "send_failed").slice(0, 120);
+    const ambiguousGraphSend = errorCode === "graph_send_ambiguous";
+
     await sb({
       url: `${supabaseUrl}/rest/v1/clinic_access_dispatches?case_id=eq.${encodeURIComponent(caseId)}`,
       key,
       method: "PATCH",
       prefer: "return=minimal",
       body: {
-        status: "failed",
-        last_error_code: String(error?.message || "send_failed").slice(0, 120),
+        // Keep an ambiguous Graph transmission locked in "sending". A blind retry
+        // could otherwise send the same access mail twice if Microsoft accepted it.
+        status: ambiguousGraphSend ? "sending" : "failed",
+        last_error_code: errorCode,
         updated_at: new Date().toISOString()
       }
     }).catch(() => undefined);
 
-    return json(502, { ok: false, error: "access_mail_failed" });
+    return json(502, {
+      ok: false,
+      error: ambiguousGraphSend ? "access_mail_status_uncertain" : "access_mail_failed"
+    });
   }
 };
