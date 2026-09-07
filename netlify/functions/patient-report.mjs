@@ -94,7 +94,7 @@ export default async (req) => {
     const c=await sbJson(`${base}/rest/v1/cases?case_id=eq.${encodeURIComponent(caseId)}&select=case_id&limit=1`,key);
     if(!c.r.ok||!Array.isArray(c.data)||c.data.length!==1) return j(404,{ok:false,error:"case_not_found"});
     await sbJson(`${base}/rest/v1/patient_report_deliveries?case_id=eq.${encodeURIComponent(caseId)}&status=in.(pending,ready)`,key,{method:"PATCH",headers:{Prefer:"return=minimal"},body:{status:"revoked",revoked_at:new Date().toISOString()}});
-    const reportId=randomUUID(), objectPath=`${reportId}.enc`, accessToken=randomBytes(32).toString("base64url");
+    const reportId=randomUUID(), objectPath=`${caseId}/${reportId}.enc`, accessToken=randomBytes(32).toString("base64url");
     const expiresAt=new Date(Date.now()+REPORT_VALID_DAYS*86400000).toISOString();
     const ins=await sbJson(`${base}/rest/v1/patient_report_deliveries`,key,{method:"POST",headers:{Prefer:"return=minimal"},body:{report_id:reportId,case_id:caseId,object_path:objectPath,status:"pending",access_token_hash:sha(accessToken),dob_hmac:dobHmac(dob,pepper),expires_at:expiresAt}});
     if(!ins.r.ok) return j(502,{ok:false,error:"prepare_failed"});
