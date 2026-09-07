@@ -37,35 +37,44 @@ async function sendGraphMail({ to, subject, html }) {
   if (!to) throw new Error("recipient_missing");
 
   const token = await getGraphToken();
-  const response = await fetch(
-    `https://graph.microsoft.com/v1.0/users/${encodeURIComponent(sender)}/sendMail`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message: {
-          subject,
-          body: {
-            contentType: "HTML",
-            content: html
-          },
-          toRecipients: [
-            { emailAddress: { address: to } }
-          ],
-          replyTo: [
-            { emailAddress: { address: sender } }
-          ],
-          internetMessageHeaders: [
-            { name: "X-Psynovia-Protect", value: "clinic-access" }
-          ]
+  let response;
+  try {
+    response = await fetch(
+      `https://graph.microsoft.com/v1.0/users/${encodeURIComponent(sender)}/sendMail`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
         },
-        saveToSentItems: true
-      })
-    }
-  );
+        body: JSON.stringify({
+          message: {
+            subject,
+            body: {
+              contentType: "HTML",
+              content: html
+            },
+            toRecipients: [
+              { emailAddress: { address: to } }
+            ],
+            replyTo: [
+              { emailAddress: { address: sender } }
+            ],
+            internetMessageHeaders: [
+              { name: "X-Psynovia-Protect", value: "clinic-access" }
+            ]
+          },
+          saveToSentItems: true
+        })
+      }
+    );
+  } catch (error) {
+    // A network failure can happen after Microsoft has already accepted the message.
+    // Treat this as ambiguous so callers do not blindly retry and risk duplicates.
+    const ambiguous = new Error("graph_send_ambiguous");
+    ambiguous.cause = error;
+    throw ambiguous;
+  }
 
   if (response.status !== 202) {
     throw new Error(`graph_send_failed_${response.status}`);
