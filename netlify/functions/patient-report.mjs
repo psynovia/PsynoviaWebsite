@@ -48,7 +48,7 @@ async function signedDownload(base,key,path){
 }
 async function notifySuccessfulDownload({base,key,token}){
   const lookup=await sbJson(
-    `${base}/rest/v1/patient_report_deliveries?access_token_hash=eq.${sha(token)}&last_downloaded_at=not.is.null&select=report_id,case_id,download_count&limit=1`,
+    `${base}/rest/v1/patient_report_deliveries?access_token_hash=eq.${sha(token)}&last_downloaded_at=not.is.null&select=report_id,case_id,recipient_type,download_count&limit=1`,
     key
   );
   if(!lookup.r.ok) return {ok:false,error:"lookup_failed"};
@@ -61,14 +61,15 @@ async function notifySuccessfulDownload({base,key,token}){
   }
   const eventTime=new Date().toISOString();
   const count=Number(row.download_count||0);
+  const recipientLabel=row.recipient_type==="clinic"?"Klinik":"Patient:in";
   const mail=await fetch("https://api.resend.com/emails",{
     method:"POST",
     headers:{Authorization:`Bearer ${resendKey}`,"Content-Type":"application/json"},
     body:JSON.stringify({
       from,
       to:"ergebnis@psynovia.de",
-      subject:`Befund erfolgreich abgerufen · ${row.case_id}`,
-      text:`Der Befund wurde im Psynovia-Portal erfolgreich abgerufen und im Browser entschlüsselt.\n\nFall-ID: ${row.case_id}${count>0?`\nAbruf Nr.: ${count}`:""}\nZeitpunkt: ${eventTime}\n\nDiese Nachricht enthält keine personenbezogenen Daten.`
+      subject:`Befund erfolgreich abgerufen · ${recipientLabel} · ${row.case_id}`,
+      text:`Der Befund wurde im Psynovia-Portal erfolgreich abgerufen und im Browser entschlüsselt.\n\nFall-ID: ${row.case_id}\nEmpfängerzugang: ${recipientLabel}${count>0?`\nAbruf Nr.: ${count}`:""}\nZeitpunkt: ${eventTime}\n\nDiese Nachricht enthält keine personenbezogenen Daten.`
     })
   });
   if(!mail.ok){
@@ -94,15 +95,24 @@ export default async (req) => {
     const c=await sbJson(`${base}/rest/v1/cases?case_id=eq.${encodeURIComponent(caseId)}&select=case_id&limit=1`,key);
     if(!c.r.ok||!Array.isArray(c.data)||c.data.length!==1) return j(404,{ok:false,error:"case_not_found"});
     await sbJson(`${base}/rest/v1/patient_report_deliveries?case_id=eq.${encodeURIComponent(caseId)}&status=in.(pending,ready)`,key,{method:"PATCH",headers:{Prefer:"return=minimal"},body:{status:"revoked",revoked_at:new Date().toISOString()}});
-    const reportId=randomUUID(), objectPath=`${caseId}/${reportId}.enc`, accessToken=randomBytes(32).toString("base64url");
+
+    const patientReportId=randomUUID();
+    const clinicReportId=randomUUID();
+    const objectPath=`${caseId}/${patientReportId}.enc`;
+    const patientAccessToken=randomBytes(32).toString("base64url");
+    const clinicAccessToken=randomBytes(32).toString("base64url");
     const expiresAt=new Date(Date.now()+REPORT_VALID_DAYS*86400000).toISOString();
-    const ins=await sbJson(`${base}/rest/v1/patient_report_deliveries`,key,{method:"POST",headers:{Prefer:"return=minimal"},body:{report_id:reportId,case_id:caseId,object_path:objectPath,status:"pending",access_token_hash:sha(accessToken),dob_hmac:dobHmac(dob,pepper),expires_at:expiresAt}});
+    const common={case_id:caseId,object_path:objectPath,status:"pending",dob_hmac:dobHmac(dob,pepper),expires_at:expiresAt};
+    const ins=await sbJson(`${base}/rest/v1/patient_report_deliveries`,key,{method:"POST",headers:{Prefer:"return=minimal"},body:[
+      {...common,report_id:patientReportId,recipient_type:"patient",access_token_hash:sha(patientAccessToken)},
+      {...common,report_id:clinicReportId,recipient_type:"clinic",access_token_hash:sha(clinicAccessToken)}
+    ]});
     if(!ins.r.ok) return j(502,{ok:false,error:"prepare_failed"});
     try{
       const uploadUrl=await signedUpload(base,key,objectPath);
-      return j(200,{ok:true,report_id:reportId,case_id:caseId,access_token:accessToken,signed_upload_url:uploadUrl,expires_at:expiresAt,max_encrypted_bytes:MAX_ENCRYPTED_BYTES});
+      return j(200,{ok:true,report_id:patientReportId,clinic_report_id:clinicReportId,case_id:caseId,access_token:patientAccessToken,clinic_access_token:clinicAccessToken,signed_upload_url:uploadUrl,expires_at:expiresAt,max_encrypted_bytes:MAX_ENCRYPTED_BYTES});
     }catch{
-      await sbJson(`${base}/rest/v1/patient_report_deliveries?report_id=eq.${reportId}`,key,{method:"PATCH",headers:{Prefer:"return=minimal"},body:{status:"revoked",revoked_at:new Date().toISOString()}}).catch(()=>{});
+      await sbJson(`${base}/rest/v1/patient_report_deliveries?object_path=eq.${encodeURIComponent(objectPath)}&status=eq.pending`,key,{method:"PATCH",headers:{Prefer:"return=minimal"},body:{status:"revoked",revoked_at:new Date().toISOString()}}).catch(()=>{});
       return j(502,{ok:false,error:"signed_upload_failed"});
     }
   }
@@ -116,7 +126,7 @@ export default async (req) => {
     if(!q.r.ok||!Array.isArray(q.data)||q.data.length!==1||q.data[0].status!=="pending") return j(409,{ok:false,error:"report_not_pending"});
     const size=await objectSize(base,key,q.data[0].object_path); if(size===null||size!==bytes) return j(409,{ok:false,error:"encrypted_size_mismatch"});
     const now=new Date().toISOString();
-    const p=await sbJson(`${base}/rest/v1/patient_report_deliveries?report_id=eq.${encodeURIComponent(reportId)}`,key,{method:"PATCH",headers:{Prefer:"return=minimal"},body:{status:"ready",encrypted_bytes:bytes,payload_sha256:digest,ready_at:now}});
+    const p=await sbJson(`${base}/rest/v1/patient_report_deliveries?object_path=eq.${encodeURIComponent(q.data[0].object_path)}&status=eq.pending`,key,{method:"PATCH",headers:{Prefer:"return=minimal"},body:{status:"ready",encrypted_bytes:bytes,payload_sha256:digest,ready_at:now}});
     if(!p.r.ok) return j(502,{ok:false,error:"finalize_failed"});
     return j(200,{ok:true,report_id:reportId,case_id:q.data[0].case_id});
   }
@@ -124,7 +134,7 @@ export default async (req) => {
   if(action==="verify"){
     const token=String(body.access_token||"").trim(), dob=String(body.birth_date||"").trim();
     if(!validToken(token)||!validDob(dob)) return j(403,{ok:false,error:"access_denied"});
-    const q=await sbJson(`${base}/rest/v1/patient_report_deliveries?access_token_hash=eq.${sha(token)}&select=report_id,case_id,object_path,status,dob_hmac,expires_at,revoked_at,failed_attempts,locked_until&limit=1`,key);
+    const q=await sbJson(`${base}/rest/v1/patient_report_deliveries?access_token_hash=eq.${sha(token)}&select=report_id,case_id,object_path,status,dob_hmac,expires_at,revoked_at,failed_attempts,locked_until,recipient_type&limit=1`,key);
     if(!q.r.ok||!Array.isArray(q.data)||q.data.length!==1) return j(403,{ok:false,error:"access_denied"});
     const row=q.data[0], nowMs=Date.now();
     if(row.status!=="ready"||row.revoked_at||new Date(row.expires_at).getTime()<=nowMs) return j(403,{ok:false,error:"access_denied"});
@@ -141,7 +151,7 @@ export default async (req) => {
     const now=new Date().toISOString();
     await sbJson(`${base}/rest/v1/patient_report_deliveries?report_id=eq.${row.report_id}`,key,{method:"PATCH",headers:{Prefer:"return=minimal"},body:{failed_attempts:0,locked_until:null,last_downloaded_at:now}}).catch(()=>{});
     await fetch(`${base}/rest/v1/rpc/increment_patient_report_download`,{method:"POST",headers:sbHeaders(key),body:JSON.stringify({p_report_id:row.report_id})}).catch(()=>{});
-    return j(200,{ok:true,case_id:row.case_id,signed_download_url:url,expires_in_seconds:SIGNED_DOWNLOAD_SECONDS});
+    return j(200,{ok:true,case_id:row.case_id,recipient_type:row.recipient_type,signed_download_url:url,expires_in_seconds:SIGNED_DOWNLOAD_SECONDS});
   }
 
   if(action==="confirm_download"){
