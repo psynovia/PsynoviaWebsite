@@ -29,19 +29,22 @@ async function sbJson(url,key,opts={}){
   const r=await fetch(url,{method:opts.method||"GET",headers:sbHeaders(key,opts.headers||{}),body:opts.body===undefined?undefined:JSON.stringify(opts.body)});
   const data=await r.json().catch(()=>null); return {r,data};
 }
+function encodeStoragePath(path){
+  return String(path).split("/").map(encodeURIComponent).join("/");
+}
 async function signedUpload(base,key,path){
-  const r=await fetch(`${base}/storage/v1/object/upload/sign/${BUCKET}/${encodeURIComponent(path)}`,{method:"POST",headers:sbHeaders(key,{"x-upsert":"false"}),body:"{}"});
+  const r=await fetch(`${base}/storage/v1/object/upload/sign/${BUCKET}/${encodeStoragePath(path)}`,{method:"POST",headers:sbHeaders(key,{"x-upsert":"false"}),body:"{}"});
   const d=await r.json().catch(()=>null); if(!r.ok||!d) throw new Error("signed_upload_failed");
   const rel=d.url||d.signedURL||d.signedUrl; if(typeof rel!=="string") throw new Error("signed_upload_invalid");
   return rel.startsWith("http")?rel:`${base}/storage/v1${rel.startsWith("/")?"":"/"}${rel}`;
 }
 async function objectSize(base,key,path){
-  const r=await fetch(`${base}/storage/v1/object/info/authenticated/${BUCKET}/${encodeURIComponent(path)}`,{headers:{apikey:key,Authorization:`Bearer ${key}`}});
+  const r=await fetch(`${base}/storage/v1/object/info/authenticated/${BUCKET}/${encodeStoragePath(path)}`,{headers:{apikey:key,Authorization:`Bearer ${key}`}});
   const d=await r.json().catch(()=>null); if(!r.ok||!d) return null;
   const n=Number(d?.metadata?.size ?? d?.size ?? d?.metadata?.contentLength); return Number.isFinite(n)?n:null;
 }
 async function signedDownload(base,key,path){
-  const r=await fetch(`${base}/storage/v1/object/sign/${BUCKET}/${encodeURIComponent(path)}`,{method:"POST",headers:sbHeaders(key),body:JSON.stringify({expiresIn:SIGNED_DOWNLOAD_SECONDS})});
+  const r=await fetch(`${base}/storage/v1/object/sign/${BUCKET}/${encodeStoragePath(path)}`,{method:"POST",headers:sbHeaders(key),body:JSON.stringify({expiresIn:SIGNED_DOWNLOAD_SECONDS})});
   const d=await r.json().catch(()=>null); if(!r.ok||!d) throw new Error("signed_download_failed");
   const rel=d.signedURL||d.signedUrl||d.url; if(typeof rel!=="string") throw new Error("signed_download_invalid");
   return rel.startsWith("http")?rel:`${base}/storage/v1${rel.startsWith("/")?"":"/"}${rel}`;
