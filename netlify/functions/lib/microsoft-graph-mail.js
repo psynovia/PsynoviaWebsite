@@ -59,9 +59,6 @@ async function sendGraphMail({ to, subject, html }) {
             ],
             replyTo: [
               { emailAddress: { address: sender } }
-            ],
-            internetMessageHeaders: [
-              { name: "X-Psynovia-Protect", value: "clinic-access" }
             ]
           },
           saveToSentItems: true
