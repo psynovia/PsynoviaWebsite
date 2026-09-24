@@ -3,7 +3,7 @@ const { sendGraphMail } = require("./lib/microsoft-graph-mail");
 function html(){
   return `<!doctype html><html lang="de"><body style="font-family:Arial,Helvetica,sans-serif;color:#173a5e;line-height:1.55">
   <p>Guten Tag,</p>
-  <p>vielen Dank für Ihre Anmeldung in meiner Praxis. Wie bereits durch die Klinik mit Ihnen besprochen, erhalten Sie nun die Unterlagen und Zugänge für die diagnostische Datenerhebung zur Abklärung einer möglichen ADHS im Erwachsenenalter.</p>
+  <p>vielen Dank für Ihre Anmeldung in meiner Praxis. Wie im Rahmen Ihrer Behandlung in der Privatklinik ChiemseeWinkel Seebruck besprochen, erhalten Sie nun die Unterlagen und Zugänge für die diagnostische Datenerhebung zur Abklärung einer möglichen ADHS im Erwachsenenalter.</p>
   <p style="padding:12px;border:1px solid #f1c27d;border-radius:10px;background:#fff8ed"><strong>TESTVERSAND:</strong> Der Hogrefe-Link unten ist absichtlich kein echter Testzugang und verbraucht keinen Eintrag aus dem Hogrefe-Pool.</p>
   <h3>Vor Beginn – was Sie wissen sollten</h3>
   <p>Die Datenerhebung besteht aus verschiedenen Fragebögen und standardisierten Leistungstests. Dabei werden unter anderem aktuelle Beschwerden, Erfahrungen aus Kindheit und Lebensverlauf, mögliche Beeinträchtigungen im Alltag sowie verschiedene Bereiche der Aufmerksamkeit und kognitiven Leistungsfähigkeit erfasst.</p>
