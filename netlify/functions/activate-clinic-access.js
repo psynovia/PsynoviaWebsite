@@ -213,10 +213,7 @@ exports.handler = async function(event) {
   const key = String(process.env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
   if (!supabaseUrl || !key) return json(500, { ok: false, error: "server_configuration_missing" });
 
-  const liveEnabled = String(process.env.CLINIC_AUTO_ACCESS_ENABLED || "").toLowerCase() === "true";
-  const testEnabled = String(process.env.CLINIC_ACCESS_TEST_ENABLED || "").toLowerCase() === "true";
-  const mode = liveEnabled ? "live" : testEnabled ? "test" : "disabled";
-  if (mode === "disabled") return json(503, { ok: false, error: "clinic_access_disabled" });
+  const mode = "live";
 
   let body;
   try { body = JSON.parse(event.body || "{}"); } catch { return json(400, { ok: false, error: "invalid_json" }); }
