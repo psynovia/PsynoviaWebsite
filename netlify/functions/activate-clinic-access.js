@@ -110,6 +110,37 @@ async function createDocumentUploadLink({ supabaseUrl, key, caseId }) {
   return `https://www.psynovia.de/klinik-unterlagen.html#token=${encodeURIComponent(token)}`;
 }
 
+async function finalizeAcceptedMail({ supabaseUrl, key, caseId, mode }) {
+  if (mode === "live") {
+    await markRealHogrefeMailSent({ supabaseUrl, key, caseId });
+  }
+
+  const now = new Date().toISOString();
+  const unlock = await sb({
+    url: `${supabaseUrl}/rest/v1/cases?case_id=eq.${encodeURIComponent(caseId)}`,
+    key,
+    method: "PATCH",
+    prefer: "return=minimal",
+    body: {
+      status: "clinic_access_granted",
+      payment_status: "clinic_paid",
+      download_locked: false
+    }
+  });
+  if (!unlock.response.ok) throw new Error("case_unlock_failed");
+
+  const consume = await sb({
+    url: `${supabaseUrl}/rest/v1/clinic_intake_submissions?case_id=eq.${encodeURIComponent(caseId)}`,
+    key,
+    method: "PATCH",
+    prefer: "return=minimal",
+    body: { access_activation_consumed_at: now }
+  });
+  if (!consume.response.ok) throw new Error("activation_consume_failed");
+
+  return now;
+}
+
 function buildMail({ caseId, hogrefeId, hogrefeUrl, shellUrl, documentUploadUrl, testMode }) {
   const testNotice = testMode
     ? `<p style="padding:12px;border:1px solid #f1c27d;border-radius:10px;background:#fff8ed"><strong>TESTVERSAND:</strong> Der Hogrefe-Link unten ist absichtlich kein echter Testzugang und verbraucht keinen Eintrag aus dem Hogrefe-Pool.</p>`
@@ -118,7 +149,7 @@ function buildMail({ caseId, hogrefeId, hogrefeUrl, shellUrl, documentUploadUrl,
   return `<!doctype html><html lang="de"><body style="font-family:Arial,Helvetica,sans-serif;color:#173a5e;line-height:1.55">
     <p>Guten Tag,</p>
 
-    <p>vielen Dank für Ihre Anmeldung in meiner Praxis. Wie bereits durch die Klinik mit Ihnen besprochen, erhalten Sie nun die Unterlagen und Zugänge für die diagnostische Datenerhebung zur Abklärung einer möglichen ADHS im Erwachsenenalter.</p>
+    <p>vielen Dank für Ihre Anmeldung in meiner Praxis. Wie im Rahmen Ihrer Behandlung in der Privatklinik ChiemseeWinkel Seebruck besprochen, erhalten Sie nun die Unterlagen und Zugänge für die diagnostische Datenerhebung zur Abklärung einer möglichen ADHS im Erwachsenenalter.</p>
 
     ${testNotice}
 
@@ -232,7 +263,12 @@ exports.handler = async function(event) {
   const dispatchResult = await sb({ url: dispatchUrl, key });
   if (!dispatchResult.response.ok) return json(502, { ok: false, error: "dispatch_lookup_failed" });
   if (Array.isArray(dispatchResult.data) && dispatchResult.data[0]?.status === "sent") {
-    return json(200, { ok: true, already_completed: true, case_id: caseId });
+    try {
+      await finalizeAcceptedMail({ supabaseUrl, key, caseId, mode: dispatchResult.data[0]?.mode || mode });
+      return json(200, { ok: true, already_completed: true, case_id: caseId });
+    } catch (error) {
+      return json(502, { ok: false, error: "access_finalize_failed" });
+    }
   }
   if (Array.isArray(dispatchResult.data) && dispatchResult.data[0]?.status === "sending") {
     return json(409, { ok: false, error: "dispatch_in_progress" });
@@ -297,6 +333,9 @@ exports.handler = async function(event) {
       testMode: mode === "test"
     });
 
+    let graphAccepted = false;
+    let dispatchRecorded = false;
+
     await sendGraphMail({
       to: recipient,
       subject: mode === "test"
@@ -304,40 +343,20 @@ exports.handler = async function(event) {
         : "Ihre Psynovia-Zugänge",
       html
     });
-
-    if (mode === "live") {
-      await markRealHogrefeMailSent({ supabaseUrl, key, caseId });
-    }
+    graphAccepted = true;
 
     const now = new Date().toISOString();
-    const unlock = await sb({
-      url: `${supabaseUrl}/rest/v1/cases?case_id=eq.${encodeURIComponent(caseId)}`,
-      key,
-      method: "PATCH",
-      prefer: "return=minimal",
-      body: {
-        status: "clinic_access_granted",
-        payment_status: "clinic_paid",
-        download_locked: false
-      }
-    });
-    if (!unlock.response.ok) throw new Error("case_unlock_failed");
-
-    await sb({
-      url: `${supabaseUrl}/rest/v1/clinic_intake_submissions?case_id=eq.${encodeURIComponent(caseId)}`,
-      key,
-      method: "PATCH",
-      prefer: "return=minimal",
-      body: { access_activation_consumed_at: now }
-    });
-
-    await sb({
+    const recordAccepted = await sb({
       url: `${supabaseUrl}/rest/v1/clinic_access_dispatches?case_id=eq.${encodeURIComponent(caseId)}`,
       key,
       method: "PATCH",
       prefer: "return=minimal",
       body: { status: "sent", mail_sent_at: now, updated_at: now, last_error_code: null }
     });
+    if (!recordAccepted.response.ok) throw new Error("graph_accepted_dispatch_unconfirmed");
+    dispatchRecorded = true;
+
+    await finalizeAcceptedMail({ supabaseUrl, key, caseId, mode });
 
     return json(200, {
       ok: true,
@@ -348,6 +367,9 @@ exports.handler = async function(event) {
   } catch (error) {
     const errorCode = String(error?.message || "send_failed").slice(0, 120);
     const ambiguousGraphSend = errorCode === "graph_send_ambiguous";
+    const graphWasAccepted = typeof graphAccepted !== "undefined" && graphAccepted;
+    const acceptedWasRecorded = typeof dispatchRecorded !== "undefined" && dispatchRecorded;
+    const mustNotRetryMail = ambiguousGraphSend || graphWasAccepted;
 
     await sb({
       url: `${supabaseUrl}/rest/v1/clinic_access_dispatches?case_id=eq.${encodeURIComponent(caseId)}`,
@@ -355,9 +377,9 @@ exports.handler = async function(event) {
       method: "PATCH",
       prefer: "return=minimal",
       body: {
-        // Keep an ambiguous Graph transmission locked in "sending". A blind retry
-        // could otherwise send the same access mail twice if Microsoft accepted it.
-        status: ambiguousGraphSend ? "sending" : "failed",
+        // Once Microsoft may have accepted the message, never fall back to a
+        // retryable state: that could send the same patient access twice.
+        status: acceptedWasRecorded ? "sent" : mustNotRetryMail ? "sending" : "failed",
         last_error_code: errorCode,
         updated_at: new Date().toISOString()
       }
@@ -365,7 +387,7 @@ exports.handler = async function(event) {
 
     return json(502, {
       ok: false,
-      error: ambiguousGraphSend ? "access_mail_status_uncertain" : "access_mail_failed"
+      error: mustNotRetryMail ? "access_mail_status_uncertain" : "access_mail_failed"
     });
   }
 };
