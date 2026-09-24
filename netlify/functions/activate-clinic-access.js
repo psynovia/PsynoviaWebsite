@@ -322,6 +322,9 @@ exports.handler = async function(event) {
   });
   if (!upsertDispatch.response.ok) return json(502, { ok: false, error: "dispatch_prepare_failed" });
 
+  let graphAccepted = false;
+  let dispatchRecorded = false;
+
   try {
     const documentUploadUrl = await createDocumentUploadLink({ supabaseUrl, key, caseId });
     const html = buildMail({
@@ -332,9 +335,6 @@ exports.handler = async function(event) {
       documentUploadUrl,
       testMode: mode === "test"
     });
-
-    let graphAccepted = false;
-    let dispatchRecorded = false;
 
     await sendGraphMail({
       to: recipient,
@@ -367,8 +367,8 @@ exports.handler = async function(event) {
   } catch (error) {
     const errorCode = String(error?.message || "send_failed").slice(0, 120);
     const ambiguousGraphSend = errorCode === "graph_send_ambiguous";
-    const graphWasAccepted = typeof graphAccepted !== "undefined" && graphAccepted;
-    const acceptedWasRecorded = typeof dispatchRecorded !== "undefined" && dispatchRecorded;
+    const graphWasAccepted = graphAccepted;
+    const acceptedWasRecorded = dispatchRecorded;
     const mustNotRetryMail = ambiguousGraphSend || graphWasAccepted;
 
     await sb({
