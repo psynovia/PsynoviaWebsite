@@ -13,6 +13,7 @@ exports.handler = async function(event) {
 
     const body = JSON.parse(event.body || "{}");
     const ref = String(body.intake_reference || "").trim().toUpperCase();
+    const questionsOpen = String(body.explanation_status || "") === "questions_open";
     if (!/^K-[A-HJ-NP-Z2-9]{8}$/.test(ref)) return json(400, { ok: false, error: "invalid_reference" });
 
     const headers = {
@@ -32,8 +33,8 @@ exports.handler = async function(event) {
     const caseId = String(rows[0].case_id || "").trim().toUpperCase();
     const displayId = /^CHIEM-[0-9]{4}-[A-HJ-NP-Z2-9]{8}$/.test(caseId) ? caseId : ref;
 
-    const subject = `Neue Psynovia-Klinikaufnahme · ${displayId}`;
-    const text = `Neue verschlüsselte Klinikaufnahme eingegangen.\n\nFall-ID: ${displayId}\n\nDie personenbezogenen Angaben befinden sich ausschließlich im verschlüsselten Intake. Bitte den Eintrag in Supabase anhand dieser Fall-ID öffnen und lokal entschlüsseln.`;
+    const subject = questionsOpen ? `Rückfragen offen · Psynovia-Klinikaufnahme · ${displayId}` : `Neue Psynovia-Klinikaufnahme · ${displayId}`;
+    const text = questionsOpen ? `Neue verschlüsselte Klinikaufnahme eingegangen.\n\nStatus: Fragen vor Beginn noch offen – keine Zugänge versendet.\n\nFall-ID: ${displayId}\n\nBitte den Fall persönlich prüfen und Kontakt aufnehmen. Die personenbezogenen Angaben befinden sich ausschließlich im verschlüsselten Intake und können anhand der Fall-ID lokal entschlüsselt werden.` : `Neue verschlüsselte Klinikaufnahme eingegangen.\n\nFall-ID: ${displayId}\n\nDie personenbezogenen Angaben befinden sich ausschließlich im verschlüsselten Intake. Bitte den Eintrag in Supabase anhand dieser Fall-ID öffnen und lokal entschlüsseln.`;
 
     const mail = await fetch("https://api.resend.com/emails", {
       method: "POST",
