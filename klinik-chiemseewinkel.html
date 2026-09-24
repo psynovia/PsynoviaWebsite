@@ -18,10 +18,10 @@
 <div class="clinic-label">Klinikzugang · Privatklinik ChiemseeWinkel Seebruck</div>
 <h1>Willkommen bei Psynovia</h1>
 <p>Zur Aufnahme in die Praxis füllen Sie bitte zunächst unser digitales Stammdatenblatt aus.</p>
-<p>Im Anschluss melde ich mich innerhalb von <strong>zwei Werktagen</strong> per E-Mail bei Ihnen und informiere Sie über den weiteren Ablauf der diagnostischen Datenerhebung.</p>
+<p>Nach der sicheren Übermittlung erhalten Sie – sofern keine Fragen mehr offen sind – automatisch eine E-Mail mit Ihren persönlichen Zugängen zur diagnostischen Datenerhebung.</p>
 <div class="steps-list">
 <div class="mini-step"><div class="num">1</div><div><strong>Stammdaten erfassen</strong><br><span class="hint">Kontaktdaten und Angaben zur Zusammenarbeit mit Ihrer Klinik.</span></div></div>
-<div class="mini-step"><div class="num">2</div><div><strong>Persönliche Rückmeldung</strong><br><span class="hint">Sie erhalten innerhalb von zwei Werktagen eine E-Mail von Psynovia.</span></div></div>
+<div class="mini-step"><div class="num">2</div><div><strong>Persönliche Zugänge</strong><br><span class="hint">Wenn die Aufklärung abgeschlossen ist, erhalten Sie Ihre Zugänge automatisch per E-Mail.</span></div></div>
 <div class="mini-step"><div class="num">3</div><div><strong>Weitere Datenerhebung</strong><br><span class="hint">Danach erhalten Sie die nächsten Schritte für die diagnostische Datenerhebung.</span></div></div>
 </div>
 <div class="box secure"><strong>Sichere Übertragung</strong><p class="hint" style="margin-top:6px">Alle Daten, die Sie hier eingeben, werden sicher und Ende-zu-Ende verschlüsselt an die Praxis übertragen.</p></div>
@@ -84,13 +84,14 @@
 <section id="successScreen" class="card screen success">
 <h1>Vielen Dank</h1>
 <p>Ihre Angaben wurden sicher an Psynovia übermittelt.</p>
-<p>Ich melde mich innerhalb von <strong>zwei Werktagen</strong> per E-Mail bei Ihnen und informiere Sie über den weiteren Ablauf.</p>
+<p id="successMessage">Ihre Angaben wurden erfolgreich übermittelt. Sie erhalten die weiteren Informationen per E-Mail.</p>
 <div class="box"><div class="hint">Ihre Fall-ID</div><div id="receiptId" class="reference"></div><p class="hint" style="margin-top:8px">Bitte bewahren Sie diese Fall-ID auf. Sie hilft bei technischen Rückfragen bei der eindeutigen Zuordnung Ihrer diagnostischen Datenerhebung.</p></div>
 </section>
 </main>
 
 <script>
 const UPLOAD_URL="https://vbwmtfndmechunmehijw.supabase.co/functions/v1/upload-clinic-intake";
+const ACTIVATE_URL="/.netlify/functions/activate-clinic-access";
 const PUBLIC_KEY_PEM=`-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAyvNcluRAiHMpSzOwQ5cF
 nPiOMzVDE6jWRUvX40WkekYu5UIEe0zRAvNAeUMFsOFc2iMImeZ6gmhY85EN8LHA
@@ -121,7 +122,30 @@ const canvas=document.getElementById("signatureCanvas"),ctx=canvas.getContext("2
 function resizeSignatureCanvas(){const rect=canvas.getBoundingClientRect(),ratio=Math.max(window.devicePixelRatio||1,1),old=signatureDirty?canvas.toDataURL("image/png"):null;canvas.width=Math.max(1,Math.round(rect.width*ratio));canvas.height=Math.max(1,Math.round(rect.height*ratio));ctx.setTransform(ratio,0,0,ratio,0,0);ctx.lineWidth=2;ctx.lineCap="round";ctx.lineJoin="round";ctx.strokeStyle="#07335f";if(old){const img=new Image();img.onload=()=>ctx.drawImage(img,0,0,rect.width,rect.height);img.src=old}}
 function point(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}let drawing=false,last=null;
 canvas.addEventListener("pointerdown",e=>{e.preventDefault();canvas.setPointerCapture(e.pointerId);drawing=true;last=point(e)});canvas.addEventListener("pointermove",e=>{if(!drawing)return;e.preventDefault();const p=point(e);ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y);ctx.stroke();last=p;signatureDirty=true});["pointerup","pointercancel","pointerleave"].forEach(ev=>canvas.addEventListener(ev,e=>{if(drawing){e.preventDefault();drawing=false;last=null}}));document.getElementById("clearSignature").onclick=()=>{ctx.clearRect(0,0,canvas.width,canvas.height);signatureDirty=false};window.addEventListener("resize",()=>{if(currentStep===3)resizeSignatureCanvas()});
-form.addEventListener("submit",async e=>{e.preventDefault();showError("");if(!checked("privacy_acknowledged")||!explanation()){showError("Bitte prüfen Sie die erforderlichen Angaben.");return}if(!signatureDirty){showError("Bitte unterschreiben Sie vor der Übermittlung im Unterschriftsfeld.");return}if(!window.isSecureContext||!crypto?.subtle){showError("Die sichere Browser-Verschlüsselung ist auf diesem Gerät nicht verfügbar. Bitte verwenden Sie einen aktuellen Browser.");return}submitBtn.disabled=true;submitBtn.textContent="Verschlüssele und übermittle …";try{let result=null;for(let attempt=0;attempt<3;attempt++){const ref=createReference(),caseId=createCaseId(ref),explanationStatus=explanation(),payload=buildPayload(ref,caseId),envelope=await encryptIntake(payload,ref,caseId,explanationStatus),r=await fetch(UPLOAD_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(envelope),cache:"no-store",credentials:"omit",referrerPolicy:"no-referrer"});result=await r.json().catch(()=>({}));if(r.status===409&&result.error==="reference_collision")continue;if(!r.ok||!result.ok)throw new Error(result.error||"upload_failed");break}if(!result?.ok||!result?.case_id)throw new Error("case_generation_failed");form.reset();formScreen.classList.remove("active");document.getElementById("receiptId").textContent=result.case_id;successScreen.classList.add("active");window.scrollTo({top:0,behavior:"smooth"})}catch(err){console.error(err);showError("Die sichere Übermittlung ist technisch fehlgeschlagen. Bitte versuchen Sie es erneut.")}finally{submitBtn.disabled=false;submitBtn.textContent="Sicher übermitteln"}});
+form.addEventListener("submit",async e=>{e.preventDefault();showError("");if(!checked("privacy_acknowledged")||!explanation()){showError("Bitte prüfen Sie die erforderlichen Angaben.");return}if(!signatureDirty){showError("Bitte unterschreiben Sie vor der Übermittlung im Unterschriftsfeld.");return}if(!window.isSecureContext||!crypto?.subtle){showError("Die sichere Browser-Verschlüsselung ist auf diesem Gerät nicht verfügbar. Bitte verwenden Sie einen aktuellen Browser.");return}submitBtn.disabled=true;submitBtn.textContent="Verschlüssele und übermittle …";try{const submittedEmail=value("email").toLowerCase();const explanationStatus=explanation();let result=null;for(let attempt=0;attempt<3;attempt++){const ref=createReference(),caseId=createCaseId(ref),payload=buildPayload(ref,caseId),envelope=await encryptIntake(payload,ref,caseId,explanationStatus),r=await fetch(UPLOAD_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(envelope),cache:"no-store",credentials:"omit",referrerPolicy:"no-referrer"});result=await r.json().catch(()=>({}));if(r.status===409&&result.error==="reference_collision")continue;if(!r.ok||!result.ok)throw new Error(result.error||"upload_failed");break}if(!result?.ok||!result?.case_id)throw new Error("case_generation_failed");
+
+let accessMailStatus="not_applicable";
+if(explanationStatus==="completed"&&result.access_activation_token){
+  try{
+    const ar=await fetch(ACTIVATE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({case_id:result.case_id,activation_token:result.access_activation_token,email:submittedEmail}),cache:"no-store",credentials:"omit",referrerPolicy:"no-referrer"});
+    const ad=await ar.json().catch(()=>({}));
+    accessMailStatus=(ar.ok&&ad.ok)?"sent":"delayed";
+  }catch(err){
+    console.error("access_mail_activation_failed",err);
+    accessMailStatus="delayed";
+  }
+}
+
+form.reset();formScreen.classList.remove("active");document.getElementById("receiptId").textContent=result.case_id;
+const successMessage=document.getElementById("successMessage");
+if(explanationStatus==="questions_open"){
+  successMessage.textContent="Da Sie noch Fragen angegeben haben, melde ich mich persönlich bei Ihnen, bevor die weitere Datenerhebung beginnt.";
+}else if(accessMailStatus==="sent"){
+  successMessage.textContent="Ihre persönlichen Zugänge zur diagnostischen Datenerhebung wurden per E-Mail versendet.";
+}else{
+  successMessage.textContent="Ihre Angaben wurden sicher übermittelt. Die Zugangs-E-Mail konnte gerade nicht automatisch bestätigt werden; Sie müssen das Stammdatenblatt nicht erneut ausfüllen. Ich kümmere mich um die weitere Freischaltung.";
+}
+successScreen.classList.add("active");window.scrollTo({top:0,behavior:"smooth"})}catch(err){console.error(err);showError("Die sichere Übermittlung ist technisch fehlgeschlagen. Bitte versuchen Sie es erneut.")}finally{submitBtn.disabled=false;submitBtn.textContent="Sicher übermitteln"}});
 function buildPayload(ref,caseId){const signedAt=new Date().toISOString();return{schema_version:"psynovia_clinic_intake_v5",intake_reference:ref,case_id:caseId,created_client_iso:signedAt,source:"clinic_chiemseewinkel",patient:{first_name:value("first_name"),last_name:value("last_name"),birth:value("birth"),street:value("street"),zip:value("zip"),city:value("city"),email:value("email").toLowerCase(),phone:value("phone")},clinic:{name:"Privatklinik ChiemseeWinkel Seebruck",contact_person:value("clinic_contact_person")},declarations:{privacy_acknowledged:{accepted:checked("privacy_acknowledged"),text:document.getElementById("privacyText").innerText.trim(),version:"clinic_privacy_notice_2026-08-25"},clinic_release:{accepted:checked("release_to_clinic"),text:document.getElementById("releaseText").innerText.trim(),version:"clinic_release_v3"},explanation_status:{value:explanation(),text:selectedExplanationText(),version:"clinic_explanation_status_v1"},signature_confirmation:{accepted:true,text:document.getElementById("signatureConfirmationText").innerText.trim(),version:"clinic_signature_confirmation_v1"}},communication:{organizational_email:true},signature:{signed_name:`${value("first_name")} ${value("last_name")}`.trim(),signed_at_iso:signedAt,format:"image/png",image_data_url:canvas.toDataURL("image/png")}}}
 async function encryptIntake(data,ref,caseId,explanationStatus){const pk=await importPublicKey(PUBLIC_KEY_PEM),aes=await crypto.subtle.generateKey({name:"AES-GCM",length:256},true,["encrypt"]),iv=crypto.getRandomValues(new Uint8Array(12)),plain=new TextEncoder().encode(JSON.stringify(data)),cipher=await crypto.subtle.encrypt({name:"AES-GCM",iv},aes,plain),raw=await crypto.subtle.exportKey("raw",aes),wrapped=await crypto.subtle.encrypt({name:"RSA-OAEP"},pk,raw);return{v:2,type:"psynovia_clinic_intake",content_encryption:"AES-256-GCM",key_encryption:"RSA-OAEP-256",intake_reference:ref,case_id:caseId,explanation_status:explanationStatus,iv_b64:b64(iv),wrapped_key_b64:b64(new Uint8Array(wrapped)),ciphertext_b64:b64(new Uint8Array(cipher))}}
 async function importPublicKey(pem){const der=from64(pem.replace(/-----BEGIN PUBLIC KEY-----|-----END PUBLIC KEY-----|\s/g,""));return crypto.subtle.importKey("spki",der.buffer,{name:"RSA-OAEP",hash:"SHA-256"},false,["encrypt"])}function b64(bytes){let s="";for(let i=0;i<bytes.length;i+=0x8000)s+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(s)}function from64(s){const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a}function value(id){return String(document.getElementById(id)?.value||"").trim()}function checked(id){return !!document.getElementById(id)?.checked}function showError(m){errorBox.textContent=m;errorBox.style.display=m?"block":"none"}function esc(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
