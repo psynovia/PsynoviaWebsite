@@ -6,20 +6,21 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Psynovia | Unterlagen sicher hochladen</title>
 <style>
-:root{--navy:#07335f;--blue:#2454d6;--soft:#eef9fd;--text:#294f6d;--muted:#58758b;--border:#d8e8f2;--danger:#b91c1c;--success:#17603a;--shadow:0 14px 34px rgba(7,51,95,.10)}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#f8fdff,#eef8fd 55%,#f8fbff);color:var(--navy);line-height:1.5}.page{max-width:760px;margin:0 auto;padding:22px 16px 48px}.topbar{display:flex;align-items:center;gap:12px;margin-bottom:18px}.topbar img{width:42px;height:42px;object-fit:contain}.brand-title{font-size:1.05rem;font-weight:900}.brand-subtitle{font-size:.9rem;color:var(--muted);font-weight:700}.card{background:#fff;border:1px solid var(--border);border-radius:22px;padding:24px;box-shadow:var(--shadow);margin-bottom:18px}h1{font-size:1.7rem;line-height:1.15;margin:0 0 14px;letter-spacing:-.03em}p{color:var(--text);margin:0 0 12px}.box{background:#f8fcfe;border:1px solid var(--border);border-radius:16px;padding:15px;margin:14px 0}.secure{background:var(--soft);border-color:#cae6f2}.hint{font-size:.9rem;color:var(--muted)}.reference{font-size:1.05rem;font-weight:900;letter-spacing:.035em}.filebox{border:2px dashed #aacbda;border-radius:16px;padding:22px;text-align:center;background:#fbfdfe;margin:16px 0}.filebox input{width:100%;font-size:1rem}.files{display:grid;gap:10px;margin:14px 0}.file{border:1px solid var(--border);border-radius:13px;padding:12px;background:#fff;color:var(--text)}.file strong{color:var(--navy)}button{border:0;border-radius:14px;padding:14px 18px;font-size:1rem;font-weight:900;cursor:pointer}.primary{background:var(--navy);color:#fff;width:100%}button:disabled{opacity:.55;cursor:not-allowed}.msg{display:none;border-radius:13px;padding:12px;margin-top:14px;font-weight:700}.msg.error{background:#fff0ef;border:1px solid #edb9b4;color:var(--danger)}.msg.success{background:#eef9f3;border:1px solid #b7ddc6;color:var(--success)}.progress{height:8px;background:#dceaf2;border-radius:999px;overflow:hidden;margin-top:8px}.progress span{display:block;height:100%;width:0;background:var(--navy);transition:width .2s}@media(max-width:620px){.card{padding:20px}h1{font-size:1.5rem}}
+:root{--navy:#07335f;--soft:#eef9fd;--text:#294f6d;--muted:#58758b;--border:#d8e8f2;--danger:#b91c1c;--success:#17603a;--shadow:0 14px 34px rgba(7,51,95,.10)}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#f8fdff,#eef8fd 55%,#f8fbff);color:var(--navy);line-height:1.5}.page{max-width:760px;margin:0 auto;padding:22px 16px 48px}.topbar{display:flex;align-items:center;gap:12px;margin-bottom:18px}.topbar img{width:42px;height:42px;object-fit:contain}.brand-title{font-size:1.05rem;font-weight:900}.brand-subtitle{font-size:.9rem;color:var(--muted);font-weight:700}.card{background:#fff;border:1px solid var(--border);border-radius:22px;padding:24px;box-shadow:var(--shadow);margin-bottom:18px}h1{font-size:1.7rem;line-height:1.15;margin:0 0 14px;letter-spacing:-.03em}p{color:var(--text);margin:0 0 12px}.box{background:#f8fcfe;border:1px solid var(--border);border-radius:16px;padding:15px;margin:14px 0}.secure{background:var(--soft);border-color:#cae6f2}.hint{font-size:.9rem;color:var(--muted)}.reference{font-size:1.05rem;font-weight:900;letter-spacing:.035em}.filebox{border:2px dashed #aacbda;border-radius:16px;padding:22px;text-align:center;background:#fbfdfe;margin:16px 0}.filebox input{width:100%;font-size:1rem}.files{display:grid;gap:10px;margin:14px 0}.file{border:1px solid var(--border);border-radius:13px;padding:12px;background:#fff;color:var(--text);display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left}.file-info{min-width:0;overflow-wrap:anywhere}.file strong{color:var(--navy)}.remove-file{flex:0 0 auto;background:#eef4f8;color:var(--navy);padding:8px 11px;border-radius:10px;font-size:.9rem}button{border:0;border-radius:14px;padding:14px 18px;font-size:1rem;font-weight:900;cursor:pointer}.primary{background:var(--navy);color:#fff;width:100%}button:disabled{opacity:.55;cursor:not-allowed}.msg{display:none;border-radius:13px;padding:12px;margin-top:14px;font-weight:700}.msg.error{background:#fff0ef;border:1px solid #edb9b4;color:var(--danger)}.msg.success{background:#eef9f3;border:1px solid #b7ddc6;color:var(--success)}.progress{height:8px;background:#dceaf2;border-radius:999px;overflow:hidden;margin-top:8px}.progress span{display:block;height:100%;width:0;background:var(--navy);transition:width .2s}.badge{display:none;background:#fff7dd;border:1px solid #efd49a;color:#6d4c00;border-radius:999px;padding:5px 9px;font-size:.82rem;font-weight:800;margin-bottom:12px}@media(max-width:620px){.card{padding:20px}h1{font-size:1.5rem}}
 </style>
 </head>
 <body>
 <main class="page">
 <header class="topbar"><img src="/psynovia-logo.png" alt="Psynovia Logo"><div><div class="brand-title">Psynovia</div><div class="brand-subtitle">Privatpraxis für klinische Diagnostik</div></div></header>
 <section class="card">
-<h1>Unterlagen sicher hochladen</h1>
-<p>Hier können Sie ergänzende Unterlagen wie <strong>Grundschulzeugnisse oder frühere Befunde</strong> sicher an Psynovia übermitteln.</p>
+<div id="testBadge" class="badge">TESTUMGEBUNG</div>
+<h1 id="title">Unterlagen sicher hochladen</h1>
+<p id="intro">Hier können Sie ergänzende Unterlagen sicher an Psynovia übermitteln.</p>
 <div class="box secure"><strong>Verschlüsselung direkt auf Ihrem Gerät</strong><p class="hint" style="margin-top:6px">Die Datei wird bereits in Ihrem Browser verschlüsselt. Erst danach wird sie hochgeladen. Auch der ursprüngliche Dateiname wird nur innerhalb der verschlüsselten Datei gespeichert.</p></div>
-<div id="caseBox" class="box" style="display:none"><div class="hint">Ihre Fall-ID</div><div id="caseId" class="reference"></div><div id="expiry" class="hint" style="margin-top:6px"></div></div>
+<div id="caseBox" class="box" style="display:none"><div class="hint">Fall-ID</div><div id="caseId" class="reference"></div><div id="expiry" class="hint" style="margin-top:6px"></div></div>
 <div id="uploadArea" style="display:none">
-<div class="filebox"><label for="files"><strong>Dateien auswählen</strong></label><p class="hint">PDF, JPG, PNG oder HEIC · maximal 30 MB pro Datei</p><input id="files" type="file" multiple accept="application/pdf,image/jpeg,image/png,image/heic,image/heif,.pdf,.jpg,.jpeg,.png,.heic,.heif"></div>
+<div class="filebox"><label for="files"><strong>Dateien auswählen</strong></label><p id="formatHint" class="hint"></p><input id="files" type="file" multiple></div>
 <div id="fileList" class="files"></div>
 <button id="uploadBtn" class="primary" type="button" disabled>Sicher hochladen</button>
 <div class="progress" id="progressWrap" style="display:none"><span id="progressBar"></span></div>
@@ -46,8 +47,13 @@ SVYvGva4sbOX1AT1/6HnM4iF4zmKL6mIM+7b3x2+xF9zURGJxH9Nqp5QLUZNCQRf
 IGY0u9QXiuHxZpWEKwsmyTkCAwEAAQ==
 -----END PUBLIC KEY-----`;
 
+const PATIENT_EXTS=[".pdf",".jpg",".jpeg",".png",".heic",".heif"];
+const CLINIC_EXTS=[".pdf",".docx",".doc",".txt"];
+const PATIENT_ACCEPT="application/pdf,image/jpeg,image/png,image/heic,image/heif,.pdf,.jpg,.jpeg,.png,.heic,.heif";
+const CLINIC_ACCEPT="application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword,text/plain,.pdf,.docx,.doc,.txt";
+
 const filesInput=document.getElementById("files"),fileList=document.getElementById("fileList"),uploadBtn=document.getElementById("uploadBtn"),errorBox=document.getElementById("error"),successBox=document.getElementById("success"),progressWrap=document.getElementById("progressWrap"),progressBar=document.getElementById("progressBar");
-let uploadToken="",caseId="";
+let uploadToken="",caseId="",purpose="",allowedExts=PATIENT_EXTS,selectedFiles=[];
 
 function showError(msg){errorBox.textContent=msg;errorBox.style.display=msg?"block":"none"}
 function showSuccess(msg){successBox.textContent=msg;successBox.style.display=msg?"block":"none"}
@@ -57,16 +63,52 @@ function from64(s){const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.le
 async function importPublicKey(){const der=from64(PUBLIC_KEY_PEM.replace(/-----BEGIN PUBLIC KEY-----|-----END PUBLIC KEY-----|\s/g,""));return crypto.subtle.importKey("spki",der.buffer,{name:"RSA-OAEP",hash:"SHA-256"},false,["encrypt"])}
 function tokenFromFragment(){const params=new URLSearchParams(location.hash.replace(/^#/,""));return String(params.get("token")||"").trim()}
 async function api(body){const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),cache:"no-store",credentials:"same-origin",referrerPolicy:"no-referrer"});const data=await r.json().catch(()=>({}));if(!r.ok||!data.ok){const e=new Error(data.error||"request_failed");e.code=data.error||"request_failed";throw e}return data}
-function allowedFile(file){const name=file.name.toLowerCase();return name.endsWith(".pdf")||name.endsWith(".jpg")||name.endsWith(".jpeg")||name.endsWith(".png")||name.endsWith(".heic")||name.endsWith(".heif")}
-function renderFiles(){showError("");showSuccess("");const files=[...filesInput.files];fileList.innerHTML="";let valid=files.length>0;for(const f of files){const div=document.createElement("div");div.className="file";div.innerHTML=`<strong>${escapeHtml(f.name)}</strong><br><span class="hint">${fmtBytes(f.size)}</span>`;fileList.appendChild(div);if(!allowedFile(f)||f.size<=0||f.size>MAX_FILE_BYTES)valid=false}if(files.some(f=>f.size>MAX_FILE_BYTES))showError("Mindestens eine Datei ist größer als 30 MB.");else if(files.some(f=>!allowedFile(f)))showError("Bitte nur PDF-, JPG-, PNG- oder HEIC-Dateien auswählen.");uploadBtn.disabled=!valid}
+function fileExt(name){const n=String(name||"").toLowerCase();const i=n.lastIndexOf(".");return i>=0?n.slice(i):""}
+function allowedFile(file){return allowedExts.includes(fileExt(file.name))}
+function fileKey(file){return [file.name,file.size,file.lastModified,file.type].join("::")}
+function addSelectedFiles(files){
+  const known=new Set(selectedFiles.map(fileKey));
+  for(const file of files){
+    const key=fileKey(file);
+    if(!known.has(key)){selectedFiles.push(file);known.add(key)}
+  }
+}
+function removeSelectedFile(index){selectedFiles.splice(index,1);renderFiles()}
+function renderFiles(){
+  showError("");showSuccess("");fileList.innerHTML="";
+  let valid=selectedFiles.length>0;
+  selectedFiles.forEach((f,index)=>{
+    const div=document.createElement("div");div.className="file";
+    div.innerHTML=`<div class="file-info"><strong>${escapeHtml(f.name)}</strong><br><span class="hint">${fmtBytes(f.size)}</span></div><button type="button" class="remove-file" data-index="${index}" aria-label="${escapeHtml(f.name)} entfernen">Entfernen</button>`;
+    fileList.appendChild(div);
+    if(!allowedFile(f)||f.size<=0||f.size>MAX_FILE_BYTES)valid=false;
+  });
+  if(selectedFiles.some(f=>f.size>MAX_FILE_BYTES))showError("Mindestens eine Datei ist größer als 30 MB.");
+  else if(selectedFiles.some(f=>!allowedFile(f)))showError(purpose==="clinic_collateral"?"Bitte nur PDF-, Word- oder TXT-Dateien auswählen.":"Bitte nur PDF-, JPG-, PNG- oder HEIC-Dateien auswählen.");
+  uploadBtn.disabled=!valid;
+}
 function escapeHtml(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+function configurePurpose(status){
+  purpose=status.purpose;
+  const clinic=purpose==="clinic_collateral";
+  allowedExts=clinic?CLINIC_EXTS:PATIENT_EXTS;
+  filesInput.accept=clinic?CLINIC_ACCEPT:PATIENT_ACCEPT;
+  document.getElementById("title").textContent=clinic?"Fremdanamnese sicher übermitteln":"Unterlagen sicher hochladen";
+  document.getElementById("intro").innerHTML=clinic
+    ?"Bitte laden Sie hier Ihre <strong>klinische Einschätzung Ihres Patienten</strong> sicher an Psynovia hoch."
+    :"Hier können Sie ergänzende Unterlagen wie <strong>Grundschulzeugnisse oder frühere Befunde</strong> sicher an Psynovia übermitteln.";
+  document.getElementById("formatHint").textContent=clinic
+    ?"PDF, DOCX, DOC oder TXT · maximal 30 MB pro Datei"
+    :"PDF, JPG, PNG oder HEIC · maximal 30 MB pro Datei";
+  if(status.mode==="test") document.getElementById("testBadge").style.display="inline-block";
+}
 
 async function encryptFile(file,publicKey){
   const aes=await crypto.subtle.generateKey({name:"AES-GCM",length:256},true,["encrypt"]);
   const iv=crypto.getRandomValues(new Uint8Array(12));
   const rawKey=await crypto.subtle.exportKey("raw",aes);
   const wrapped=new Uint8Array(await crypto.subtle.encrypt({name:"RSA-OAEP"},publicKey,rawKey));
-  const metaBytes=new TextEncoder().encode(JSON.stringify({v:1,name:file.name,type:file.type||"application/octet-stream",size:file.size,last_modified:file.lastModified||null}));
+  const metaBytes=new TextEncoder().encode(JSON.stringify({v:1,name:file.name,type:file.type||"application/octet-stream",size:file.size,last_modified:file.lastModified||null,document_purpose:purpose}));
   const fileBytes=new Uint8Array(await file.arrayBuffer());
   const plain=new Uint8Array(4+metaBytes.length+fileBytes.length);
   new DataView(plain.buffer).setUint32(0,metaBytes.length,false);
@@ -86,11 +128,11 @@ async function encryptFile(file,publicKey){
 
 async function uploadSigned(url,bytes){const r=await fetch(url,{method:"PUT",headers:{"Content-Type":"application/octet-stream","cache-control":"max-age=3600","x-upsert":"false"},body:bytes,cache:"no-store",referrerPolicy:"no-referrer"});if(!r.ok)throw new Error("storage_upload_failed")}
 
-filesInput.addEventListener("change",renderFiles);
-uploadBtn.addEventListener("click",async()=>{showError("");showSuccess("");const files=[...filesInput.files];if(!files.length)return;uploadBtn.disabled=true;progressWrap.style.display="block";progressBar.style.width="0%";try{if(!window.isSecureContext||!crypto?.subtle)throw new Error("crypto_unavailable");const publicKey=await importPublicKey();let done=0;for(const file of files){const encrypted=await encryptFile(file,publicKey);const prep=await api({action:"prepare",token:uploadToken});if(encrypted.bytes.byteLength>prep.max_encrypted_bytes)throw new Error("encrypted_file_too_large");await uploadSigned(prep.signed_upload_url,encrypted.bytes);await api({action:"finalize",token:uploadToken,upload_id:prep.upload_id,encrypted_bytes:encrypted.bytes.byteLength,payload_sha256:encrypted.sha256});done++;progressBar.style.width=`${Math.round(done/files.length*100)}%`}filesInput.value="";renderFiles();showSuccess(files.length===1?"Die Datei wurde sicher verschlüsselt und hochgeladen.":`${files.length} Dateien wurden sicher verschlüsselt und hochgeladen.`)}catch(err){console.error(err);const map={upload_link_expired:"Dieser Upload-Link ist abgelaufen.",upload_link_revoked:"Dieser Upload-Link wurde deaktiviert.",upload_link_invalid:"Dieser Upload-Link ist ungültig.",storage_upload_failed:"Der verschlüsselte Upload konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut.",crypto_unavailable:"Die sichere Browser-Verschlüsselung ist auf diesem Gerät nicht verfügbar."};showError(map[err.code||err.message]||"Der Upload konnte technisch nicht abgeschlossen werden. Bitte versuchen Sie es erneut.")}finally{uploadBtn.disabled=[...filesInput.files].length===0;}}
-);
+filesInput.addEventListener("change",()=>{addSelectedFiles([...filesInput.files]);filesInput.value="";renderFiles()});
+fileList.addEventListener("click",e=>{const btn=e.target.closest(".remove-file");if(!btn)return;removeSelectedFile(Number(btn.dataset.index))});
+uploadBtn.addEventListener("click",async()=>{showError("");showSuccess("");const files=[...selectedFiles];if(!files.length)return;uploadBtn.disabled=true;progressWrap.style.display="block";progressBar.style.width="0%";try{if(!window.isSecureContext||!crypto?.subtle)throw new Error("crypto_unavailable");const publicKey=await importPublicKey();let done=0;const uploadedIds=[];for(const file of files){const encrypted=await encryptFile(file,publicKey);const prep=await api({action:"prepare",token:uploadToken});if(encrypted.bytes.byteLength>prep.max_encrypted_bytes)throw new Error("encrypted_file_too_large");await uploadSigned(prep.signed_upload_url,encrypted.bytes);await api({action:"finalize",token:uploadToken,upload_id:prep.upload_id,encrypted_bytes:encrypted.bytes.byteLength,payload_sha256:encrypted.sha256});uploadedIds.push(prep.upload_id);done++;progressBar.style.width=`${Math.round(done/files.length*100)}%`}await api({action:"notify_batch",token:uploadToken,upload_ids:uploadedIds});selectedFiles=[];filesInput.value="";renderFiles();showSuccess(files.length===1?"Die Datei wurde sicher verschlüsselt und hochgeladen.":`${files.length} Dateien wurden sicher verschlüsselt und hochgeladen.`)}catch(err){console.error(err);const map={upload_link_expired:"Dieser Upload-Link ist abgelaufen.",upload_link_revoked:"Dieser Upload-Link wurde deaktiviert.",upload_link_invalid:"Dieser Upload-Link ist ungültig.",storage_upload_failed:"Der verschlüsselte Upload konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut.",crypto_unavailable:"Die sichere Browser-Verschlüsselung ist auf diesem Gerät nicht verfügbar."};showError(map[err.code||err.message]||"Der Upload konnte technisch nicht abgeschlossen werden. Bitte versuchen Sie es erneut.")}finally{uploadBtn.disabled=selectedFiles.length===0||selectedFiles.some(f=>!allowedFile(f)||f.size<=0||f.size>MAX_FILE_BYTES);}});
 
-(async()=>{try{uploadToken=tokenFromFragment();if(!uploadToken)throw new Error("upload_link_invalid");const status=await api({action:"status",token:uploadToken});caseId=status.case_id;document.getElementById("caseId").textContent=caseId;document.getElementById("expiry").textContent=`Upload möglich bis ${new Date(status.expires_at).toLocaleDateString("de-DE")}.`;document.getElementById("caseBox").style.display="block";document.getElementById("uploadArea").style.display="block";if(history.replaceState)history.replaceState(null,"",location.pathname+location.search+location.hash)}catch(err){showError(err.code==="upload_link_expired"?"Dieser Upload-Link ist abgelaufen.":err.code==="upload_link_revoked"?"Dieser Upload-Link wurde deaktiviert.":"Dieser Upload-Link ist ungültig oder nicht mehr verfügbar.")}})();
+(async()=>{try{uploadToken=tokenFromFragment();if(!uploadToken)throw new Error("upload_link_invalid");const status=await api({action:"status",token:uploadToken});caseId=status.case_id;configurePurpose(status);document.getElementById("caseId").textContent=caseId;document.getElementById("expiry").textContent=`Upload möglich bis ${new Date(status.expires_at).toLocaleDateString("de-DE")}.`;document.getElementById("caseBox").style.display="block";document.getElementById("uploadArea").style.display="block"}catch(err){showError(err.code==="upload_link_expired"?"Dieser Upload-Link ist abgelaufen.":err.code==="upload_link_revoked"?"Dieser Upload-Link wurde deaktiviert.":"Dieser Upload-Link ist ungültig oder nicht mehr verfügbar.")}})();
 </script>
 </body>
 </html>

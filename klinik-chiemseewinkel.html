@@ -70,7 +70,7 @@
 <h2>4. Prüfen und unterschreiben</h2>
 <div id="review" class="review"></div>
 <p><strong>Unterschrift</strong></p>
-<p id="signatureConfirmationText">Mit meiner Unterschrift bestätige ich die Richtigkeit meiner oben angegebenen Stammdaten und die von mir getroffenen Erklärungen. Sofern ich die Schweigepflichtentbindung ausgewählt habe, erstreckt sich meine Unterschrift auch auf diese Erklärung.</p>
+<p id="signatureConfirmationText">Mit meiner Unterschrift willige ich in die Durchführung der in diesem Aufklärungsbogen beschriebenen ADHS-Diagnostik durch Psynovia ein.</p>
 <p class="hint">Bitte unterschreiben Sie mit Finger, Stift oder Maus im Feld. Die Unterschrift wird zusammen mit Ihren Angaben verschlüsselt übertragen.</p>
 <div class="signature-wrap"><canvas id="signatureCanvas" aria-label="Unterschriftsfeld"></canvas><div class="signature-actions"><button id="clearSignature" type="button" class="secondary">Unterschrift löschen</button></div></div>
 <p class="hint">Unterschrift von: <span id="signatureName" class="signature-name"></span></p>
@@ -115,12 +115,15 @@ document.querySelectorAll(".back").forEach(b=>b.onclick=()=>{showError("");if(cu
 function showStep(i){currentStep=i;steps.forEach((s,n)=>s.classList.toggle("active",n===i));progress.forEach((p,n)=>p.classList.toggle("active",n<=i));if(i===3){renderReview();resizeSignatureCanvas()}window.scrollTo({top:0,behavior:"smooth"})}
 function fieldLabel(el){const label=document.querySelector('label[for="'+el.id+'"]');return label?label.textContent.replace("(optional)","").trim():"dieses Feld"}
 function validateStep(i){
+  for(const el of steps[i].querySelectorAll("input,select"))el.removeAttribute("aria-invalid");
   for(const el of steps[i].querySelectorAll("input,select")){
     if(!el.checkValidity()){
       let msg="Bitte prüfen Sie "+fieldLabel(el)+".";
       if(el.validity.valueMissing)msg="Bitte füllen Sie "+fieldLabel(el)+" aus.";
       else if(el.validity.typeMismatch)msg="Bitte geben Sie eine gültige E-Mail-Adresse ein.";
-      showError(msg);el.focus();el.scrollIntoView({behavior:"smooth",block:"center"});return false;
+      el.setAttribute("aria-invalid","true");
+      showError(msg);
+      return false;
     }
   }
   return true
@@ -158,9 +161,25 @@ if(explanationStatus==="questions_open"){
   successMessage.textContent="Ihre Angaben wurden sicher übermittelt. Die Zugangs-E-Mail konnte gerade nicht automatisch bestätigt werden; Sie müssen das Stammdatenblatt nicht erneut ausfüllen. Ich kümmere mich um die weitere Freischaltung.";
 }
 successScreen.classList.add("active");window.scrollTo({top:0,behavior:"smooth"})}catch(err){console.error(err);showError("Die sichere Übermittlung ist technisch fehlgeschlagen. Bitte versuchen Sie es erneut.")}finally{submitBtn.disabled=false;submitBtn.textContent="Sicher übermitteln"}});
-function buildPayload(ref,caseId){const signedAt=new Date().toISOString();return{schema_version:"psynovia_clinic_intake_v5",intake_reference:ref,case_id:caseId,created_client_iso:signedAt,source:"clinic_chiemseewinkel",patient:{first_name:value("first_name"),last_name:value("last_name"),birth:value("birth"),street:value("street"),zip:value("zip"),city:value("city"),email:value("email").toLowerCase(),phone:value("phone")},clinic:{name:"Privatklinik ChiemseeWinkel Seebruck",contact_person:value("clinic_contact_person")},declarations:{privacy_acknowledged:{accepted:checked("privacy_acknowledged"),text:document.getElementById("privacyText").innerText.trim(),version:"clinic_privacy_notice_2026-08-25"},clinic_release:{accepted:checked("release_to_clinic"),text:document.getElementById("releaseText").innerText.trim(),version:"clinic_release_v3"},explanation_status:{value:explanation(),text:selectedExplanationText(),version:"clinic_explanation_status_v1"},signature_confirmation:{accepted:true,text:document.getElementById("signatureConfirmationText").innerText.trim(),version:"clinic_signature_confirmation_v1"}},communication:{organizational_email:true},signature:{signed_name:`${value("first_name")} ${value("last_name")}`.trim(),signed_at_iso:signedAt,format:"image/png",image_data_url:canvas.toDataURL("image/png")}}}
+function buildPayload(ref,caseId){const signedAt=new Date().toISOString();return{schema_version:"psynovia_clinic_intake_v5",intake_reference:ref,case_id:caseId,created_client_iso:signedAt,source:"clinic_chiemseewinkel",patient:{first_name:value("first_name"),last_name:value("last_name"),birth:value("birth"),street:value("street"),zip:value("zip"),city:value("city"),email:value("email").toLowerCase(),phone:value("phone")},clinic:{name:"Privatklinik ChiemseeWinkel Seebruck",contact_person:value("clinic_contact_person")},declarations:{privacy_acknowledged:{accepted:checked("privacy_acknowledged"),text:document.getElementById("privacyText").innerText.trim(),version:"clinic_privacy_notice_2026-08-25"},clinic_release:{accepted:checked("release_to_clinic"),text:document.getElementById("releaseText").innerText.trim(),version:"clinic_release_v3"},explanation_status:{value:explanation(),text:selectedExplanationText(),version:"clinic_explanation_status_v1"},signature_confirmation:{accepted:true,text:document.getElementById("signatureConfirmationText").innerText.trim(),version:"clinic_signature_confirmation_v2"}},communication:{organizational_email:true},signature:{signed_name:`${value("first_name")} ${value("last_name")}`.trim(),signed_at_iso:signedAt,format:"image/png",image_data_url:canvas.toDataURL("image/png")}}}
 async function encryptIntake(data,ref,caseId,explanationStatus){const pk=await importPublicKey(PUBLIC_KEY_PEM),aes=await crypto.subtle.generateKey({name:"AES-GCM",length:256},true,["encrypt"]),iv=crypto.getRandomValues(new Uint8Array(12)),plain=new TextEncoder().encode(JSON.stringify(data)),cipher=await crypto.subtle.encrypt({name:"AES-GCM",iv},aes,plain),raw=await crypto.subtle.exportKey("raw",aes),wrapped=await crypto.subtle.encrypt({name:"RSA-OAEP"},pk,raw);return{v:2,type:"psynovia_clinic_intake",content_encryption:"AES-256-GCM",key_encryption:"RSA-OAEP-256",intake_reference:ref,case_id:caseId,explanation_status:explanationStatus,iv_b64:b64(iv),wrapped_key_b64:b64(new Uint8Array(wrapped)),ciphertext_b64:b64(new Uint8Array(cipher))}}
-async function importPublicKey(pem){const der=from64(pem.replace(/-----BEGIN PUBLIC KEY-----|-----END PUBLIC KEY-----|\s/g,""));return crypto.subtle.importKey("spki",der.buffer,{name:"RSA-OAEP",hash:"SHA-256"},false,["encrypt"])}function b64(bytes){let s="";for(let i=0;i<bytes.length;i+=0x8000)s+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(s)}function from64(s){const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a}function value(id){return String(document.getElementById(id)?.value||"").trim()}function checked(id){return !!document.getElementById(id)?.checked}function showError(m){[formErrorBox,errorBox].filter(Boolean).forEach(box=>{box.textContent=m;box.style.display=m?"block":"none"})}function esc(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
+async function importPublicKey(pem){const der=from64(pem.replace(/-----BEGIN PUBLIC KEY-----|-----END PUBLIC KEY-----|\s/g,""));return crypto.subtle.importKey("spki",der.buffer,{name:"RSA-OAEP",hash:"SHA-256"},false,["encrypt"])}function b64(bytes){let s="";for(let i=0;i<bytes.length;i+=0x8000)s+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(s)}function from64(s){const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a}function value(id){return String(document.getElementById(id)?.value||"").trim()}function checked(id){return !!document.getElementById(id)?.checked}function showError(m){
+  if(currentStep<3&&formErrorBox){
+    const step=steps[currentStep],buttons=step?.querySelector(".buttons");
+    if(buttons&&formErrorBox.previousElementSibling!==buttons)buttons.insertAdjacentElement("afterend",formErrorBox);
+    formErrorBox.textContent=m;
+    formErrorBox.style.display=m?"block":"none";
+    if(errorBox)errorBox.style.display="none";
+    if(m)requestAnimationFrame(()=>formErrorBox.scrollIntoView({behavior:"smooth",block:"nearest"}));
+    return;
+  }
+  if(formErrorBox)formErrorBox.style.display="none";
+  if(errorBox){
+    errorBox.textContent=m;
+    errorBox.style.display=m?"block":"none";
+    if(m)requestAnimationFrame(()=>errorBox.scrollIntoView({behavior:"smooth",block:"nearest"}));
+  }
+}function esc(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 </script>
 </body>
 </html>

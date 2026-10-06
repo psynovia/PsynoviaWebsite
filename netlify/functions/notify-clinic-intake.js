@@ -1,3 +1,5 @@
+const crypto = require("crypto");
+
 exports.handler = async function(event) {
   if (event.httpMethod !== "POST") return json(405, { ok: false, error: "method_not_allowed" });
 
@@ -27,14 +29,66 @@ exports.handler = async function(event) {
     );
     const rows = await check.json();
     if (!check.ok || !Array.isArray(rows) || !rows.length) return json(404, { ok: false, error: "reference_not_found" });
-
     if (rows[0].notification_status === "sent") return json(200, { ok: true, already_sent: true });
 
     const caseId = String(rows[0].case_id || "").trim().toUpperCase();
-    const displayId = /^CHIEM-[0-9]{4}-[A-HJ-NP-Z2-9]{8}$/.test(caseId) ? caseId : ref;
+    const validCaseId = /^CHIEM-[0-9]{4}-[A-HJ-NP-Z2-9]{8}$/.test(caseId);
+    const displayId = validCaseId ? caseId : ref;
 
-    const subject = questionsOpen ? `Rückfragen offen · Psynovia-Klinikaufnahme · ${displayId}` : `Neue Psynovia-Klinikaufnahme · ${displayId}`;
-    const text = questionsOpen ? `Neue verschlüsselte Klinikaufnahme eingegangen.\n\nStatus: Fragen vor Beginn noch offen – keine Zugänge versendet.\n\nFall-ID: ${displayId}\n\nBitte den Fall persönlich prüfen und Kontakt aufnehmen. Die personenbezogenen Angaben befinden sich ausschließlich im verschlüsselten Intake und können anhand der Fall-ID lokal entschlüsselt werden.` : `Neue verschlüsselte Klinikaufnahme eingegangen.\n\nFall-ID: ${displayId}\n\nDie personenbezogenen Angaben befinden sich ausschließlich im verschlüsselten Intake. Bitte den Eintrag in Supabase anhand dieser Fall-ID öffnen und lokal entschlüsseln.`;
+    let clinicUploadUrl = "";
+    if (!questionsOpen && validCaseId) {
+      const token = crypto.randomBytes(32).toString("base64url");
+      const tokenHash = crypto.createHash("sha256").update(token, "utf8").digest("hex");
+      const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+
+      const tokenWrite = await fetch(
+        `${SUPABASE_URL}/rest/v1/clinic_document_upload_tokens_v2?on_conflict=case_id,purpose`,
+        {
+          method: "POST",
+          headers: {
+            ...headers,
+            "Content-Type": "application/json",
+            Prefer: "resolution=merge-duplicates,return=minimal"
+          },
+          body: JSON.stringify({
+            case_id: caseId,
+            purpose: "clinic_collateral",
+            token_hash: tokenHash,
+            mode: "live",
+            expires_at: expiresAt,
+            revoked_at: null,
+            last_used_at: null,
+            upload_count: 0
+          })
+        }
+      );
+
+      if (!tokenWrite.ok) return json(502, { ok: false, error: "clinic_upload_link_failed" });
+      clinicUploadUrl = `https://www.psynovia.de/klinik-unterlagen.html#token=${encodeURIComponent(token)}`;
+    }
+
+    const subject = questionsOpen
+      ? `Rückfragen offen · Psynovia-Klinikaufnahme · ${displayId}`
+      : `Neue Psynovia-Klinikaufnahme · ${displayId}`;
+
+    const text = questionsOpen
+      ? `Neue verschlüsselte Klinikaufnahme eingegangen.
+
+Status: Fragen vor Beginn noch offen – keine Zugänge versendet.
+
+Fall-ID: ${displayId}
+
+Bitte den Fall persönlich prüfen und Kontakt aufnehmen. Die personenbezogenen Angaben befinden sich ausschließlich im verschlüsselten Intake und können anhand der Fall-ID lokal entschlüsselt werden.`
+      : `Neue verschlüsselte Klinikaufnahme eingegangen.
+
+Fall-ID: ${displayId}
+
+Geheimer Klinik-Upload-Link für die klinische Einschätzung / Fremdanamnese:
+${clinicUploadUrl}
+
+Bitte diesen Link nur bei vorliegender Schweigepflichtentbindung und ausschließlich an die behandelnde Ärztin/den behandelnden Arzt bzw. die behandelnde Psychotherapeutin/den behandelnden Psychotherapeuten weitergeben.
+
+Die personenbezogenen Angaben befinden sich ausschließlich im verschlüsselten Intake. Bitte den Eintrag in Supabase anhand dieser Fall-ID öffnen und lokal entschlüsseln.`;
 
     const mail = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -57,7 +111,7 @@ exports.handler = async function(event) {
 
     await mark(ref, "sent", new Date().toISOString(), SUPABASE_URL, headers);
     return json(200, { ok: true });
-  } catch (error) {
+  } catch {
     return json(500, { ok: false, error: "function_failed" });
   }
 };
