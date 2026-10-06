@@ -159,6 +159,40 @@ async function objectInfo({ supabaseUrl, key, objectPath }) {
   return Number.isFinite(size) && size > 0 ? { size } : { size: null };
 }
 
+
+async function notifyInternalUpload({ caseId, source, purpose }) {
+  const resendKey = String(Netlify.env.get("RESEND_API_KEY") || "").trim();
+  const resendFrom = String(Netlify.env.get("RESEND_FROM_EMAIL") || "").trim();
+  if (!resendKey || !resendFrom) return { ok: false, reason: "mail_config_missing" };
+
+  const sourceLabel = source === "clinic" ? "Klinik" : "Patient";
+  const purposeLabel = purpose === "clinic_collateral" ? "klinische Fremdanamnese" : "ergänzende Patientenunterlage";
+  const subject = `Neue Datei hochgeladen · ${sourceLabel} · ${caseId}`;
+  const text = `Neue verschlüsselte Datei bei Psynovia eingegangen.
+
+Fall-ID: ${caseId}
+Quelle: ${sourceLabel}
+Dokumenttyp: ${purposeLabel}
+
+Der Dateiinhalt und der ursprüngliche Dateiname wurden nicht per E-Mail übertragen. Bitte den Fall anhand der Fall-ID im sicheren System öffnen.`;
+
+  const mail = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${resendKey}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      from: resendFrom,
+      to: "info@psynovia.de",
+      subject,
+      text
+    })
+  });
+
+  return { ok: mail.ok, reason: mail.ok ? null : "mail_failed" };
+}
+
 export default async (req) => {
   if (req.method !== "POST") return json(405, { ok: false, error: "method_not_allowed" });
 
@@ -293,11 +327,18 @@ export default async (req) => {
       return json(502, { ok: false, error: "upload_finalize_failed" });
     }
 
+    const notification = await notifyInternalUpload({
+      caseId: access.caseId,
+      source: access.source,
+      purpose: access.purpose
+    }).catch(() => ({ ok: false, reason: "mail_exception" }));
+
     return json(200, {
       ok: true,
       upload_id: uploadId,
       case_id: access.caseId,
-      purpose: access.purpose
+      purpose: access.purpose,
+      internal_notification: notification.ok ? "sent" : "failed"
     });
   }
 
