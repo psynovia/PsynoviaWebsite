@@ -178,11 +178,11 @@ function buildMail({ caseId, hogrefeId, hogrefeUrl, shellUrl, documentUploadUrl,
     <p>Ihre dortige Kennung lautet:</p>
     <p><strong>${hogrefeId}</strong></p>
     <p>Bitte prüfen Sie zu Beginn der Testung kurz, ob diese Kennung korrekt angezeigt wird.</p>
-    <p><a href="${hogrefeUrl}">${hogrefeUrl}</a></p>
+    <p><a href="${hogrefeUrl}"><strong>Hogrefe-Testung starten</strong></a></p>
     <p>Bitte planen Sie hierfür etwa <strong>40 Minuten ungestörte Zeit</strong> ein. Die Hogrefe-Testung sollte möglichst in einem Durchgang bearbeitet werden. Sorgen Sie bitte für eine ruhige Umgebung und vermeiden Sie Unterbrechungen oder einen Wechsel zwischen verschiedenen Geräten.</p>
 
     <h3>2. Psynovia-Datenerhebung</h3>
-    <p><a href="${shellUrl}">${shellUrl}</a></p>
+    <p><a href="${shellUrl}"><strong>Psynovia-Datenerhebung starten</strong></a></p>
     <p>Für diesen Teil können Sie sich mehr Zeit lassen. Die Datenerhebung dauert etwa <strong>90 Minuten</strong> und kann bei Bedarf unterbrochen und später über denselben persönlichen Link fortgesetzt werden.</p>
     <p>Bitte bearbeiten Sie insbesondere die Leistungstests in einer möglichst ruhigen Umgebung und nach Möglichkeit nicht unter starkem Zeitdruck, bei ausgeprägter Müdigkeit oder während häufiger Ablenkungen.</p>
 
