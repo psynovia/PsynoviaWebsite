@@ -160,21 +160,17 @@ async function objectInfo({ supabaseUrl, key, objectPath }) {
 }
 
 
-async function notifyInternalUpload({ caseId, source, purpose }) {
+async function notifyInternalUpload({ caseId, source, purpose, fileCount }) {
   const resendKey = String(Netlify.env.get("RESEND_API_KEY") || "").trim();
   const resendFrom = String(Netlify.env.get("RESEND_FROM_EMAIL") || "").trim();
   if (!resendKey || !resendFrom) return { ok: false, reason: "mail_config_missing" };
 
   const sourceLabel = source === "clinic" ? "Klinik" : "Patient";
   const purposeLabel = purpose === "clinic_collateral" ? "klinische Fremdanamnese" : "ergänzende Patientenunterlage";
-  const subject = `Neue Datei hochgeladen · ${sourceLabel} · ${caseId}`;
-  const text = `Neue verschlüsselte Datei bei Psynovia eingegangen.
-
-Fall-ID: ${caseId}
-Quelle: ${sourceLabel}
-Dokumenttyp: ${purposeLabel}
-
-Der Dateiinhalt und der ursprüngliche Dateiname wurden nicht per E-Mail übertragen. Bitte den Fall anhand der Fall-ID im sicheren System öffnen.`;
+  const count = Number(fileCount || 0);
+  const singular = count === 1;
+  const subject = `${singular ? "Neue Datei" : `${count} neue Dateien`} hochgeladen · ${sourceLabel} · ${caseId}`;
+  const text = `${singular ? "Eine neue verschlüsselte Datei" : `${count} neue verschlüsselte Dateien`} bei Psynovia eingegangen.\n\nFall-ID: ${caseId}\nQuelle: ${sourceLabel}\nDokumenttyp: ${purposeLabel}\n\nDateiinhalte und ursprüngliche Dateinamen wurden nicht per E-Mail übertragen. Bitte den Fall anhand der Fall-ID im sicheren System öffnen.`;
 
   const mail = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -224,6 +220,28 @@ export default async (req) => {
       max_file_bytes: 30 * 1024 * 1024
     });
   }
+
+  if (action === "notify_batch") {
+    const fileCount = Number(body?.file_count);
+    if (!Number.isInteger(fileCount) || fileCount < 1 || fileCount > 100) {
+      return json(400, { ok: false, error: "invalid_file_count" });
+    }
+
+    const notification = await notifyInternalUpload({
+      caseId: access.caseId,
+      source: access.source,
+      purpose: access.purpose,
+      fileCount
+    }).catch(() => ({ ok: false, reason: "mail_exception" }));
+
+    return json(200, {
+      ok: true,
+      case_id: access.caseId,
+      purpose: access.purpose,
+      internal_notification: notification.ok ? "sent" : "failed"
+    });
+  }
+
 
   if (action === "prepare") {
     const uploadId = randomUUID();
@@ -327,18 +345,11 @@ export default async (req) => {
       return json(502, { ok: false, error: "upload_finalize_failed" });
     }
 
-    const notification = await notifyInternalUpload({
-      caseId: access.caseId,
-      source: access.source,
-      purpose: access.purpose
-    }).catch(() => ({ ok: false, reason: "mail_exception" }));
-
     return json(200, {
       ok: true,
       upload_id: uploadId,
       case_id: access.caseId,
-      purpose: access.purpose,
-      internal_notification: notification.ok ? "sent" : "failed"
+      purpose: access.purpose
     });
   }
 
