@@ -86,7 +86,7 @@ Fall-ID: ${displayId}
 Geheimer Klinik-Upload-Link für die klinische Einschätzung / Fremdanamnese:
 ${clinicUploadUrl}
 
-Bitte diesen Link ausschließlich an die behandelnde Ärztin/den behandelnden Arzt bzw. die behandelnde Psychotherapeutin/den behandelnden Psychotherapeuten weitergeben.
+Bitte diesen Link nur bei vorliegender Schweigepflichtentbindung und ausschließlich an die behandelnde Ärztin/den behandelnden Arzt bzw. die behandelnde Psychotherapeutin/den behandelnden Psychotherapeuten weitergeben.
 
 Die personenbezogenen Angaben befinden sich ausschließlich im verschlüsselten Intake. Bitte den Eintrag in Supabase anhand dieser Fall-ID öffnen und lokal entschlüsseln.`;
 
