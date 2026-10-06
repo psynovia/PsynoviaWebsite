@@ -114,11 +114,11 @@ function buildMail({ caseId, shellUrl, documentUploadUrl }) {
 
     <h3>1. Testung über das Hogrefe Testsystem</h3>
     <p>Kennung: <strong>${TEST_HOGREFE_ID}</strong></p>
-    <p><a href="${TEST_HOGREFE_URL}">${TEST_HOGREFE_URL}</a></p>
+    <p><a href="${TEST_HOGREFE_URL}"><strong>Hogrefe-Testung starten</strong></a></p>
     <p><strong>Dieser Link ist absichtlich nur ein Dummy und verbraucht keinen echten Hogrefe-Link.</strong></p>
 
     <h3>2. Psynovia-Datenerhebung</h3>
-    <p><a href="${shellUrl}">${shellUrl}</a></p>
+    <p><a href="${shellUrl}"><strong>Psynovia-Datenerhebung starten</strong></a></p>
 
     <h3>3. Ergänzende Unterlagen des Patienten</h3>
     <p><a href="${documentUploadUrl}"><strong>Unterlagen sicher hochladen</strong></a></p>
