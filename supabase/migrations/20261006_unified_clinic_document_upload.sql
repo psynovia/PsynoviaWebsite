@@ -39,6 +39,11 @@ create table if not exists public.clinic_document_uploads_v2 (
 alter table public.clinic_document_uploads_v2
   add column if not exists notification_sent_at timestamptz;
 
+create index if not exists clinic_document_uploads_v2_case_id_idx
+  on public.clinic_document_uploads_v2(case_id);
+create index if not exists clinic_document_uploads_v2_token_id_idx
+  on public.clinic_document_uploads_v2(token_id);
+
 alter table public.clinic_document_uploads_v2 enable row level security;
 revoke all on table public.clinic_document_uploads_v2 from anon, authenticated;
 grant select, insert, update, delete on table public.clinic_document_uploads_v2 to service_role;
