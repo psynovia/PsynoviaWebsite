@@ -4,6 +4,7 @@ const BUCKET = "clinic-documents-encrypted";
 const MAX_ENCRYPTED_BYTES = 33_554_432;
 const MAX_BATCH_FILES = 100;
 const ALLOWED_CASE_STATUSES = new Set([
+  "clinic_ready_for_access",
   "clinic_access_granted",
   "assessment_pending",
   "download_ready",
@@ -342,7 +343,7 @@ export default async (req) => {
       return json(400, { ok: false, error: "invalid_upload_ids" });
     }
 
-    const inFilter = uploadIds.join(",");
+    const inFilter = uploadIds.map(encodeURIComponent).join(",");
     const lookup = await requestJson(
       `${supabaseUrl}/rest/v1/clinic_document_uploads_v2?id=in.(${encodeURIComponent(inFilter)})&select=id,case_id,token_id,source,status,notification_sent_at`,
       key
@@ -375,7 +376,7 @@ export default async (req) => {
     }).catch(() => ({ ok: false, reason: "mail_exception" }));
 
     if (notification.ok) {
-      const pendingIds = pendingRows.map((row) => row.id).join(",");
+      const pendingIds = pendingRows.map((row) => encodeURIComponent(row.id)).join(",");
       await requestJson(
         `${supabaseUrl}/rest/v1/clinic_document_uploads_v2?id=in.(${encodeURIComponent(pendingIds)})`,
         key,
