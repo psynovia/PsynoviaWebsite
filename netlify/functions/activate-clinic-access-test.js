@@ -251,9 +251,8 @@ exports.handler = async function(event) {
 
     const html = buildMail({ caseId, shellUrl, documentUploadUrl });
 
-    // Test mails are deliberately forced to Psynovia, never to the submitted test address.
     await sendGraphMail({
-      to: "info@psynovia.de",
+      to: submittedEmail,
       subject: `TEST · Ihre Psynovia-Zugänge · ${caseId}`,
       html
     });
@@ -277,7 +276,7 @@ exports.handler = async function(event) {
       case_id: caseId,
       mode: "test",
       hogrefe_source: "test",
-      recipient: "info@psynovia.de"
+      recipient: submittedEmail
     });
   } catch (error) {
     const errorCode = String(error?.message || "send_failed").slice(0, 120);
