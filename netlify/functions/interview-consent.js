@@ -54,6 +54,8 @@ exports.handler = async function(event) {
       const id=string(p.id,40),token=string(p.token,110);
       const subject=string(p.subject,160),body=string(p.message,3500);
       if(!/^[0-9a-f-]{36}$/i.test(id)||!allowedToken(token)||subject.length<4||body.length<12||!body.includes('{LINK}'))return fail(400,'invalid_invitation');
+      // Zweite, serverseitig erzwungene Freigabe: Kein Versand nur durch Linkerzeugung oder durch Aufruf ohne Zustimmung.
+      if(p.send_authorized!==true)return fail(403,'send_not_authorized');
       const rows=await db('GET',`${TABLE}?id=eq.${eq(id)}&token_hash=eq.${digest(token)}&select=id,case_id,status,expires_at,link_email_status&limit=1`);
       const row=rows?.[0];if(!row)return fail(404,'invitation_not_found');
       if(row.status!=='pending'||new Date(row.expires_at).getTime()<=Date.now())return fail(410,'link_unavailable');
@@ -61,6 +63,7 @@ exports.handler = async function(event) {
       const found=await db('GET',`cases?case_id=eq.${eq(row.case_id)}&select=case_id,email&limit=1`);
       const recipient=String(found?.[0]?.email||'').trim().toLowerCase();
       if(!isEmail(recipient))return fail(409,'patient_email_not_available');
+      if(String(p.recipient_confirmed||'').trim().toLowerCase()!==recipient)return fail(409,'recipient_confirmation_mismatch');
       // Sperre vor dem externen Versand, damit parallele Klicks nicht mehrfach senden.
       const claimed=await db('PATCH',`${TABLE}?id=eq.${eq(id)}&link_email_status=eq.${eq(row.link_email_status)}&select=id`,{link_email_status:'sending'},'return=representation');
       if(!claimed?.length)return fail(409,'invitation_in_progress');
