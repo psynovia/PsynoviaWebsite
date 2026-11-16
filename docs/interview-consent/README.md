@@ -46,3 +46,6 @@
 
 ## Teststatus
 `node --check` für die Netlify-Funktion; JavaScript-Parsekontrolle für alle HTML-Skripte und die Netlify-Funktion sowie `node tests/smoke.cjs`: erfolgreich (Mock-Backend). **Noch kein Live-End-to-End-Test**, keine E-Mail real gesendet, keine Produktionsdatenbank geändert. 
+
+## Produktivaktivierung 16.11.2026
+Das Feature wurde separat freigeschaltet. Der Einladungsversand setzt sowohl eine bewusst gesetzte Freigabe-Checkbox als auch die serverseitige Bestätigung `send_authorized: true` und die exakte Bestätigung der zugehörigen Patienten-E-Mail-Adresse voraus. Ein bloßes Erzeugen eines Links löst keinen E-Mail-Versand aus. Nach jeder Änderung des E-Mail-Textes wird die Freigabe zurückgesetzt.
