@@ -1,0 +1,24 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Psynovia · Lokaler Entschlüsselungstest</title><style>*{box-sizing:border-box}body{font:16px/1.5 Arial,Helvetica,sans-serif;background:#eef8fd;color:#07335f;margin:0;padding:25px 12px}main{max-width:740px;margin:auto;background:white;border-radius:22px;border:1px solid #d8e8f2;padding:25px}h1{font-size:1.5rem}label{font-weight:700;display:block;margin:14px 0 5px}input{width:100%;padding:10px}button{border:0;border-radius:12px;color:white;background:#07335f;font-weight:bold;font-size:1rem;padding:14px 22px;margin-top:20px;cursor:pointer}pre{overflow-wrap:anywhere;white-space:pre-wrap;background:#f3f8fb;padding:14px;border-radius:12px;max-height:400px;overflow-y:auto}#status{font-weight:bold}img{max-width:100%}</style></head><body><main><h1>Verschlüsselten Nachweis lokal lesen</h1><p>Diese Datei funktioniert <strong>offline</strong>. Der private Schlüssel und der Nachweis bleiben auf deinem Gerät. Es werden keine Netzwerkzugriffe durchgeführt.</p><p>Unterstützt unverschlüsselte private RSA-Schlüssel im PEM-Format (PKCS#8 oder PKCS#1). Ein passwortgeschützter privater Schlüssel muss vorher lokal in PKCS#8 exportiert werden.</p><label for="privateKey">Privater Schlüssel (.pem oder .key)</label><input type="file" id="privateKey" accept=".pem,.key,.txt"><label for="record">Verschlüsselter Export (.json)</label><input id="record" type="file" accept=".json"><button id="run">Lokal entschlüsseln</button><p id="status" role="status"></p><section id="out" hidden><h2>Entschlüsseltes Ergebnis</h2><p id="identity"></p><p>Unterschrift:</p><img id="signature" alt="Unterschrift" hidden><pre id="view"></pre></section></main><script>
+'use strict';const el=id=>document.getElementById(id);
+function bytes(s){const raw=atob(s.replace(/\s/g,''));return Uint8Array.from(raw,x=>x.charCodeAt(0));}
+function derLength(n){if(n<128)return Uint8Array.of(n);let x=[];while(n){x.unshift(n&255);n>>>=8;}return Uint8Array.of(128|x.length,...x);}
+function der(tag,content){return cat(Uint8Array.of(tag),derLength(content.length),content);}
+function cat(...items){const n=items.reduce((sum,x)=>sum+x.length,0);const out=new Uint8Array(n);let start=0;for(const i of items){out.set(i,start);start+=i.length;}return out;}
+function toPkcs8(text){let m=text.match(/-----BEGIN (RSA PRIVATE KEY|PRIVATE KEY)-----([\s\S]*?)-----END \1-----/);if(!m)throw Error('Das PEM-Format ist unbekannt oder der Schlüssel ist passwortgeschützt.');let raw=bytes(m[2]);if(m[1]==='PRIVATE KEY')return raw;const alg=Uint8Array.from([0x30,0x0d,0x06,0x09,0x2a,0x86,0x48,0x86,0xf7,0x0d,0x01,0x01,0x01,0x05,0x00]);return der(0x30,cat(Uint8Array.of(0x02,0x01,0x00),alg,der(0x04,raw)));}
+function envelope(record){let obj=record.record?.encrypted_envelope||record.encrypted_envelope||record;return obj;}
+el('run').onclick=async()=>{el('status').textContent='';el('out').hidden=true;el('signature').hidden=true;try{
+ const keyFile=el('privateKey').files?.[0],recordFile=el('record').files?.[0];if(!keyFile||!recordFile)throw Error('Bitte beide Dateien auswählen.');
+ if(!crypto?.subtle)throw Error('Dieser Browser erlaubt keine lokale Kryptografie in diesem Kontext.');
+ const key=await crypto.subtle.importKey('pkcs8',toPkcs8(await keyFile.text()),{name:'RSA-OAEP',hash:'SHA-256'},false,['decrypt']);
+ const record=JSON.parse(await recordFile.text());const e=envelope(record);
+ if(e.type!=='psynovia_interview_consent'||e.key_encryption!=='RSA-OAEP-256'||e.content_encryption!=='AES-256-GCM')throw Error('Dies ist keine Psynovia-Intervieweinwilligung.');
+ const aesRaw=await crypto.subtle.decrypt({name:'RSA-OAEP'},key,bytes(e.wrapped_key_b64));
+ const aes=await crypto.subtle.importKey('raw',aesRaw,{name:'AES-GCM'},false,['decrypt']);
+ const decrypted=await crypto.subtle.decrypt({name:'AES-GCM',iv:bytes(e.iv_b64)},aes,bytes(e.ciphertext_b64));
+ const data=JSON.parse(new TextDecoder().decode(decrypted));
+ el('identity').textContent=`Fall-ID: ${data.case_id||'-'} · Name: ${data.signature?.signed_name||'-'} · Kollegin: ${data.professional?.name||'-'}`;
+ if(data.signature?.image_data_url?.startsWith('data:image/png;base64,')){el('signature').src=data.signature.image_data_url;el('signature').hidden=false;}
+ const clone=JSON.parse(JSON.stringify(data));if(clone.signature?.image_data_url)clone.signature.image_data_url='[Unterschriftsbild wird oben angezeigt]';
+ el('view').textContent=JSON.stringify(clone,null,2);el('out').hidden=false;el('status').textContent='Erfolgreich lokal entschlüsselt.';
+ }catch(err){el('status').textContent='Entschlüsselung fehlgeschlagen: '+err.message;}};
+</script></body></html>
