@@ -3,7 +3,9 @@ import { createHash, randomUUID } from "node:crypto";
 const BUCKET = "clinic-documents-encrypted";
 const MAX_ENCRYPTED_BYTES = 33_554_432;
 const MAX_BATCH_FILES = 100;
+const ALLOWED_PAYMENT_STATUSES = new Set(["paid", "clinic_paid"]);
 const ALLOWED_CASE_STATUSES = new Set([
+  "active",
   "clinic_ready_for_access",
   "clinic_access_granted",
   "assessment_pending",
@@ -68,7 +70,7 @@ async function validateCase({ supabaseUrl, key, caseId }) {
     return { error: "case_not_found", status: 404 };
   }
   const row = caseLookup.data[0];
-  if (row.payment_status !== "clinic_paid" || !ALLOWED_CASE_STATUSES.has(String(row.status || ""))) {
+  if (!ALLOWED_PAYMENT_STATUSES.has(String(row.payment_status || "")) || !ALLOWED_CASE_STATUSES.has(String(row.status || ""))) {
     return { error: "upload_not_available", status: 403 };
   }
   return { ok: true };
