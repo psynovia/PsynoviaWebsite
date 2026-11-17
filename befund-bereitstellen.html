@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Psynovia | Befund bereitstellen</title>
 <style>
-:root{--navy:#07335f;--text:#294f6d;--muted:#58758b;--border:#d8e8f2;--soft:#eef9fd;--ok:#17603a;--err:#b91c1c;--shadow:0 14px 34px rgba(7,51,95,.10)}*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#f8fdff,#eef8fd 55%,#f8fbff);color:var(--navy)}main{max-width:760px;margin:0 auto;padding:24px 16px 48px}.top{display:flex;gap:12px;align-items:center;margin-bottom:18px}.top img{width:42px;height:42px}.card{background:#fff;border:1px solid var(--border);border-radius:22px;padding:24px;box-shadow:var(--shadow)}h1{font-size:1.7rem;margin:0 0 12px}p{color:var(--text);line-height:1.5}label{display:block;font-weight:800;margin:14px 0 6px}input{width:100%;padding:13px;border:1px solid #aacbda;border-radius:13px;font-size:1rem}button{width:100%;border:0;border-radius:14px;padding:14px 18px;background:var(--navy);color:#fff;font-weight:900;font-size:1rem;margin-top:18px;cursor:pointer}button:disabled{opacity:.55;cursor:not-allowed}.hint{font-size:.9rem;color:var(--muted)}.box{background:var(--soft);border:1px solid #cae6f2;border-radius:14px;padding:14px;margin-top:16px}.ok{background:#eef9f3;border-color:#b7ddc6;color:var(--ok)}.err{display:none;background:#fff0ef;border:1px solid #edb9b4;color:var(--err);border-radius:13px;padding:12px;margin-top:14px;font-weight:700}.link{word-break:break-all;font-family:ui-monospace,monospace;font-size:.9rem}.copy{background:#eaf4f9;color:var(--navy);margin-top:10px}.recipient{margin-top:18px;padding-top:14px;border-top:1px solid #cfe2ea}.recipient:first-of-type{margin-top:10px;padding-top:0;border-top:0}.mode-switch{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.mode-switch button{width:auto;flex:1;background:#eaf4f9;color:var(--navy);margin:0}.mode-switch button.selected{background:var(--navy);color:white}.hint-strong{font-weight:700}.secure-files{margin-top:12px;display:grid;gap:5px}.secure-files div{border:1px solid #cfe2ea;border-radius:9px;padding:9px;overflow-wrap:anywhere}.secure-checkbox{display:flex;gap:10px;align-items:center;margin-top:16px}.secure-checkbox input{width:auto;min-width:19px;height:19px}.secure-checkbox label{margin:0}.form-panel[hidden]{display:none}
+:root{--navy:#07335f;--text:#294f6d;--muted:#58758b;--border:#d8e8f2;--soft:#eef9fd;--ok:#17603a;--err:#b91c1c;--shadow:0 14px 34px rgba(7,51,95,.10)}*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#f8fdff,#eef8fd 55%,#f8fbff);color:var(--navy)}main{max-width:760px;margin:0 auto;padding:24px 16px 48px}.top{display:flex;gap:12px;align-items:center;margin-bottom:18px}.top img{width:42px;height:42px}.card{background:#fff;border:1px solid var(--border);border-radius:22px;padding:24px;box-shadow:var(--shadow)}h1{font-size:1.7rem;margin:0 0 12px}p{color:var(--text);line-height:1.5}label{display:block;font-weight:800;margin:14px 0 6px}input{width:100%;padding:13px;border:1px solid #aacbda;border-radius:13px;font-size:1rem}button{width:100%;border:0;border-radius:14px;padding:14px 18px;background:var(--navy);color:#fff;font-weight:900;font-size:1rem;margin-top:18px;cursor:pointer}button:disabled{opacity:.55;cursor:not-allowed}.hint{font-size:.9rem;color:var(--muted)}.box{background:var(--soft);border:1px solid #cae6f2;border-radius:14px;padding:14px;margin-top:16px}.ok{background:#eef9f3;border-color:#b7ddc6;color:var(--ok)}.err{display:none;background:#fff0ef;border:1px solid #edb9b4;color:var(--err);border-radius:13px;padding:12px;margin-top:14px;font-weight:700}.link{word-break:break-all;font-family:ui-monospace,monospace;font-size:.9rem}.copy{background:#eaf4f9;color:var(--navy);margin-top:10px}.recipient{margin-top:18px;padding-top:14px;border-top:1px solid #cfe2ea}.recipient:first-of-type{margin-top:10px;padding-top:0;border-top:0}.mode-switch{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.mode-switch button{width:auto;flex:1;background:#eaf4f9;color:var(--navy);margin:0}.mode-switch button.selected{background:var(--navy);color:white}.hint-strong{font-weight:700}.secure-files{margin-top:12px;display:grid;gap:5px}.secure-files .file-entry{border:1px solid #cfe2ea;border-radius:9px;padding:9px;overflow-wrap:anywhere;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.secure-files .file-entry button{width:auto;margin:0;background:#eaf4f9;color:var(--navy);padding:8px 12px}.secure-files .file-entry span{flex:1;min-width:160px}.secure-files .file-entry button:disabled{opacity:.5}.secure-checkbox{display:flex;gap:10px;align-items:center;margin-top:16px}.secure-checkbox input{width:auto;min-width:19px;height:19px}.secure-checkbox label{margin:0}.form-panel[hidden]{display:none}
 </style>
 </head>
 <body><main><div class="top"><img src="/psynovia-logo.png" alt="Psynovia"><div><strong>Psynovia</strong><div class="hint">Interner Befundversand</div></div></div>
@@ -27,9 +27,9 @@
 <label for="secureRecipient">Empfänger</label><select id="secureRecipient" style="width:100%;padding:13px;border:1px solid #aacbda;border-radius:13px;font-size:1rem"><option value="patient">Patient:in</option><option value="clinic">Behandler:in / Klinik</option></select>
 <div class="secure-checkbox"><input id="secureRequireDob" type="checkbox" checked><label for="secureRequireDob">Geburtsdatum beim Abruf zusätzlich abfragen</label></div>
 <div id="secureDobBox"><label for="secureDob">Geburtsdatum der Patientin / des Patienten</label><input id="secureDob" type="text" inputmode="numeric" placeholder="TT.MM.JJJJ" autocomplete="off" maxlength="10"></div>
-<label for="secureFiles">Dateien auswählen (mehrere möglich)</label><input id="secureFiles" type="file" multiple>
-<p class="hint">Maximal 15 Dateien mit zusammen 30 MB. Die Dateinamen bleiben verschlüsselt. Ein Link ist 30 Tage gültig.</p>
-<div id="secureFileList" class="secure-files"></div>
+<label for="secureFiles">Dateien hinzufügen (auch nacheinander aus verschiedenen Ordnern)</label><input id="secureFiles" type="file" multiple>
+<p class="hint">Jede neue Auswahl ergänzt die vorhandene Liste. Du kannst einzelne Dateien wieder entfernen. Maximal 15 Dateien mit zusammen 30 MB. Die Dateinamen bleiben verschlüsselt. Ein Link ist 30 Tage gültig.</p>
+<div id="secureFileList" class="secure-files" aria-live="polite"></div>
 <button id="secureGo" type="button">Dateien verschlüsseln und bereitstellen</button>
 </div>
 <div id="err" class="err"></div>
@@ -41,7 +41,49 @@ function setMode(secure){reportFields.hidden=secure;secureFields.hidden=!secure;
 modeReport.onclick=()=>setMode(false);modeSecure.onclick=()=>setMode(true);
 secureRequireDob.onchange=()=>{document.getElementById("secureDobBox").hidden=!secureRequireDob.checked};
 secureDob.addEventListener("input",()=>{secureDob.value=formatBirthValue(secureDob.value)});
-secureFiles.addEventListener("change",()=>{const files=[...secureFiles.files];const box=document.getElementById("secureFileList");box.replaceChildren();let total=0;for(const f of files){total+=f.size;const line=document.createElement("div");line.textContent=f.name+" · "+(f.size/1048576).toFixed(2)+" MB";box.appendChild(line)}if(files.length) {const p=document.createElement("p");p.className="hint";p.textContent=files.length+" Dateien · "+(total/1048576).toFixed(2)+" MB insgesamt";box.appendChild(p)}});
+// File objects stay in memory while this page is open; every folder selection appends.
+const selectedSecureFiles=[];
+let secureUploading=false;
+function renderSelectedSecureFiles(){
+  const box=document.getElementById("secureFileList");
+  box.replaceChildren();
+  const summary=document.createElement("p");
+  summary.className="hint";
+  const total=selectedSecureFiles.reduce((sum,file)=>sum+file.size,0);
+  summary.textContent=selectedSecureFiles.length
+    ?selectedSecureFiles.length+" Datei(en) ausgewählt · "+(total/1048576).toFixed(2)+" MB insgesamt"
+    :"Noch keine Dateien ausgewählt.";
+  box.appendChild(summary);
+  selectedSecureFiles.forEach((file,index)=>{
+    const line=document.createElement("div");
+    line.className="file-entry";
+    const name=document.createElement("span");
+    name.textContent=file.name+" · "+(file.size/1048576).toFixed(2)+" MB";
+    const remove=document.createElement("button");
+    remove.type="button";
+    remove.textContent="Entfernen";
+    remove.setAttribute("aria-label","Datei "+file.name+" entfernen");
+    remove.disabled=secureUploading;
+    remove.onclick=()=>{if(secureUploading)return;selectedSecureFiles.splice(index,1);renderSelectedSecureFiles();showErr("")};
+    line.append(name,remove);
+    box.appendChild(line);
+  });
+}
+secureFiles.addEventListener("change",()=>{
+  if(secureUploading)return;
+  const additions=[...secureFiles.files];
+  secureFiles.value=""; // Allows selecting the same file again from any folder.
+  if(!additions.length)return;
+  const combined=[...selectedSecureFiles,...additions];
+  if(combined.length>15||combined.some(f=>f.size<1||f.name.length>240)||combined.reduce((n,f)=>n+f.size,0)>30*1024*1024){
+    showErr("Die Auswahl überschreitet 15 Dateien oder 30 MB, oder enthält eine ungültige Datei. Bereits ausgewählte Dateien bleiben erhalten.");
+    return;
+  }
+  selectedSecureFiles.push(...additions);
+  showErr("");
+  renderSelectedSecureFiles();
+});
+renderSelectedSecureFiles();
 
 const go=document.getElementById("go"),err=document.getElementById("err"),result=document.getElementById("result"),patientLink=document.getElementById("patientLink"),clinicLink=document.getElementById("clinicLink"),birthInput=document.getElementById("birth");
 function showErr(m){err.textContent=m;err.style.display=m?"block":"none"}
@@ -77,11 +119,11 @@ async function encryptBundle(files){
 secureGo.onclick=async()=>{
   showErr("");secureResult.style.display="none";
   if(!window.isSecureContext||!crypto?.subtle)return showErr("Die sichere Verschlüsselung ist in diesem Browser nicht verfügbar.");
-  const admin=document.getElementById("secureAdmin").value.trim(),caseId=document.getElementById("secureCaseId").value.trim().toUpperCase(),files=[...secureFiles.files],requireDob=secureRequireDob.checked,dob=requireDob?normalizeBirthDate(secureDob.value):"";
+  const admin=document.getElementById("secureAdmin").value.trim(),caseId=document.getElementById("secureCaseId").value.trim().toUpperCase(),files=[...selectedSecureFiles],requireDob=secureRequireDob.checked,dob=requireDob?normalizeBirthDate(secureDob.value):"";
   if(!admin||!caseId||!files.length)return showErr("Bitte Admin-Schlüssel, Fall-ID und mindestens eine Datei angeben.");
   if(requireDob&&!dob)return showErr("Bitte ein gültiges Geburtsdatum eingeben oder die Abfrage deaktivieren.");
   if(files.length>15||files.some(f=>f.size<1||f.name.length>240)||files.reduce((n,f)=>n+f.size,0)>30*1024*1024)return showErr("Maximal 15 nichtleere Dateien, insgesamt höchstens 30 MB.");
-  secureGo.disabled=true;secureGo.textContent="Dateien werden verschlüsselt …";
+  secureUploading=true;secureFiles.disabled=true;secureGo.disabled=true;renderSelectedSecureFiles();secureGo.textContent="Dateien werden verschlüsselt …";
   try{
     const enc=await encryptBundle(files);
     if(enc.container.byteLength>33_554_432)throw new Error("encrypted_too_large");
@@ -93,7 +135,7 @@ secureGo.onclick=async()=>{
     secureLink.textContent="https://www.psynovia.de/sicher.html#access="+encodeURIComponent(prep.access_token)+"&key="+encodeURIComponent(enc.key);
     secureResult.style.display="block";secureResult.scrollIntoView({behavior:"smooth",block:"nearest"});
   }catch(e){console.error("secure-document-upload",e);showErr("Der sichere Dokumentenversand ist fehlgeschlagen ("+e.message+"). Bitte den Link nicht verwenden und den Vorgang prüfen.")}
-  finally{secureGo.disabled=false;secureGo.textContent="Dateien verschlüsseln und bereitstellen"}
+  finally{secureUploading=false;secureFiles.disabled=false;secureGo.disabled=false;renderSelectedSecureFiles();secureGo.textContent="Dateien verschlüsseln und bereitstellen"}
 };
 document.getElementById("copySecureLink").onclick=async()=>{try{await navigator.clipboard.writeText(secureLink.textContent);document.getElementById("copySecureLink").textContent="Kopiert"}catch{showErr("Link konnte nicht automatisch kopiert werden.")}};
 async function copyText(el,button){try{await navigator.clipboard.writeText(el.textContent);button.textContent="Kopiert"}catch{showErr("Link konnte nicht automatisch kopiert werden.")}}
